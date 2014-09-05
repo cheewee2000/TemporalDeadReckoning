@@ -89,33 +89,31 @@
     
     
     // This is commented out because the graph is created in the interface with this sample app. However, the code remains as an example for creating the graph using code.
-     BEMSimpleLineGraphView *myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, 20,  self.view.bounds.size.width, 320)];
-     myGraph.delegate = self;
-     myGraph.dataSource = self;
-     [self.view addSubview:myGraph];
-    myGraph.colorTop =[UIColor clearColor];
-    myGraph.colorBottom =[UIColor clearColor];
-    myGraph.colorLine = [UIColor blackColor];
-    myGraph.colorXaxisLabel = [UIColor blackColor];
-    myGraph.colorYaxisLabel = [UIColor blackColor];
+     //BEMSimpleLineGraphView *myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, 20,  self.view.bounds.size.width, 320)];
+     //myGraph.delegate = self;
+     //myGraph.dataSource = self;
+     //[self.view addSubview:myGraph];
+    //self.myGraph=myGraph;
+
+    self.myGraph.colorTop =[UIColor clearColor];
+    self.myGraph.colorBottom =[UIColor clearColor];
+    self.myGraph.colorLine = [UIColor blackColor];
+    self.myGraph.colorXaxisLabel = [UIColor blackColor];
+    self.myGraph.colorYaxisLabel = [UIColor blackColor];
     //myGraph.widthLine = 3.0;
-    myGraph.colorPoint=[UIColor blackColor];
-    myGraph.animationGraphStyle = BEMLineAnimationDraw;
+    self.myGraph.colorPoint=[UIColor blackColor];
+    self.myGraph.animationGraphStyle = BEMLineAnimationDraw;
     //myGraph.enableBezierCurve = YES;
     //myGraph.enableTouchReport = YES;
     //myGraph.alwaysDisplayPopUpLabels = YES;
-    myGraph.enablePopUpReport = YES;
+    self.myGraph.enablePopUpReport = YES;
     //myGraph.enableYAxisLabel = YES;
-    myGraph.autoScaleYAxis = YES;
+    self.myGraph.autoScaleYAxis = YES;
     //myGraph.alwaysDisplayDots = YES;
     //myGraph.enableReferenceAxisLines = YES;
-    myGraph.animationGraphEntranceTime = 0.4;
+    self.myGraph.animationGraphEntranceTime = 0.4;
     //myGraph.alphaTop=.2;
-    
-    self.myGraph=myGraph;
-    
 
-    
     
     self.myGraph.userInteractionEnabled=YES;
     self.myGraph.multipleTouchEnabled=YES;

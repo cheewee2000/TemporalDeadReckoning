@@ -144,12 +144,12 @@
 		70C2EB461475EF4F00751AE8 /* BlindStopwatch */ = {
 			isa = PBXGroup;
 			children = (
+				448E78A319B936C000BF902A /* BlindStopwatch-Info.plist */,
 				448E789819B936C000BF902A /* RBVolume */,
 				448E789C19B936C000BF902A /* en.lproj */,
 				448E789B19B936C000BF902A /* ViewController.m */,
 				448E78A119B936C000BF902A /* ViewController.h */,
 				448E78A219B936C000BF902A /* AppDelegate.m */,
-				448E78A319B936C000BF902A /* BlindStopwatch-Info.plist */,
 				448E78A419B936C000BF902A /* Default-568h@2x.png */,
 				448E78A519B936C000BF902A /* Default@2x.png */,
 				448E78A619B936C000BF902A /* Default.png */,
