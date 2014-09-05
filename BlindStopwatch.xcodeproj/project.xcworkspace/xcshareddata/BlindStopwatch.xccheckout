@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>3591FB58-15AE-4707-B666-E3D1D9981B18</string>
+	<key>IDESourceControlProjectName</key>
+	<string>BlindStopwatch</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>E70C6B6E40D328B0FE4260E6C870AC9F268F7031</key>
+		<string>https://github.com/cheewee2000/temporal-dead-reckoning.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>BlindStopwatch.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>E70C6B6E40D328B0FE4260E6C870AC9F268F7031</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/cheewee2000/temporal-dead-reckoning.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>E70C6B6E40D328B0FE4260E6C870AC9F268F7031</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>E70C6B6E40D328B0FE4260E6C870AC9F268F7031</string>
+			<key>IDESourceControlWCCName</key>
+			<string>temporal%20dead%20reckoning</string>
+		</dict>
+	</array>
+</dict>
+</plist>

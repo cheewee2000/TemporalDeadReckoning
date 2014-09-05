@@ -1,0 +1,375 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		44866B4819B78B500084652A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44866B4719B78B500084652A /* QuartzCore.framework */; };
+		448E78B119B936C100BF902A /* RBVolumeButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E789A19B936C000BF902A /* RBVolumeButtons.m */; };
+		448E78B219B936C100BF902A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E789B19B936C000BF902A /* ViewController.m */; };
+		448E78B319B936C100BF902A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 448E789D19B936C000BF902A /* InfoPlist.strings */; };
+		448E78B419B936C100BF902A /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 448E789F19B936C000BF902A /* MainStoryboard.storyboard */; };
+		448E78B519B936C100BF902A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78A219B936C000BF902A /* AppDelegate.m */; };
+		448E78B619B936C100BF902A /* BlindStopwatch-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 448E78A319B936C000BF902A /* BlindStopwatch-Info.plist */; };
+		448E78B719B936C100BF902A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 448E78A419B936C000BF902A /* Default-568h@2x.png */; };
+		448E78B819B936C100BF902A /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 448E78A519B936C000BF902A /* Default@2x.png */; };
+		448E78B919B936C100BF902A /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 448E78A619B936C000BF902A /* Default.png */; };
+		448E78BA19B936C100BF902A /* BEMCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78A919B936C000BF902A /* BEMCircle.m */; };
+		448E78BB19B936C100BF902A /* BEMLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78AB19B936C000BF902A /* BEMLine.m */; };
+		448E78BC19B936C100BF902A /* BEMSimpleLineGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78AD19B936C100BF902A /* BEMSimpleLineGraphView.m */; };
+		448E78BD19B936C100BF902A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78B019B936C100BF902A /* main.m */; };
+		70C2EB411475EF4F00751AE8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB401475EF4F00751AE8 /* UIKit.framework */; };
+		70C2EB431475EF4F00751AE8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB421475EF4F00751AE8 /* Foundation.framework */; };
+		70C2EB451475EF4F00751AE8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB441475EF4F00751AE8 /* CoreGraphics.framework */; };
+		70C2EB601475F07400751AE8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB5F1475F07400751AE8 /* AudioToolbox.framework */; };
+		70C2EB621475FE4900751AE8 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB611475FE4900751AE8 /* MediaPlayer.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		44866B4719B78B500084652A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		448E789919B936C000BF902A /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
+		448E789A19B936C000BF902A /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
+		448E789B19B936C000BF902A /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = BlindStopwatch/ViewController.m; sourceTree = SOURCE_ROOT; };
+		448E789E19B936C000BF902A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
+		448E78A019B936C000BF902A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
+		448E78A119B936C000BF902A /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = BlindStopwatch/ViewController.h; sourceTree = SOURCE_ROOT; };
+		448E78A219B936C000BF902A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = BlindStopwatch/AppDelegate.m; sourceTree = SOURCE_ROOT; };
+		448E78A319B936C000BF902A /* BlindStopwatch-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BlindStopwatch-Info.plist"; path = "BlindStopwatch/BlindStopwatch-Info.plist"; sourceTree = SOURCE_ROOT; };
+		448E78A419B936C000BF902A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "BlindStopwatch/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
+		448E78A519B936C000BF902A /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "BlindStopwatch/Default@2x.png"; sourceTree = SOURCE_ROOT; };
+		448E78A619B936C000BF902A /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = BlindStopwatch/Default.png; sourceTree = SOURCE_ROOT; };
+		448E78A819B936C000BF902A /* BEMCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BEMCircle.h; sourceTree = "<group>"; };
+		448E78A919B936C000BF902A /* BEMCircle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEMCircle.m; sourceTree = "<group>"; };
+		448E78AA19B936C000BF902A /* BEMLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BEMLine.h; sourceTree = "<group>"; };
+		448E78AB19B936C000BF902A /* BEMLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEMLine.m; sourceTree = "<group>"; };
+		448E78AC19B936C000BF902A /* BEMSimpleLineGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BEMSimpleLineGraphView.h; sourceTree = "<group>"; };
+		448E78AD19B936C100BF902A /* BEMSimpleLineGraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEMSimpleLineGraphView.m; sourceTree = "<group>"; };
+		448E78AE19B936C100BF902A /* BlindStopwatch-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "BlindStopwatch-Prefix.pch"; path = "BlindStopwatch/BlindStopwatch-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		448E78AF19B936C100BF902A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = BlindStopwatch/AppDelegate.h; sourceTree = SOURCE_ROOT; };
+		448E78B019B936C100BF902A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = BlindStopwatch/main.m; sourceTree = SOURCE_ROOT; };
+		70C2EB3C1475EF4F00751AE8 /* BlindStopwatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlindStopwatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		70C2EB401475EF4F00751AE8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		70C2EB421475EF4F00751AE8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		70C2EB441475EF4F00751AE8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		70C2EB5D1475F03B00751AE8 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		70C2EB5F1475F07400751AE8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		70C2EB611475FE4900751AE8 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		70C2EB391475EF4F00751AE8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				44866B4819B78B500084652A /* QuartzCore.framework in Frameworks */,
+				70C2EB621475FE4900751AE8 /* MediaPlayer.framework in Frameworks */,
+				70C2EB601475F07400751AE8 /* AudioToolbox.framework in Frameworks */,
+				70C2EB411475EF4F00751AE8 /* UIKit.framework in Frameworks */,
+				70C2EB431475EF4F00751AE8 /* Foundation.framework in Frameworks */,
+				70C2EB451475EF4F00751AE8 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		448E789819B936C000BF902A /* RBVolume */ = {
+			isa = PBXGroup;
+			children = (
+				448E789919B936C000BF902A /* RBVolumeButtons.h */,
+				448E789A19B936C000BF902A /* RBVolumeButtons.m */,
+			);
+			name = RBVolume;
+			path = BlindStopwatch/RBVolume;
+			sourceTree = SOURCE_ROOT;
+		};
+		448E789C19B936C000BF902A /* en.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				448E789D19B936C000BF902A /* InfoPlist.strings */,
+				448E789F19B936C000BF902A /* MainStoryboard.storyboard */,
+			);
+			name = en.lproj;
+			path = BlindStopwatch/en.lproj;
+			sourceTree = SOURCE_ROOT;
+		};
+		448E78A719B936C000BF902A /* BEM */ = {
+			isa = PBXGroup;
+			children = (
+				448E78A819B936C000BF902A /* BEMCircle.h */,
+				448E78A919B936C000BF902A /* BEMCircle.m */,
+				448E78AA19B936C000BF902A /* BEMLine.h */,
+				448E78AB19B936C000BF902A /* BEMLine.m */,
+				448E78AC19B936C000BF902A /* BEMSimpleLineGraphView.h */,
+				448E78AD19B936C100BF902A /* BEMSimpleLineGraphView.m */,
+			);
+			name = BEM;
+			path = BlindStopwatch/BEM;
+			sourceTree = SOURCE_ROOT;
+		};
+		70C2EB311475EF4F00751AE8 = {
+			isa = PBXGroup;
+			children = (
+				70C2EB461475EF4F00751AE8 /* BlindStopwatch */,
+				70C2EB3F1475EF4F00751AE8 /* Frameworks */,
+				70C2EB3D1475EF4F00751AE8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		70C2EB3D1475EF4F00751AE8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				70C2EB3C1475EF4F00751AE8 /* BlindStopwatch.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		70C2EB3F1475EF4F00751AE8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				44866B4719B78B500084652A /* QuartzCore.framework */,
+				70C2EB611475FE4900751AE8 /* MediaPlayer.framework */,
+				70C2EB5F1475F07400751AE8 /* AudioToolbox.framework */,
+				70C2EB5D1475F03B00751AE8 /* CoreAudio.framework */,
+				70C2EB401475EF4F00751AE8 /* UIKit.framework */,
+				70C2EB421475EF4F00751AE8 /* Foundation.framework */,
+				70C2EB441475EF4F00751AE8 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		70C2EB461475EF4F00751AE8 /* BlindStopwatch */ = {
+			isa = PBXGroup;
+			children = (
+				448E789819B936C000BF902A /* RBVolume */,
+				448E789C19B936C000BF902A /* en.lproj */,
+				448E789B19B936C000BF902A /* ViewController.m */,
+				448E78A119B936C000BF902A /* ViewController.h */,
+				448E78A219B936C000BF902A /* AppDelegate.m */,
+				448E78A319B936C000BF902A /* BlindStopwatch-Info.plist */,
+				448E78A419B936C000BF902A /* Default-568h@2x.png */,
+				448E78A519B936C000BF902A /* Default@2x.png */,
+				448E78A619B936C000BF902A /* Default.png */,
+				448E78A719B936C000BF902A /* BEM */,
+				448E78AE19B936C100BF902A /* BlindStopwatch-Prefix.pch */,
+				448E78AF19B936C100BF902A /* AppDelegate.h */,
+				448E78B019B936C100BF902A /* main.m */,
+			);
+			path = BlindStopwatch;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		70C2EB3B1475EF4F00751AE8 /* BlindStopwatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 70C2EB5A1475EF4F00751AE8 /* Build configuration list for PBXNativeTarget "BlindStopwatch" */;
+			buildPhases = (
+				70C2EB381475EF4F00751AE8 /* Sources */,
+				70C2EB391475EF4F00751AE8 /* Frameworks */,
+				70C2EB3A1475EF4F00751AE8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BlindStopwatch;
+			productName = VolumeSnap;
+			productReference = 70C2EB3C1475EF4F00751AE8 /* BlindStopwatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		70C2EB331475EF4F00751AE8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+			};
+			buildConfigurationList = 70C2EB361475EF4F00751AE8 /* Build configuration list for PBXProject "BlindStopwatch" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 70C2EB311475EF4F00751AE8;
+			productRefGroup = 70C2EB3D1475EF4F00751AE8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				70C2EB3B1475EF4F00751AE8 /* BlindStopwatch */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		70C2EB3A1475EF4F00751AE8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				448E78B619B936C100BF902A /* BlindStopwatch-Info.plist in Resources */,
+				448E78B919B936C100BF902A /* Default.png in Resources */,
+				448E78B719B936C100BF902A /* Default-568h@2x.png in Resources */,
+				448E78B819B936C100BF902A /* Default@2x.png in Resources */,
+				448E78B419B936C100BF902A /* MainStoryboard.storyboard in Resources */,
+				448E78B319B936C100BF902A /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		70C2EB381475EF4F00751AE8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				448E78BB19B936C100BF902A /* BEMLine.m in Sources */,
+				448E78BA19B936C100BF902A /* BEMCircle.m in Sources */,
+				448E78BC19B936C100BF902A /* BEMSimpleLineGraphView.m in Sources */,
+				448E78B219B936C100BF902A /* ViewController.m in Sources */,
+				448E78B119B936C100BF902A /* RBVolumeButtons.m in Sources */,
+				448E78BD19B936C100BF902A /* main.m in Sources */,
+				448E78B519B936C100BF902A /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		448E789D19B936C000BF902A /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				448E789E19B936C000BF902A /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		448E789F19B936C000BF902A /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				448E78A019B936C000BF902A /* en */,
+			);
+			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		70C2EB581475EF4F00751AE8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PROVISIONING_PROFILE = "6D115A24-6CA5-445C-981F-0534ADD95C14";
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		70C2EB591475EF4F00751AE8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "6D115A24-6CA5-445C-981F-0534ADD95C14";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		70C2EB5B1475EF4F00751AE8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BlindStopwatch/BlindStopwatch-Prefix.pch";
+				INFOPLIST_FILE = "BlindStopwatch/BlindStopwatch-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = BlindStopwatch;
+				PROVISIONING_PROFILE = "6D115A24-6CA5-445C-981F-0534ADD95C14";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		70C2EB5C1475EF4F00751AE8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BlindStopwatch/BlindStopwatch-Prefix.pch";
+				INFOPLIST_FILE = "BlindStopwatch/BlindStopwatch-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = BlindStopwatch;
+				PROVISIONING_PROFILE = "6D115A24-6CA5-445C-981F-0534ADD95C14";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		70C2EB361475EF4F00751AE8 /* Build configuration list for PBXProject "BlindStopwatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70C2EB581475EF4F00751AE8 /* Debug */,
+				70C2EB591475EF4F00751AE8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		70C2EB5A1475EF4F00751AE8 /* Build configuration list for PBXNativeTarget "BlindStopwatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70C2EB5B1475EF4F00751AE8 /* Debug */,
+				70C2EB5C1475EF4F00751AE8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 70C2EB331475EF4F00751AE8 /* Project object */;
+}
