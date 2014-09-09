@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "BEMSimpleLineGraphView.h"
-
+#import "Dots.h"
 
 @class RBVolumeButtons;
 
@@ -17,21 +17,36 @@
 //@interface ViewController : UIViewController <JBLineChartViewDelegate, JBLineChartViewDataSource>
 
 {
-   float launchVolume;
-   IBOutlet UILabel *counterLabel;
-   
-   RBVolumeButtons *_buttonStealer;
+    float launchVolume;
+    IBOutlet UILabel *counterLabel;
+    IBOutlet UILabel *counterGoalLabel;
+    IBOutlet UILabel *nextLevelLabel;
+    
+    
+    IBOutlet UIView *stats;
+    UILabel *lastResults;
+    UILabel *accuracy;
+    UILabel *precision;
+    
+    IBOutlet UIView *morestats;
+
+    RBVolumeButtons *_buttonStealer;
     bool running, reset;
+    
     NSTimeInterval startTime;
     NSTimeInterval elapsed;
     NSTimeInterval timerGoal;
     NSString *timeValuesFile;
     
-    UILabel *instructionLabel;
     NSInteger nPointsVisible;
+    NSArray *dots;
+    
+    int levelProgress;
+    int maxTimerGoal;
     
 }
 
+void drawLine(CGContextRef context, CGPoint startPoint, CGPoint endPoint, CGColorRef color);
 
 
 @property (strong) RBVolumeButtons *buttonStealer;

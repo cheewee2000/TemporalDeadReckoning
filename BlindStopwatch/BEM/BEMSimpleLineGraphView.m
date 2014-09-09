@@ -1107,11 +1107,21 @@
 
 
 - (void)drawZero {
-    
     float yPos= [self yPositionForDotValue:0.0f];
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, yPos, 320, 1)];
     lineView.backgroundColor = [UIColor colorWithWhite:0 alpha:.3];
     [self addSubview:lineView];
+    
+    
+    UILabel * label=[[UILabel alloc] initWithFrame:CGRectMake(8, yPos+4, 12, 12)];
+    [label setText:@"0"];
+
+    label.backgroundColor = [UIColor clearColor];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12];
+    label.textColor = self.colorLine;
+    [self addSubview:label];
+    
 }
 
 

@@ -21,6 +21,8 @@
 		448E78BB19B936C100BF902A /* BEMLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78AB19B936C000BF902A /* BEMLine.m */; };
 		448E78BC19B936C100BF902A /* BEMSimpleLineGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78AD19B936C100BF902A /* BEMSimpleLineGraphView.m */; };
 		448E78BD19B936C100BF902A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78B019B936C100BF902A /* main.m */; };
+		449761A619B9E2B90026E70D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 449761A519B9E2B90026E70D /* Images.xcassets */; };
+		44C2E02E19BE52D3009CFF88 /* Dots.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C2E02D19BE52D3009CFF88 /* Dots.m */; };
 		70C2EB411475EF4F00751AE8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB401475EF4F00751AE8 /* UIKit.framework */; };
 		70C2EB431475EF4F00751AE8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB421475EF4F00751AE8 /* Foundation.framework */; };
 		70C2EB451475EF4F00751AE8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB441475EF4F00751AE8 /* CoreGraphics.framework */; };
@@ -50,6 +52,9 @@
 		448E78AE19B936C100BF902A /* BlindStopwatch-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "BlindStopwatch-Prefix.pch"; path = "BlindStopwatch/BlindStopwatch-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		448E78AF19B936C100BF902A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = BlindStopwatch/AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		448E78B019B936C100BF902A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = BlindStopwatch/main.m; sourceTree = SOURCE_ROOT; };
+		449761A519B9E2B90026E70D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		44C2E02C19BE52D3009CFF88 /* Dots.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dots.h; sourceTree = "<group>"; };
+		44C2E02D19BE52D3009CFF88 /* Dots.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Dots.m; sourceTree = "<group>"; };
 		70C2EB3C1475EF4F00751AE8 /* BlindStopwatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlindStopwatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70C2EB401475EF4F00751AE8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		70C2EB421475EF4F00751AE8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -144,19 +149,22 @@
 		70C2EB461475EF4F00751AE8 /* BlindStopwatch */ = {
 			isa = PBXGroup;
 			children = (
-				448E78A319B936C000BF902A /* BlindStopwatch-Info.plist */,
-				448E789819B936C000BF902A /* RBVolume */,
-				448E789C19B936C000BF902A /* en.lproj */,
-				448E789B19B936C000BF902A /* ViewController.m */,
-				448E78A119B936C000BF902A /* ViewController.h */,
+				448E78B019B936C100BF902A /* main.m */,
+				448E78AF19B936C100BF902A /* AppDelegate.h */,
 				448E78A219B936C000BF902A /* AppDelegate.m */,
+				448E78A319B936C000BF902A /* BlindStopwatch-Info.plist */,
+				448E78AE19B936C100BF902A /* BlindStopwatch-Prefix.pch */,
+				448E789C19B936C000BF902A /* en.lproj */,
+				448E78A119B936C000BF902A /* ViewController.h */,
+				448E789B19B936C000BF902A /* ViewController.m */,
+				448E78A719B936C000BF902A /* BEM */,
+				448E789819B936C000BF902A /* RBVolume */,
+				449761A519B9E2B90026E70D /* Images.xcassets */,
 				448E78A419B936C000BF902A /* Default-568h@2x.png */,
 				448E78A519B936C000BF902A /* Default@2x.png */,
 				448E78A619B936C000BF902A /* Default.png */,
-				448E78A719B936C000BF902A /* BEM */,
-				448E78AE19B936C100BF902A /* BlindStopwatch-Prefix.pch */,
-				448E78AF19B936C100BF902A /* AppDelegate.h */,
-				448E78B019B936C100BF902A /* main.m */,
+				44C2E02C19BE52D3009CFF88 /* Dots.h */,
+				44C2E02D19BE52D3009CFF88 /* Dots.m */,
 			);
 			path = BlindStopwatch;
 			sourceTree = SOURCE_ROOT;
@@ -213,6 +221,7 @@
 			files = (
 				448E78B619B936C100BF902A /* BlindStopwatch-Info.plist in Resources */,
 				448E78B919B936C100BF902A /* Default.png in Resources */,
+				449761A619B9E2B90026E70D /* Images.xcassets in Resources */,
 				448E78B719B936C100BF902A /* Default-568h@2x.png in Resources */,
 				448E78B819B936C100BF902A /* Default@2x.png in Resources */,
 				448E78B419B936C100BF902A /* MainStoryboard.storyboard in Resources */,
@@ -233,6 +242,7 @@
 				448E78B219B936C100BF902A /* ViewController.m in Sources */,
 				448E78B119B936C100BF902A /* RBVolumeButtons.m in Sources */,
 				448E78BD19B936C100BF902A /* main.m in Sources */,
+				44C2E02E19BE52D3009CFF88 /* Dots.m in Sources */,
 				448E78B519B936C100BF902A /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -319,6 +329,8 @@
 		70C2EB5B1475EF4F00751AE8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -335,6 +347,8 @@
 		70C2EB5C1475EF4F00751AE8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

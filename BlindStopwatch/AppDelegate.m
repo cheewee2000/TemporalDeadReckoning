@@ -13,6 +13,7 @@
 
     //disable dimming and screen off
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
 
     return YES;
 }
