@@ -5,12 +5,14 @@
 
 @interface ViewController () {
     int previousStepperValue;
+
 }
 @end
 
 @implementation ViewController
 
 @synthesize buttonStealer = _buttonStealer;
+@synthesize screenLabel,indexNumber;
 
 - (void)didReceiveMemoryWarning
 {
@@ -25,20 +27,20 @@
    [super viewDidLoad];
     running=false;
     reset=true;
-    
+
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if([defaults objectForKey:@"timerGoal"] == nil) timerGoal=1.0;
-    else timerGoal = [defaults floatForKey:@"timerGoal"];
+    if([defaults objectForKey:@"currentLevel"] == nil) currentLevel=0;
+    else currentLevel = [defaults integerForKey:@"currentLevel"];
 
     if([defaults objectForKey:@"levelProgress"] == nil) levelProgress=0;
-    else levelProgress = [defaults floatForKey:@"levelProgress"];
+    else levelProgress = [defaults integerForKey:@"levelProgress"];
     
-    if([defaults objectForKey:@"maxTimerGoal"] == nil) maxTimerGoal=1;
-    else maxTimerGoal = [defaults floatForKey:@"maxTimerGoal"];
+    if([defaults objectForKey:@"maxLevel"] == nil) maxLevel=0;
+    else maxLevel = [defaults integerForKey:@"maxLevel"];
     
-    
-    [self updateTimeDisplay:0];
+    [self setLevel:currentLevel];
+    [self loadData:currentLevel];
 
     
     //blocks for buttons
@@ -56,12 +58,9 @@
     
     nPointsVisible=20;
     
-    
-    [self loadData:timerGoal];
-    
-    
-    
-    
+
+
+
     //graph
     
     // This is commented out because the graph is created in the interface with this sample app. However, the code remains as an example for creating the graph using code.
@@ -83,7 +82,7 @@
     self.myGraph.enablePopUpReport = YES;
     self.myGraph.autoScaleYAxis = YES;
 
-    self.myGraph.animationGraphEntranceTime = 0.4;
+    self.myGraph.animationGraphEntranceTime = 0.8;
     //myGraph.alphaTop=.2;
     //myGraph.enableBezierCurve = YES;
     //myGraph.alwaysDisplayDots = YES;
@@ -177,7 +176,7 @@
     dots=[NSArray array];
     
     for (int i=0;i<10;i++){
-        Dots *circleView = [[Dots alloc] initWithFrame:CGRectMake(8+(self.view.frame.size.width-8)/10.0*i,150,15,15)];
+        Dots *circleView = [[Dots alloc] initWithFrame:CGRectMake(8+(self.view.frame.size.width)/10.0*i,180,15,15)];
         circleView.alpha = 1;
         circleView.backgroundColor = [UIColor clearColor];
         [circleView setFill:NO];
@@ -185,11 +184,14 @@
         dots = [dots arrayByAddingObject:circleView];
         [self.view addSubview:dots[i]];
     }
+
     [self updateDots];
+    [self updateTimeDisplay:0];
+
 
 }
 
--(void)loadData:(float) timerGoal{
+-(void)loadData:(float) level{
     //load values
     self.ArrayOfValues = [[NSMutableArray alloc] init];
     
@@ -198,7 +200,7 @@
     NSString *documentsDirectory = [paths objectAtIndex:0];
     
     
-    timeValuesFile = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"timeData%i.dat",(int)timerGoal]];
+    timeValuesFile = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"timeData%i.dat",(int)level]];
     
     //Load the array
     self.ArrayOfValues = [[NSMutableArray alloc] initWithContentsOfFile: timeValuesFile];
@@ -229,6 +231,27 @@
     }
 }
 
+-(void)setLevel:(int)level{
+    if(level>maxLevel)return;
+    else if(level<0)return;
+    const int timeIncrements []= { 1, 2, 5, 10, 20, 30, 60, 120, 180, 300, 600, 1200, 1800 };
+    timerGoal=timeIncrements[level];
+    [self updateTimeDisplay:0];
+    
+    levelProgress=0;
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setFloat:currentLevel forKey:@"currentLevel"];
+    [defaults setFloat:levelProgress forKey:@"levelProgress"];
+    [defaults synchronize];
+    
+    
+}
+
+-(int)getLevel:(int)level{
+    const int timeIncrements []= { 1, 2, 5, 10, 20, 30, 60, 120, 180, 300, 600, 1200, 1800 };
+   return timeIncrements[level];
+}
 
 - (IBAction)scalePiece:(UIPinchGestureRecognizer *)gestureRecognizer
 {
@@ -295,7 +318,7 @@
     
     
     //goal String
-    NSTimeInterval goalInterval=fabs(timerGoal);
+    NSTimeInterval goalInterval=timerGoal;
     NSDate* gDate = [NSDate dateWithTimeIntervalSince1970: goalInterval];
     NSDateFormatter* gf = [[NSDateFormatter alloc] init];
     [gf setDateFormat:@"/mm:ss.SSS"];
@@ -304,7 +327,7 @@
     
 
     //next goal String
-    NSTimeInterval nextGoal=fabs(timerGoal*2.0);
+    NSTimeInterval nextGoal=[self getLevel:currentLevel+1];
     NSDate* nDate = [NSDate dateWithTimeIntervalSince1970: nextGoal];
     NSDateFormatter* ngf = [[NSDateFormatter alloc] init];
     [ngf setDateFormat:@"mm:ss.SSS"];
@@ -349,15 +372,21 @@
 
 //stepper button
 - (IBAction)valueChanged:(UIStepper *)sender {
-    timerGoal=[sender value];
+
+    if([sender value]>0)currentLevel++;
+    else currentLevel--;
+    sender.value=0;
+
+    if(currentLevel>maxLevel)currentLevel=maxLevel;
+    else if (currentLevel<0)currentLevel=0;
     
-    [self updateTimeDisplay:timerGoal];
+    [self setLevel:currentLevel];
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setFloat:timerGoal forKey:@"timerGoal"];
-    [defaults synchronize];
-    [self loadData:timerGoal];
+
     
+    [self loadData:currentLevel];
+    [self.myGraph reloadGraph];
+    [self updateTimeDisplay:0];
 
 }
 
@@ -389,7 +418,7 @@
         [self.ArrayOfValues addObject:myDictionary];
         
         //update graph
-        self.myGraph.animationGraphEntranceTime = 0.4;
+        self.myGraph.animationGraphEntranceTime = 0.8;
         [self.myGraph reloadGraph];
         [self saveValues];
         
@@ -397,19 +426,28 @@
         if(accuracyP>=90)levelProgress++;
         else levelProgress=0;
         
-        if(levelProgress>=2){
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setFloat:levelProgress forKey:@"levelProgress"];
+
+        
+        if(levelProgress>=10){
             levelProgress=0;
             //load next level
-            timerGoal=timerGoal*2;
+            //timerGoal=timerGoal*2;
+            currentLevel++;
+            maxLevel=currentLevel;
             
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            [defaults setFloat:timerGoal forKey:@"timerGoal"];
-            [defaults setFloat:timerGoal forKey:@"maxTimerGoal"];
-            [defaults synchronize];
+            [self setLevel:currentLevel];
             
-            [self loadData:timerGoal];
+            
+            [defaults setFloat:currentLevel forKey:@"currentLevel"];
+            [defaults setFloat:maxLevel forKey:@"maxLevel"];
+            
+            [self loadData:currentLevel];
         }
         
+        [defaults synchronize];
+
         [self updateDots];
 
         [self updateTimeDisplay:0];
@@ -425,6 +463,8 @@
 }
 
 - (CGFloat)lineGraph:(BEMSimpleLineGraphView *)graph valueForPointAtIndex:(NSInteger)index {
+    if([self.ArrayOfValues count]==0)return 0.0;
+    
     index=[self.ArrayOfValues count]-nPointsVisible+index; //show last nPoints
     return ([[[self.ArrayOfValues objectAtIndex:index] objectForKey:@"accuracy"] floatValue]*1000);
 }
@@ -507,6 +547,10 @@
 //- (CGFloat)maxValueForLineGraph:(BEMSimpleLineGraphView *)graph{
 //    return 100;
 //}
+
+
+
+
 
 
 #pragma mark - ViewController Delegate

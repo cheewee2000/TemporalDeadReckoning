@@ -1,10 +1,11 @@
 
 
 #import "AppDelegate.h"
+#import "ContainerViewController.h"
 
 @implementation AppDelegate
 
-@synthesize window = _window;
+//@synthesize window = _window;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -12,9 +13,18 @@
     // Override point for customization after application launch.
 
     //disable dimming and screen off
-    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES];
-
+/*
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    // Override point for customization after application launch.
+    self.window.backgroundColor = [UIColor whiteColor];
+    [self.window makeKeyAndVisible];
+    ContainerViewController *container = [[ContainerViewController alloc] init];
+    self.window.rootViewController = container;
+    */
+    
+//    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+//    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    
     return YES;
 }
 							

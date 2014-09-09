@@ -17,6 +17,7 @@
 //@interface ViewController : UIViewController <JBLineChartViewDelegate, JBLineChartViewDataSource>
 
 {
+
     float launchVolume;
     IBOutlet UILabel *counterLabel;
     IBOutlet UILabel *counterGoalLabel;
@@ -42,12 +43,17 @@
     NSArray *dots;
     
     int levelProgress;
-    int maxTimerGoal;
-    
+    int maxLevel;
+    int currentLevel;
+
+
 }
 
-void drawLine(CGContextRef context, CGPoint startPoint, CGPoint endPoint, CGColorRef color);
 
+void drawLine(CGContextRef context, CGPoint startPoint, CGPoint endPoint, CGColorRef color);
+@property (weak, nonatomic) IBOutlet UILabel *screenLabel;
+
+@property (assign, nonatomic) NSInteger indexNumber;
 
 @property (strong) RBVolumeButtons *buttonStealer;
 //- (IBAction)startStealing:(id)sender;
