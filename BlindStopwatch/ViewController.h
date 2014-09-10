@@ -22,7 +22,8 @@
     IBOutlet UILabel *counterLabel;
     IBOutlet UILabel *counterGoalLabel;
     IBOutlet UILabel *nextLevelLabel;
-    
+    IBOutlet UILabel *instructionLabel;
+
     
     IBOutlet UIView *stats;
     UILabel *lastResults;
@@ -31,7 +32,6 @@
     
     IBOutlet UIView *morestats;
 
-    RBVolumeButtons *_buttonStealer;
     bool running, reset;
     
     NSTimeInterval startTime;
@@ -46,7 +46,11 @@
     int maxLevel;
     int currentLevel;
 
+    MPVolumeView *volumeView;
+    
+    RBVolumeButtons *_buttonStealer;
 
+    
 }
 
 
@@ -55,11 +59,7 @@ void drawLine(CGContextRef context, CGPoint startPoint, CGPoint endPoint, CGColo
 
 @property (assign, nonatomic) NSInteger indexNumber;
 
-@property (strong) RBVolumeButtons *buttonStealer;
-//- (IBAction)startStealing:(id)sender;
-//- (IBAction)stopStealing:(id)sender;
-
-
+@property (retain) RBVolumeButtons *buttonStealer;
 
 
 @property (weak, nonatomic) IBOutlet BEMSimpleLineGraphView *myGraph;

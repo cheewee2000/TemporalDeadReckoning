@@ -22,12 +22,18 @@
     self.window.rootViewController = container;
     */
     
-//    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
-//    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    
+
+    
     
     return YES;
 }
-							
+
+
+
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
    /*

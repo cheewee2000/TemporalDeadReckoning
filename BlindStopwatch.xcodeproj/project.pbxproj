@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		443CA72D19C0B171003BACD8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443CA72C19C0B171003BACD8 /* AVFoundation.framework */; };
+		443CA73119C0BFDB003BACD8 /* RBVolumeButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */; };
+		443CA73219C0C013003BACD8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB5F1475F07400751AE8 /* AudioToolbox.framework */; };
 		44866B4819B78B500084652A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44866B4719B78B500084652A /* QuartzCore.framework */; };
-		448E78B119B936C100BF902A /* RBVolumeButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E789A19B936C000BF902A /* RBVolumeButtons.m */; };
 		448E78B319B936C100BF902A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 448E789D19B936C000BF902A /* InfoPlist.strings */; };
 		448E78B519B936C100BF902A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78A219B936C000BF902A /* AppDelegate.m */; };
 		448E78B719B936C100BF902A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 448E78A419B936C000BF902A /* Default-568h@2x.png */; };
@@ -25,14 +27,14 @@
 		70C2EB411475EF4F00751AE8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB401475EF4F00751AE8 /* UIKit.framework */; };
 		70C2EB431475EF4F00751AE8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB421475EF4F00751AE8 /* Foundation.framework */; };
 		70C2EB451475EF4F00751AE8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB441475EF4F00751AE8 /* CoreGraphics.framework */; };
-		70C2EB601475F07400751AE8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB5F1475F07400751AE8 /* AudioToolbox.framework */; };
 		70C2EB621475FE4900751AE8 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB611475FE4900751AE8 /* MediaPlayer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		443CA72C19C0B171003BACD8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		443CA72F19C0BFDB003BACD8 /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
+		443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
 		44866B4719B78B500084652A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		448E789919B936C000BF902A /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
-		448E789A19B936C000BF902A /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
 		448E789E19B936C000BF902A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		448E78A219B936C000BF902A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = BlindStopwatch/AppDelegate.m; sourceTree = SOURCE_ROOT; };
 		448E78A319B936C000BF902A /* BlindStopwatch-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BlindStopwatch-Info.plist"; path = "BlindStopwatch/BlindStopwatch-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -68,9 +70,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				443CA73219C0C013003BACD8 /* AudioToolbox.framework in Frameworks */,
+				443CA72D19C0B171003BACD8 /* AVFoundation.framework in Frameworks */,
 				44866B4819B78B500084652A /* QuartzCore.framework in Frameworks */,
 				70C2EB621475FE4900751AE8 /* MediaPlayer.framework in Frameworks */,
-				70C2EB601475F07400751AE8 /* AudioToolbox.framework in Frameworks */,
 				70C2EB411475EF4F00751AE8 /* UIKit.framework in Frameworks */,
 				70C2EB431475EF4F00751AE8 /* Foundation.framework in Frameworks */,
 				70C2EB451475EF4F00751AE8 /* CoreGraphics.framework in Frameworks */,
@@ -80,15 +83,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		448E789819B936C000BF902A /* RBVolume */ = {
+		443CA72E19C0BFDB003BACD8 /* RBVolume */ = {
 			isa = PBXGroup;
 			children = (
-				448E789919B936C000BF902A /* RBVolumeButtons.h */,
-				448E789A19B936C000BF902A /* RBVolumeButtons.m */,
+				443CA72F19C0BFDB003BACD8 /* RBVolumeButtons.h */,
+				443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */,
 			);
-			name = RBVolume;
-			path = BlindStopwatch/RBVolume;
-			sourceTree = SOURCE_ROOT;
+			path = RBVolume;
+			sourceTree = "<group>";
 		};
 		448E789C19B936C000BF902A /* en.lproj */ = {
 			isa = PBXGroup;
@@ -134,6 +136,7 @@
 		70C2EB3F1475EF4F00751AE8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				443CA72C19C0B171003BACD8 /* AVFoundation.framework */,
 				44866B4719B78B500084652A /* QuartzCore.framework */,
 				70C2EB611475FE4900751AE8 /* MediaPlayer.framework */,
 				70C2EB5F1475F07400751AE8 /* AudioToolbox.framework */,
@@ -148,6 +151,7 @@
 		70C2EB461475EF4F00751AE8 /* BlindStopwatch */ = {
 			isa = PBXGroup;
 			children = (
+				443CA72E19C0BFDB003BACD8 /* RBVolume */,
 				44F972C819BE9E310094FCF4 /* ViewController.h */,
 				44F972C919BE9E310094FCF4 /* ViewController.m */,
 				448E78B019B936C100BF902A /* main.m */,
@@ -157,7 +161,6 @@
 				448E78AE19B936C100BF902A /* BlindStopwatch-Prefix.pch */,
 				448E789C19B936C000BF902A /* en.lproj */,
 				448E78A719B936C000BF902A /* BEM */,
-				448E789819B936C000BF902A /* RBVolume */,
 				449761A519B9E2B90026E70D /* Images.xcassets */,
 				448E78A419B936C000BF902A /* Default-568h@2x.png */,
 				448E78A519B936C000BF902A /* Default@2x.png */,
@@ -238,10 +241,10 @@
 				448E78BA19B936C100BF902A /* BEMCircle.m in Sources */,
 				448E78BC19B936C100BF902A /* BEMSimpleLineGraphView.m in Sources */,
 				44F972CA19BE9E310094FCF4 /* ViewController.m in Sources */,
-				448E78B119B936C100BF902A /* RBVolumeButtons.m in Sources */,
 				448E78BD19B936C100BF902A /* main.m in Sources */,
 				44C2E02E19BE52D3009CFF88 /* Dots.m in Sources */,
 				448E78B519B936C100BF902A /* AppDelegate.m in Sources */,
+				443CA73119C0BFDB003BACD8 /* RBVolumeButtons.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

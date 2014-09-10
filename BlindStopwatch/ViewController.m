@@ -1,6 +1,8 @@
 #import "ViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
+//#import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
+#define CGRectSetPos( r, x, y ) CGRectMake( x, y, r.size.width, r.size.height )
 #import "RBVolumeButtons.h"
 
 @interface ViewController () {
@@ -32,29 +34,35 @@
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if([defaults objectForKey:@"currentLevel"] == nil) currentLevel=0;
-    else currentLevel = [defaults integerForKey:@"currentLevel"];
+    else currentLevel = (int)[defaults integerForKey:@"currentLevel"];
     
     if([defaults objectForKey:@"maxLevel"] == nil) maxLevel=0;
-    else maxLevel = [defaults integerForKey:@"maxLevel"];
+    else maxLevel = (int)[defaults integerForKey:@"maxLevel"];
 
     [self setLevel:currentLevel];
     [self loadData:currentLevel];
     [self loadLevelProgress];
 
-    //blocks for buttons
+    //volume button
+    //prevent volume hud
+//    volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(-100, 0, 10, 0)];
+//    [volumeView sizeToFit];
+//    [self.view addSubview:volumeView];
+    
+
     id progressDelegate = self;
 
     self.buttonStealer = [[RBVolumeButtons alloc] init];
     self.buttonStealer.upBlock = ^{
-    [progressDelegate buttonPressed];
+        [progressDelegate buttonPressed];
     };
     self.buttonStealer.downBlock = ^{
-    [progressDelegate buttonPressed];
-    };
+        [progressDelegate buttonPressed];
 
+    };
+    
     [self.buttonStealer startStealingVolumeButtonEvents];
-    
-    
+
     self.myGraph.colorTop =[UIColor clearColor];
     self.myGraph.colorBottom =[UIColor clearColor];
     self.myGraph.colorLine = [UIColor blackColor];
@@ -82,19 +90,14 @@
     [pinch setDelegate:self];
     [self.myGraph addGestureRecognizer:pinch];
     
-//    UISwipeGestureRecognizer *mSwipeUpRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipe:)];
-//    [mSwipeUpRecognizer setDirection:(UISwipeGestureRecognizerDirectionLeft | UISwipeGestureRecognizerDirectionRight)];
-//    [[self view] addGestureRecognizer:mSwipeUpRecognizer];
-//    
-//    
     
-//    instructionLabel = [ [UILabel alloc ] initWithFrame:CGRectMake(10.0, 56.0, 320.0, 40.0) ];
-//    instructionLabel.textColor = [UIColor blackColor];
-//    instructionLabel.backgroundColor = [UIColor clearColor];
-//    instructionLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:(24.0)];
-//    [self.view addSubview:instructionLabel];
-//    instructionLabel.text = @"<Press volume button";
-//    instructionLabel.alpha=0;
+    instructionLabel = [ [UILabel alloc ] initWithFrame:CGRectMake(8.0, 145, 320.0, 12.0) ];
+    instructionLabel.textColor = [UIColor blackColor];
+    instructionLabel.backgroundColor = [UIColor clearColor];
+    instructionLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:(12.0)];
+    instructionLabel.text = @"PRESS VOLUME BUTTON TO START";
+    instructionLabel.alpha=1.00;
+    [self.view addSubview:instructionLabel];
     
     
     //stats
@@ -168,6 +171,26 @@
 
 
 }
+
+
+//-(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+//    if ([keyPath isEqual:@"outputVolume"]) {
+//    
+//    //    MPMusicPlayerController *mpc = [MPMusicPlayerController applicationMusicPlayer];
+//      //  mpc.volume = .5;  //0.0~1.0
+//        
+//        if([[AVAudioSession sharedInstance] outputVolume]<.5 ){
+//            instructionLabel.frame=CGRectSetPos( instructionLabel.frame, 8, 80 );
+//        }
+//        else{
+//            
+//            instructionLabel.frame=CGRectSetPos( instructionLabel.frame, 8, 145 );
+//
+//        }
+//    
+//        [self buttonPressed];
+//    }
+//}
 
 
 #pragma mark DATA
@@ -337,12 +360,12 @@
 
 -(void)updateStats{
     //results
-    lastResults.text=[NSString stringWithFormat:@"%02d",nPointsVisible];
+    lastResults.text=[NSString stringWithFormat:@"%02d",(int)nPointsVisible];
     
     //accuracy
     int averageAccuracy=0;
     for( int i=0; i<nPointsVisible; i++){
-        int index=[self.ArrayOfValues count]-nPointsVisible+i; //show last nPoints
+        int index=(int)[self.ArrayOfValues count]-(int)nPointsVisible+i; //show last nPoints
         float absResult=fabs([[[self.ArrayOfValues objectAtIndex:index] objectForKey:@"accuracy"] floatValue]);
         averageAccuracy+=abs((absResult-timerGoal)/timerGoal*100);
     }
@@ -439,7 +462,7 @@
         self.myGraph.animationGraphEntranceTime = 0.8;
         [self.myGraph reloadGraph];
         [self saveValues];
-        int currentLevelProgress=[[levelProgress objectAtIndex:currentLevel]integerValue];
+        int currentLevelProgress=(int)[[levelProgress objectAtIndex:currentLevel]integerValue];
 
         float accuracyP=100.0-fabs(elapsed-timerGoal)/(float)timerGoal*100.0;
         if(accuracyP>=90){
@@ -592,7 +615,20 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    
+    //volume button
+//    AVAudioSession* audioSession = [AVAudioSession sharedInstance];
+//    
+//    [audioSession setActive:YES error:nil];
+//    [audioSession addObserver:self
+//                   forKeyPath:@"outputVolume"
+//                      options:0
+//                      context:nil];
+//    
+    
    [super viewWillAppear:animated];
+
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
