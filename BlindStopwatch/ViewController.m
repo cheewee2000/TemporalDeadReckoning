@@ -91,13 +91,26 @@
     [self.myGraph addGestureRecognizer:pinch];
     
     
-    instructionLabel = [ [UILabel alloc ] initWithFrame:CGRectMake(8.0, 145, 320.0, 12.0) ];
+    //instructions
+    instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, 145, 190, 15.0)];
+    instructions.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:instructions];
+    
+    int h=instructions.frame.size.height;
+    instructionLabel = [ [UILabel alloc ] initWithFrame:CGRectMake(h, 0, instructions.frame.size.width, h) ];
     instructionLabel.textColor = [UIColor blackColor];
     instructionLabel.backgroundColor = [UIColor clearColor];
-    instructionLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:(12.0)];
+    instructionLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:(10.0)];
     instructionLabel.text = @"PRESS VOLUME BUTTON TO START";
     instructionLabel.alpha=1.00;
-    [self.view addSubview:instructionLabel];
+    [instructions addSubview:instructionLabel];
+    
+    CGSize textSize = [[instructionLabel text] sizeWithAttributes:@{NSFontAttributeName:[instructionLabel font]}];
+    CGFloat strikeWidth = textSize.width;
+    
+    //set label to text length
+    instructions.frame=CGRectMake(instructions.frame.origin.x, instructions.frame.origin.y, strikeWidth+h*1.5, instructions.frame.size.height);
+    
     
     
     //stats

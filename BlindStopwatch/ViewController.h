@@ -10,6 +10,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "BEMSimpleLineGraphView.h"
 #import "Dots.h"
+#import "TextArrow.h"
 
 @class RBVolumeButtons;
 
@@ -50,6 +51,7 @@
     
     RBVolumeButtons *_buttonStealer;
 
+    TextArrow* instructions;
     
 }
 

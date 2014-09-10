@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		44024E3919C0D7C8000AC66E /* TextArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 44024E3819C0D7C8000AC66E /* TextArrow.m */; };
 		443CA72D19C0B171003BACD8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443CA72C19C0B171003BACD8 /* AVFoundation.framework */; };
 		443CA73119C0BFDB003BACD8 /* RBVolumeButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */; };
 		443CA73219C0C013003BACD8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB5F1475F07400751AE8 /* AudioToolbox.framework */; };
@@ -31,6 +32,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		44024E3719C0D7C8000AC66E /* TextArrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextArrow.h; sourceTree = "<group>"; };
+		44024E3819C0D7C8000AC66E /* TextArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextArrow.m; sourceTree = "<group>"; };
 		443CA72C19C0B171003BACD8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		443CA72F19C0BFDB003BACD8 /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
 		443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
@@ -167,6 +170,8 @@
 				448E78A619B936C000BF902A /* Default.png */,
 				44C2E02C19BE52D3009CFF88 /* Dots.h */,
 				44C2E02D19BE52D3009CFF88 /* Dots.m */,
+				44024E3719C0D7C8000AC66E /* TextArrow.h */,
+				44024E3819C0D7C8000AC66E /* TextArrow.m */,
 			);
 			path = BlindStopwatch;
 			sourceTree = SOURCE_ROOT;
@@ -242,6 +247,7 @@
 				448E78BC19B936C100BF902A /* BEMSimpleLineGraphView.m in Sources */,
 				44F972CA19BE9E310094FCF4 /* ViewController.m in Sources */,
 				448E78BD19B936C100BF902A /* main.m in Sources */,
+				44024E3919C0D7C8000AC66E /* TextArrow.m in Sources */,
 				44C2E02E19BE52D3009CFF88 /* Dots.m in Sources */,
 				448E78B519B936C100BF902A /* AppDelegate.m in Sources */,
 				443CA73119C0BFDB003BACD8 /* RBVolumeButtons.m in Sources */,
