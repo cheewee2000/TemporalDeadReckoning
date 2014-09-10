@@ -1169,15 +1169,24 @@
     //float yPos= [self yPositionForDotValue:0.0f];
     float range=timerGoal*1000*.1;
     float th=[self yPositionForDotValue:range];
+    float tb=fabs([self yPositionForDotValue:-range]);
+
+//    UIView *top = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, th)];
+//    top.backgroundColor = [UIColor colorWithWhite:1 alpha:.45];
+//    [self addSubview:top];
+//    
+//    UIView *bottom = [[UIView alloc] initWithFrame:CGRectMake(0, tb, self.frame.size.width, self.frame.size.height-tb)];
+//    bottom.backgroundColor = [UIColor colorWithWhite:1 alpha:.45];
+//    [self addSubview:bottom];
     
-    UIView *top = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, th)];
-    top.backgroundColor = [UIColor colorWithWhite:1 alpha:.45];
+    UIView *top = [[UIView alloc] initWithFrame:CGRectMake(0, th, self.frame.size.width, 1)];
+    top.backgroundColor = [UIColor colorWithWhite:0 alpha:.1];
     [self addSubview:top];
     
-    float tb=fabs([self yPositionForDotValue:-range]);
-    UIView *bottom = [[UIView alloc] initWithFrame:CGRectMake(0, tb, self.frame.size.width, self.frame.size.height-tb)];
-    bottom.backgroundColor = [UIColor colorWithWhite:1 alpha:.45];
+    UIView *bottom = [[UIView alloc] initWithFrame:CGRectMake(0, tb, self.frame.size.width, 1)];
+    bottom.backgroundColor = [UIColor colorWithWhite:0 alpha:.1];
     [self addSubview:bottom];
+    
     
     
     UILabel * label=[[UILabel alloc] initWithFrame:CGRectMake(8, th-16, 120, 12)];

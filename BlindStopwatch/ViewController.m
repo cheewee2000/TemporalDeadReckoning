@@ -580,7 +580,7 @@
     [formatter setDateFormat:@"YYYY.MM.dd HH:mm"];
     NSString *stringFromDate = [formatter stringFromDate:[[self.ArrayOfValues lastObject] objectForKey:@"date"]];
     
-    self.myGraph.lastPointLabel.text=[NSString stringWithFormat:@"%@ | %ims",stringFromDate,(int)([[[self.ArrayOfValues lastObject] objectForKey:@"accuracy"] floatValue]*1000)];
+    self.myGraph.lastPointLabel.text=[NSString stringWithFormat:@"%@  |  %ims",stringFromDate,(int)([[[self.ArrayOfValues lastObject] objectForKey:@"accuracy"] floatValue]*1000)];
 
     
     
