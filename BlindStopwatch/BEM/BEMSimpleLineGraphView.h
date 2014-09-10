@@ -30,6 +30,13 @@
 
 
 
+
+
+- (void)drawPrecisionOverlay:(int) timerGoal;
+-(void)drawLastDot;
+@property (nonatomic) BEMCircle *lastDot;
+@property (nonatomic) UILabel *lastPointLabel;
+
 //------------------------------------------------------------------------------------//
 //----- DELEGATE ---------------------------------------------------------------------//
 //------------------------------------------------------------------------------------//
@@ -59,7 +66,6 @@
 //------------------------------------------------------------------------------------//
 //----- METHODS ----------------------------------------------------------------------//
 //------------------------------------------------------------------------------------//
-
 
 /// Reload the graph, all delegate methods are called again and the graph is reloaded. Similar to calling reloadData on a UITableView.
 - (void)reloadGraph;
@@ -449,6 +455,7 @@
  @param graph The graph object which is requesting the label on the specified X-Axis position.
  @param index The index from left to right of a given label on the X-axis. Is the same index as the one for the points. The first value for the index is 0. */
 - (NSString *)lineGraph:(BEMSimpleLineGraphView *)graph labelOnXAxisForIndex:(NSInteger)index __unavailable __deprecated;
+
 
 
 @end

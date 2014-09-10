@@ -27,6 +27,7 @@
    [super viewDidLoad];
     running=false;
     reset=true;
+    nPointsVisible=20;
 
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -53,20 +54,7 @@
 
     [self.buttonStealer startStealingVolumeButtonEvents];
     
-    nPointsVisible=20;
     
-
-
-
-    //graph
-    
-    // This is commented out because the graph is created in the interface with this sample app. However, the code remains as an example for creating the graph using code.
-    //BEMSimpleLineGraphView *myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, 20,  self.view.bounds.size.width, 320)];
-    //myGraph.delegate = self;
-    //myGraph.dataSource = self;
-    //[self.view addSubview:myGraph];
-    //self.myGraph=myGraph;
-
     self.myGraph.colorTop =[UIColor clearColor];
     self.myGraph.colorBottom =[UIColor clearColor];
     self.myGraph.colorLine = [UIColor blackColor];
@@ -86,8 +74,6 @@
     //myGraph.enableReferenceAxisLines = YES;
     //myGraph.enableYAxisLabel = YES;
     //myGraph.alwaysDisplayPopUpLabels = YES;
-
-    
     
     self.myGraph.userInteractionEnabled=YES;
     self.myGraph.multipleTouchEnabled=YES;
@@ -112,7 +98,6 @@
     
     
     //stats
-    
     UIFont * LF=[UIFont fontWithName:@"HelveticaNeue" size:32];
     UIFont * SMF=[UIFont fontWithName:@"HelveticaNeue" size:8];
     
@@ -165,10 +150,6 @@
     precisionLabel.font = SMF;
     [stats addSubview:precisionLabel];
     
-    //FRAME
-    //CGContextRef currentContext =UIGraphicsGetCurrentContext();
-    //drawLine(currentContext, CGPointMake(stats.frame.origin.x,stats.frame.origin.y), CGPointMake(stats.frame.origin.x+10,stats.frame.origin.y),  [[UIColor blackColor] CGColor]);
-    
     //Dots
     dots=[NSArray array];
     
@@ -211,7 +192,6 @@
             NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
             [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"accuracy"];
             [myDictionary setObject:[NSDate date] forKey:@"date"];
-            
             [self.ArrayOfValues addObject:myDictionary];
         }
     }
@@ -308,16 +288,13 @@
 
 
 
-
 # pragma mark LABELS
 -(void)updateTimeDisplay: (NSTimeInterval) interval{
     
+    //main stopwatch
     NSTimeInterval absoluteTime=fabs(interval);
     NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: absoluteTime];
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
-    //if(interval>=0)    [df setDateFormat:@"mm:ss.SSS"];
-    //else[df setDateFormat:@"-mm:ss.SSS"];
-    
     [df setDateFormat:@"mm:ss.SSS"];
     NSString* counterString = [df stringFromDate:aDate];
     [counterLabel setText:counterString];
@@ -362,7 +339,6 @@
     //results
     lastResults.text=[NSString stringWithFormat:@"%02d",nPointsVisible];
     
-    
     //accuracy
     int averageAccuracy=0;
     for( int i=0; i<nPointsVisible; i++){
@@ -382,7 +358,6 @@
     float uncertainty=[[self.myGraph calculatePointValueMedian] floatValue]-[[self.myGraph calculateMinimumPointValue] floatValue]+[[self.myGraph calculateMaximumPointValue] floatValue]-[[self.myGraph calculatePointValueMedian] floatValue];
     precision.text=[NSString stringWithFormat:@"%d",(int)uncertainty];
 
-    
 }
 
 
@@ -399,14 +374,12 @@
             nPointsVisible=[self.ArrayOfValues count]-1;
             return;
         }
-        else if(nPointsVisible<=5){
-            nPointsVisible=5;
+        else if(nPointsVisible<=10){
+            nPointsVisible=10;
             return;
         }
         self.myGraph.animationGraphEntranceTime = 0.0;
-        
         [self.myGraph reloadGraph];
-        
     }
 }
 
@@ -449,7 +422,6 @@
     }
     else if(running==true){
         running=false;
-
     }
     else
     {
@@ -471,7 +443,6 @@
 
         float accuracyP=100.0-fabs(elapsed-timerGoal)/(float)timerGoal*100.0;
         if(accuracyP>=90){
-         //levelProgress++;
             currentLevelProgress++;
             [levelProgress replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:currentLevelProgress]];
             [self saveLevelProgress];
@@ -479,7 +450,6 @@
         else{
             [levelProgress replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:0]];
             [self saveLevelProgress];
-            //levelProgress=0;
         }
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -489,13 +459,10 @@
         if(currentLevelProgress>=10){
             [levelProgress replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:0]];
             [self saveLevelProgress];
-            //load next level
-            //timerGoal=timerGoal*2;
             currentLevel++;
             maxLevel=currentLevel;
             
             [self setLevel:currentLevel];
-            
             
             [defaults setFloat:currentLevel forKey:@"currentLevel"];
             [defaults setFloat:maxLevel forKey:@"maxLevel"];
@@ -504,9 +471,7 @@
         }
         
         [defaults synchronize];
-
         [self updateDots];
-
         [self updateTimeDisplay:0];
     }
 }
@@ -515,38 +480,15 @@
 #pragma mark - SimpleLineGraph Data Source
 
 - (NSInteger)numberOfPointsInLineGraph:(BEMSimpleLineGraphView *)graph {
-    //return (int)[self.ArrayOfValues count];
     return nPointsVisible;
 }
 
 - (CGFloat)lineGraph:(BEMSimpleLineGraphView *)graph valueForPointAtIndex:(NSInteger)index {
     if([self.ArrayOfValues count]==0)return 0.0;
-    
     index=[self.ArrayOfValues count]-nPointsVisible+index; //show last nPoints
     return ([[[self.ArrayOfValues objectAtIndex:index] objectForKey:@"accuracy"] floatValue]*1000);
 }
 
-
-
-
-//- (IBAction)displayStatistics:(id)sender {
-//    [self performSegueWithIdentifier:@"showStats" sender:self];
-//}
-//
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    [super prepareForSegue:segue sender:sender];
-//    
-//    if ([segue.identifier isEqualToString:@"showStats"]) {
-//        StatsViewController *controller = segue.destinationViewController;
-//        controller.standardDeviation = [NSString stringWithFormat:@"%.2f", [[self.myGraph calculateLineGraphStandardDeviation] floatValue]];
-//        controller.average = [NSString stringWithFormat:@"%.2f", [[self.myGraph calculatePointValueAverage] floatValue]];
-//        controller.median = [NSString stringWithFormat:@"%.2f", [[self.myGraph calculatePointValueMedian] floatValue]];
-//        controller.mode = [NSString stringWithFormat:@"%.2f", [[self.myGraph calculatePointValueMode] floatValue]];
-//        controller.minimum = [NSString stringWithFormat:@"%.2f", [[self.myGraph calculateMinimumPointValue] floatValue]];
-//        controller.maximum = [NSString stringWithFormat:@"%.2f", [[self.myGraph calculateMaximumPointValue] floatValue]];
-//        controller.snapshotImage = [self.myGraph graphSnapshotImage];
-//    }
-//}
 
 
 
@@ -583,20 +525,48 @@
 
 - (void)lineGraph:(BEMSimpleLineGraphView *)graph didReleaseTouchFromGraphWithClosestIndex:(CGFloat)index {
     [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.labelValues.alpha = 0.0;
+        //counterLabel.alpha = 0.0;
+        //[counterLabel setText:counterString];
+        //hide precision overlay
+        
+
     } completion:^(BOOL finished) {
-        self.labelValues.text = [NSString stringWithFormat:@"%f", [[self.myGraph calculatePointValueSum] floatValue]];
+        //counterLabel.text = [NSString stringWithFormat:@"%f", [[self.myGraph calculatePointValueSum] floatValue]];
         
         [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            self.labelValues.alpha = 1.0;
+            //counterLabel.alpha = 1.0;
+            //show precision overlay
         } completion:nil];
     }];
 }
 
 - (void)lineGraphDidFinishLoading:(BEMSimpleLineGraphView *)graph {
-    self.labelValues.text = [NSString stringWithFormat:@"%f", [[self.myGraph calculatePointValueSum] floatValue]];
+    
     [self updateStats];
+    [self.myGraph drawPrecisionOverlay:timerGoal];
+    
+    //last dot
+    self.myGraph.lastDot.alpha=0.0;
+    [UIView animateWithDuration:0.2 delay:.8 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.myGraph.lastDot.alpha=1.0;
+    } completion:nil];
+    
+    
+    //last label
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"YYYY.MM.dd HH:mm"];
+    NSString *stringFromDate = [formatter stringFromDate:[[self.ArrayOfValues lastObject] objectForKey:@"date"]];
+    
+    self.myGraph.lastPointLabel.text=[NSString stringWithFormat:@"%@ | %ims",stringFromDate,(int)([[[self.ArrayOfValues lastObject] objectForKey:@"accuracy"] floatValue]*1000)];
+
+    
+    
+    
 }
+
+
+
+
 
 //- (CGFloat)minValueForLineGraph:(BEMSimpleLineGraphView *)graph{
 //    return -100;

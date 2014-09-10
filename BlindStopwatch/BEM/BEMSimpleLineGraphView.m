@@ -45,6 +45,7 @@
     
     /// All of the X-Axis Labels
     NSMutableArray *xAxisLabels;
+    
 }
 
 /// The vertical line which appears when the user drags across the graph
@@ -297,7 +298,10 @@
     // Draw the Y-Axis
     if (self.enableYAxisLabel) [self drawYAxis];
     
+    [self drawLastStats];
     [self drawZero];
+    [self drawLastDot];
+
 }
 
 - (void)drawDots {
@@ -1105,24 +1109,88 @@
     NSLog(@"[BEMSimpleLineGraph] DEPRECATION WARNING. The delegate method, %@, is deprecated and will become unavailable in a future version. Use %@ instead. Update your delegate method as soon as possible. An exception will be thrown in a future version.", oldMethod, replacementMethod);
 }
 
+-(void)drawLastStats{
+    
+    UIView *labelBackground = [[UIView alloc] initWithFrame:CGRectMake(self.frame.size.width, 0, 15, self.frame.size.height)];
+    labelBackground.backgroundColor = [UIColor whiteColor];
 
+    [self addSubview:labelBackground];
+    
+    int w=150;
+    int h=15;
+    self.lastPointLabel = [[UILabel alloc] initWithFrame:CGRectMake(-1*w/2+h/2, w, w, h)];
+    self.lastPointLabel.numberOfLines = 1;
+    self.lastPointLabel.backgroundColor = [UIColor clearColor];
+    self.lastPointLabel.textColor = [UIColor blackColor];
+    self.lastPointLabel.text=@"";
+    self.lastPointLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:10];
+
+
+    CGAffineTransform rotateLabel = CGAffineTransformMakeRotation(M_PI / -2);
+    [self.lastPointLabel setTransform:rotateLabel];
+    [labelBackground addSubview:self.lastPointLabel];
+    
+    
+
+}
 - (void)drawZero {
     float yPos= [self yPositionForDotValue:0.0f];
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, yPos, 320, 1)];
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, yPos, self.frame.size.width, 1)];
     lineView.backgroundColor = [UIColor colorWithWhite:0 alpha:.3];
     [self addSubview:lineView];
     
     
-    UILabel * label=[[UILabel alloc] initWithFrame:CGRectMake(8, yPos+4, 12, 12)];
-    [label setText:@"0"];
+//    UILabel * label=[[UILabel alloc] initWithFrame:CGRectMake(8, yPos+4, 12, 12)];
+//    [label setText:@"0"];
+//
+//    label.backgroundColor = [UIColor clearColor];
+//    label.textAlignment = NSTextAlignmentCenter;
+//    label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12];
+//    label.textColor = self.colorLine;
+//    [self addSubview:label];
+    
+}
 
+-(void)drawLastDot{
+    
+    int x= self.frame.size.width;
+    int y= [self yPositionForDotValue:[self.dataSource lineGraph:self valueForPointAtIndex:numberOfPoints-1]];
+    
+    
+    self.lastDot = [[BEMCircle alloc] initWithFrame:CGRectMake(0, 0, self.sizePoint, self.sizePoint)];
+    self.lastDot.center = CGPointMake(x,y);
+    self.lastDot.Pointcolor = self.colorPoint;
+    self.lastDot.alpha = 0;
+    [self addSubview:self.lastDot];
+    
+}
+
+- (void)drawPrecisionOverlay:(int) timerGoal{
+    //float yPos= [self yPositionForDotValue:0.0f];
+    float range=timerGoal*1000*.1;
+    float th=[self yPositionForDotValue:range];
+    
+    UIView *top = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, th)];
+    top.backgroundColor = [UIColor colorWithWhite:1 alpha:.45];
+    [self addSubview:top];
+    
+    float tb=fabs([self yPositionForDotValue:-range]);
+    UIView *bottom = [[UIView alloc] initWithFrame:CGRectMake(0, tb, self.frame.size.width, self.frame.size.height-tb)];
+    bottom.backgroundColor = [UIColor colorWithWhite:1 alpha:.45];
+    [self addSubview:bottom];
+    
+    
+    UILabel * label=[[UILabel alloc] initWithFrame:CGRectMake(8, th-16, 120, 12)];
+    [label setText:[NSString stringWithFormat:@"±%ims",(int)range]];
+    
     label.backgroundColor = [UIColor clearColor];
-    label.textAlignment = NSTextAlignmentCenter;
-    label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12];
+    label.textAlignment = NSTextAlignmentLeft;
+    label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:10];
     label.textColor = self.colorLine;
     [self addSubview:label];
     
 }
+
 
 
 
