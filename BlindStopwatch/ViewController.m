@@ -32,17 +32,14 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if([defaults objectForKey:@"currentLevel"] == nil) currentLevel=0;
     else currentLevel = [defaults integerForKey:@"currentLevel"];
-
-    if([defaults objectForKey:@"levelProgress"] == nil) levelProgress=0;
-    else levelProgress = [defaults integerForKey:@"levelProgress"];
     
     if([defaults objectForKey:@"maxLevel"] == nil) maxLevel=0;
     else maxLevel = [defaults integerForKey:@"maxLevel"];
-    
+
     [self setLevel:currentLevel];
     [self loadData:currentLevel];
+    [self loadLevelProgress];
 
-    
     //blocks for buttons
     id progressDelegate = self;
 
@@ -191,6 +188,8 @@
 
 }
 
+
+#pragma mark DATA
 -(void)loadData:(float) level{
     //load values
     self.ArrayOfValues = [[NSMutableArray alloc] init];
@@ -198,7 +197,6 @@
     //Creating a file path under iOS:
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    
     
     timeValuesFile = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"timeData%i.dat",(int)level]];
     
@@ -224,12 +222,40 @@
     [self.ArrayOfValues writeToFile:timeValuesFile atomically:YES];
 }
 
--(void) updateDots{
-    for (int i=0;i<10;i++){
-        if(i<levelProgress) [[dots objectAtIndex:i ] setFill:YES];
-        else [[dots objectAtIndex:i] setFill:NO];
+
+#pragma mark LEVELS
+-(void)loadLevelProgress{
+    //load values
+    levelProgress = [[NSMutableArray alloc] init];
+    
+    //Creating a file path under iOS:
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    
+    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelProgress.dat"];
+    
+    //Load the array
+    levelProgress = [[NSMutableArray alloc] initWithContentsOfFile: File];
+    
+    if(levelProgress == nil)
+    {
+        //Array file didn't exist... create a new one
+        levelProgress = [[NSMutableArray alloc] init];
+        for (int i = 0; i < 13; i++) {
+            [levelProgress addObject:[NSNumber numberWithInt:0] ];
+        }
     }
 }
+
+-(void)saveLevelProgress{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelProgress.dat"];    
+    [levelProgress writeToFile:File atomically:YES];
+}
+
+
+
 
 -(void)setLevel:(int)level{
     if(level>maxLevel)return;
@@ -238,14 +264,10 @@
     timerGoal=timeIncrements[level];
     [self updateTimeDisplay:0];
     
-    levelProgress=0;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setFloat:currentLevel forKey:@"currentLevel"];
-    [defaults setFloat:levelProgress forKey:@"levelProgress"];
+    [defaults setInteger:currentLevel forKey:@"currentLevel"];
     [defaults synchronize];
-    
-    
 }
 
 -(int)getLevel:(int)level{
@@ -253,26 +275,10 @@
    return timeIncrements[level];
 }
 
-- (IBAction)scalePiece:(UIPinchGestureRecognizer *)gestureRecognizer
-{
-    if ([gestureRecognizer state] == UIGestureRecognizerStateBegan || [gestureRecognizer state] == UIGestureRecognizerStateChanged) {
-
-        nPointsVisible*=1.0/([gestureRecognizer scale]*[gestureRecognizer scale]);
-        
-        [gestureRecognizer setScale:1.0];
-        
-        if(nPointsVisible>=[self.ArrayOfValues count]-1){
-         nPointsVisible=[self.ArrayOfValues count]-1;
-            return;
-        }
-        else if(nPointsVisible<=5){
-            nPointsVisible=5;
-            return;
-        }
-        self.myGraph.animationGraphEntranceTime = 0.0;
-
-        [self.myGraph reloadGraph];
-        
+-(void) updateDots{
+    for (int i=0;i<10;i++){
+        if(i<[[levelProgress objectAtIndex:currentLevel] integerValue]) [[dots objectAtIndex:i ] setFill:YES];
+        else [[dots objectAtIndex:i] setFill:NO];
     }
 }
 
@@ -303,7 +309,7 @@
 
 
 
-# pragma mark labels
+# pragma mark LABELS
 -(void)updateTimeDisplay: (NSTimeInterval) interval{
     
     NSTimeInterval absoluteTime=fabs(interval);
@@ -353,21 +359,56 @@
 
 
 -(void)updateStats{
+    //results
     lastResults.text=[NSString stringWithFormat:@"%02d",nPointsVisible];
     
     
-    float accuracyP=100.0-fabs(([[self.myGraph calculatePointValueAverage] floatValue])/1000.0)/(float)timerGoal*100.0;
+    //accuracy
+    int averageAccuracy=0;
+    for( int i=0; i<nPointsVisible; i++){
+        int index=[self.ArrayOfValues count]-nPointsVisible+i; //show last nPoints
+        float absResult=fabs([[[self.ArrayOfValues objectAtIndex:index] objectForKey:@"accuracy"] floatValue]);
+        averageAccuracy+=abs((absResult-timerGoal)/timerGoal*100);
+    }
+
+    averageAccuracy=averageAccuracy/nPointsVisible;
     
-    accuracy.text = [NSString stringWithFormat:@"%02i", (int)accuracyP];
+    
+    //float accuracyP=100.0-fabs(([[self.myGraph calculatePointValueAverage] floatValue])/1000.0)/(float)timerGoal*100.0;
+    accuracy.text = [NSString stringWithFormat:@"%02i", (int)averageAccuracy];
 
     
+    //precision
     float uncertainty=[[self.myGraph calculatePointValueMedian] floatValue]-[[self.myGraph calculateMinimumPointValue] floatValue]+[[self.myGraph calculateMaximumPointValue] floatValue]-[[self.myGraph calculatePointValueMedian] floatValue];
-
     precision.text=[NSString stringWithFormat:@"%d",(int)uncertainty];
 
     
 }
 
+
+# pragma mark ACTIONS
+- (IBAction)scalePiece:(UIPinchGestureRecognizer *)gestureRecognizer
+{
+    if ([gestureRecognizer state] == UIGestureRecognizerStateBegan || [gestureRecognizer state] == UIGestureRecognizerStateChanged) {
+        
+        nPointsVisible*=1.0/([gestureRecognizer scale]*[gestureRecognizer scale]);
+        
+        [gestureRecognizer setScale:1.0];
+        
+        if(nPointsVisible>=[self.ArrayOfValues count]-1){
+            nPointsVisible=[self.ArrayOfValues count]-1;
+            return;
+        }
+        else if(nPointsVisible<=5){
+            nPointsVisible=5;
+            return;
+        }
+        self.myGraph.animationGraphEntranceTime = 0.0;
+        
+        [self.myGraph reloadGraph];
+        
+    }
+}
 
 
 //stepper button
@@ -377,12 +418,17 @@
     else currentLevel--;
     sender.value=0;
 
-    if(currentLevel>maxLevel)currentLevel=maxLevel;
-    else if (currentLevel<0)currentLevel=0;
+    if(currentLevel>maxLevel){
+        currentLevel=maxLevel;
+        return;
+    }
+    else if (currentLevel<0){
+        currentLevel=0;
+        return;
+    }
     
     [self setLevel:currentLevel];
-    
-
+    [self updateDots];
     
     [self loadData:currentLevel];
     [self.myGraph reloadGraph];
@@ -421,17 +467,28 @@
         self.myGraph.animationGraphEntranceTime = 0.8;
         [self.myGraph reloadGraph];
         [self saveValues];
-        
+        int currentLevelProgress=[[levelProgress objectAtIndex:currentLevel]integerValue];
+
         float accuracyP=100.0-fabs(elapsed-timerGoal)/(float)timerGoal*100.0;
-        if(accuracyP>=90)levelProgress++;
-        else levelProgress=0;
+        if(accuracyP>=90){
+         //levelProgress++;
+            currentLevelProgress++;
+            [levelProgress replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:currentLevelProgress]];
+            [self saveLevelProgress];
+        }
+        else{
+            [levelProgress replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:0]];
+            [self saveLevelProgress];
+            //levelProgress=0;
+        }
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setFloat:levelProgress forKey:@"levelProgress"];
+        //[defaults setFloat:levelProgress forKey:@"levelProgress"];
 
         
-        if(levelProgress>=10){
-            levelProgress=0;
+        if(currentLevelProgress>=10){
+            [levelProgress replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:0]];
+            [self saveLevelProgress];
             //load next level
             //timerGoal=timerGoal*2;
             currentLevel++;
@@ -589,18 +646,6 @@
     
    // Return YES for supported orientations
   // return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-}
-
-void drawLine(CGContextRef context, CGPoint startPoint, CGPoint endPoint, CGColorRef color)
-{
-    CGContextSaveGState(context);
-    CGContextSetLineCap(context, kCGLineCapSquare);
-    CGContextSetStrokeColorWithColor(context, color);
-    CGContextSetLineWidth(context, 1.0);
-    CGContextMoveToPoint(context, startPoint.x + 0.5, startPoint.y + 0.5);
-    CGContextAddLineToPoint(context, endPoint.x + 0.5, endPoint.y + 0.5);
-    CGContextStrokePath(context);
-    CGContextRestoreGState(context);
 }
 
 

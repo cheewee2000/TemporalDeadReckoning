@@ -42,7 +42,7 @@
     NSInteger nPointsVisible;
     NSArray *dots;
     
-    int levelProgress;
+    NSMutableArray *levelProgress;
     int maxLevel;
     int currentLevel;
 
