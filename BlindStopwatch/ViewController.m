@@ -4,6 +4,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #define CGRectSetPos( r, x, y ) CGRectMake( x, y, r.size.width, r.size.height )
 #import "RBVolumeButtons.h"
+#import <SceneKit/SceneKit.h>
 
 @interface ViewController () {
     int previousStepperValue;
@@ -42,14 +43,7 @@
     [self setLevel:currentLevel];
     [self loadData:currentLevel];
     [self loadLevelProgress];
-
-    //volume button
-    //prevent volume hud
-//    volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(-100, 0, 10, 0)];
-//    [volumeView sizeToFit];
-//    [self.view addSubview:volumeView];
     
-
     id progressDelegate = self;
 
     self.buttonStealer = [[RBVolumeButtons alloc] init];
@@ -92,7 +86,7 @@
     
     
     //instructions
-    instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, 145, 190, 15.0)];
+    instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, 145, self.view.frame.size.width, 15.0)];
     instructions.backgroundColor = [UIColor clearColor];
     [self.view addSubview:instructions];
     
@@ -101,15 +95,15 @@
     instructionLabel.textColor = [UIColor blackColor];
     instructionLabel.backgroundColor = [UIColor clearColor];
     instructionLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:(10.0)];
-    instructionLabel.text = @"PRESS VOLUME BUTTON TO START";
+    instructionLabel.text = @"START";
     instructionLabel.alpha=1.00;
     [instructions addSubview:instructionLabel];
     
-    CGSize textSize = [[instructionLabel text] sizeWithAttributes:@{NSFontAttributeName:[instructionLabel font]}];
-    CGFloat strikeWidth = textSize.width;
+    //CGSize textSize = [[instructionLabel text] sizeWithAttributes:@{NSFontAttributeName:[instructionLabel font]}];
+    //CGFloat strikeWidth = textSize.width;
     
     //set label to text length
-    instructions.frame=CGRectMake(instructions.frame.origin.x, instructions.frame.origin.y, strikeWidth+h*1.5, instructions.frame.size.height);
+    //instructions.frame=CGRectMake(instructions.frame.origin.x, instructions.frame.origin.y, strikeWidth+h*1.5, instructions.frame.size.height);
     
     
     
@@ -182,6 +176,13 @@
     [self updateDots];
     [self updateTimeDisplay:0];
 
+    
+    
+    //3D
+    ascView=[[ASCView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height*.5, self.view.frame.size.width, self.view.frame.size.height*.5)];
+    [ascView loadScene];
+    [self.view addSubview:ascView];
+    
 
 }
 
@@ -340,7 +341,7 @@
     NSTimeInterval goalInterval=timerGoal;
     NSDate* gDate = [NSDate dateWithTimeIntervalSince1970: goalInterval];
     NSDateFormatter* gf = [[NSDateFormatter alloc] init];
-    [gf setDateFormat:@"/mm:ss.SSS"];
+    [gf setDateFormat:@"mm:ss.SSS"];
     NSString* goalString = [gf stringFromDate:gDate];
     [counterGoalLabel setText:goalString];
     

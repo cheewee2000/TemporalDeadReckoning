@@ -11,6 +11,12 @@
 		443CA72D19C0B171003BACD8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443CA72C19C0B171003BACD8 /* AVFoundation.framework */; };
 		443CA73119C0BFDB003BACD8 /* RBVolumeButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */; };
 		443CA73219C0C013003BACD8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB5F1475F07400751AE8 /* AudioToolbox.framework */; };
+		4458F2AE19C21E43000B619B /* SceneKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4458F2AD19C21E43000B619B /* SceneKit.framework */; };
+		4458F2B219C2A283000B619B /* ASCView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4458F2B119C2A283000B619B /* ASCView.m */; };
+		4458F2B719C2A776000B619B /* Color.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4458F2B419C2A776000B619B /* Color.jpg */; };
+		4458F2B819C2A776000B619B /* Normal.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4458F2B519C2A776000B619B /* Normal.jpg */; };
+		4458F2B919C2A776000B619B /* Orange.dae in Resources */ = {isa = PBXBuildFile; fileRef = 4458F2B619C2A776000B619B /* Orange.dae */; };
+		4458F2BB19C2AF6D000B619B /* Untitled.dae in Resources */ = {isa = PBXBuildFile; fileRef = 4458F2BA19C2AF6D000B619B /* Untitled.dae */; };
 		44866B4819B78B500084652A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44866B4719B78B500084652A /* QuartzCore.framework */; };
 		448E78B319B936C100BF902A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 448E789D19B936C000BF902A /* InfoPlist.strings */; };
 		448E78B519B936C100BF902A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78A219B936C000BF902A /* AppDelegate.m */; };
@@ -37,6 +43,13 @@
 		443CA72C19C0B171003BACD8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		443CA72F19C0BFDB003BACD8 /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
 		443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
+		4458F2AD19C21E43000B619B /* SceneKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SceneKit.framework; path = System/Library/Frameworks/SceneKit.framework; sourceTree = SDKROOT; };
+		4458F2B019C2A283000B619B /* ASCView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASCView.h; sourceTree = "<group>"; };
+		4458F2B119C2A283000B619B /* ASCView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASCView.m; sourceTree = "<group>"; };
+		4458F2B419C2A776000B619B /* Color.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Color.jpg; sourceTree = "<group>"; };
+		4458F2B519C2A776000B619B /* Normal.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Normal.jpg; sourceTree = "<group>"; };
+		4458F2B619C2A776000B619B /* Orange.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = Orange.dae; sourceTree = "<group>"; };
+		4458F2BA19C2AF6D000B619B /* Untitled.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = Untitled.dae; sourceTree = "<group>"; };
 		44866B4719B78B500084652A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		448E789E19B936C000BF902A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		448E78A219B936C000BF902A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = BlindStopwatch/AppDelegate.m; sourceTree = SOURCE_ROOT; };
@@ -73,6 +86,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4458F2AE19C21E43000B619B /* SceneKit.framework in Frameworks */,
 				443CA73219C0C013003BACD8 /* AudioToolbox.framework in Frameworks */,
 				443CA72D19C0B171003BACD8 /* AVFoundation.framework in Frameworks */,
 				44866B4819B78B500084652A /* QuartzCore.framework in Frameworks */,
@@ -93,6 +107,16 @@
 				443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */,
 			);
 			path = RBVolume;
+			sourceTree = "<group>";
+		};
+		4458F2B319C2A776000B619B /* Orange_dae */ = {
+			isa = PBXGroup;
+			children = (
+				4458F2B419C2A776000B619B /* Color.jpg */,
+				4458F2B519C2A776000B619B /* Normal.jpg */,
+				4458F2B619C2A776000B619B /* Orange.dae */,
+			);
+			path = Orange_dae;
 			sourceTree = "<group>";
 		};
 		448E789C19B936C000BF902A /* en.lproj */ = {
@@ -139,6 +163,7 @@
 		70C2EB3F1475EF4F00751AE8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4458F2AD19C21E43000B619B /* SceneKit.framework */,
 				443CA72C19C0B171003BACD8 /* AVFoundation.framework */,
 				44866B4719B78B500084652A /* QuartzCore.framework */,
 				70C2EB611475FE4900751AE8 /* MediaPlayer.framework */,
@@ -172,6 +197,10 @@
 				44C2E02D19BE52D3009CFF88 /* Dots.m */,
 				44024E3719C0D7C8000AC66E /* TextArrow.h */,
 				44024E3819C0D7C8000AC66E /* TextArrow.m */,
+				4458F2B019C2A283000B619B /* ASCView.h */,
+				4458F2B119C2A283000B619B /* ASCView.m */,
+				4458F2BA19C2AF6D000B619B /* Untitled.dae */,
+				4458F2B319C2A776000B619B /* Orange_dae */,
 			);
 			path = BlindStopwatch;
 			sourceTree = SOURCE_ROOT;
@@ -227,9 +256,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				448E78B919B936C100BF902A /* Default.png in Resources */,
+				4458F2BB19C2AF6D000B619B /* Untitled.dae in Resources */,
 				449761A619B9E2B90026E70D /* Images.xcassets in Resources */,
+				4458F2B819C2A776000B619B /* Normal.jpg in Resources */,
 				44F972CF19BE9F5E0094FCF4 /* MainStoryboard.storyboard in Resources */,
+				4458F2B719C2A776000B619B /* Color.jpg in Resources */,
 				448E78B719B936C100BF902A /* Default-568h@2x.png in Resources */,
+				4458F2B919C2A776000B619B /* Orange.dae in Resources */,
 				448E78B819B936C100BF902A /* Default@2x.png in Resources */,
 				448E78B319B936C100BF902A /* InfoPlist.strings in Resources */,
 			);
@@ -244,6 +277,7 @@
 			files = (
 				448E78BB19B936C100BF902A /* BEMLine.m in Sources */,
 				448E78BA19B936C100BF902A /* BEMCircle.m in Sources */,
+				4458F2B219C2A283000B619B /* ASCView.m in Sources */,
 				448E78BC19B936C100BF902A /* BEMSimpleLineGraphView.m in Sources */,
 				44F972CA19BE9E310094FCF4 /* ViewController.m in Sources */,
 				448E78BD19B936C100BF902A /* main.m in Sources */,
@@ -356,7 +390,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BlindStopwatch/BlindStopwatch-Prefix.pch";
 				INFOPLIST_FILE = "BlindStopwatch/BlindStopwatch-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_NAME = BlindStopwatch;
 				PROVISIONING_PROFILE = "6D115A24-6CA5-445C-981F-0534ADD95C14";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -374,7 +408,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BlindStopwatch/BlindStopwatch-Prefix.pch";
 				INFOPLIST_FILE = "BlindStopwatch/BlindStopwatch-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_NAME = BlindStopwatch;
 				PROVISIONING_PROFILE = "6D115A24-6CA5-445C-981F-0534ADD95C14";
 				TARGETED_DEVICE_FAMILY = "1,2";

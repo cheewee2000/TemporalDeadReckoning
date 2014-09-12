@@ -11,6 +11,7 @@
 #import "BEMSimpleLineGraphView.h"
 #import "Dots.h"
 #import "TextArrow.h"
+#import "ASCView.h"
 
 @class RBVolumeButtons;
 
@@ -52,6 +53,9 @@
     RBVolumeButtons *_buttonStealer;
 
     TextArrow* instructions;
+    
+    ASCView * ascView;
+    
     
 }
 
