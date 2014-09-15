@@ -25,7 +25,7 @@
     IBOutlet UILabel *counterLabel;
     IBOutlet UILabel *counterGoalLabel;
     IBOutlet UILabel *nextLevelLabel;
-    IBOutlet UILabel *instructionLabel;
+//    IBOutlet UILabel *instructionLabel;
 
     
     IBOutlet UIView *stats;
@@ -56,7 +56,9 @@
     TextArrow* instructions;
     
     ASCView * ascView;
+    float resetCounter;
     
+    Dots *mainDot;
     
 }
 

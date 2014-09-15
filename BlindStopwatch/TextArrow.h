@@ -8,5 +8,11 @@
 
 
 
-@interface TextArrow :UIView
+@interface TextArrow :UILabel{
+    UILabel *instructionText;
+
+    
+}
+-(void)addTextLabel;
+-(void)updateText:(NSString*) str;
 @end

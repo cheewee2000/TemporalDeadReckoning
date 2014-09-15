@@ -92,16 +92,23 @@
     //instructions
     instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, 137, self.view.frame.size.width-8, 30.0)];
     instructions.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:instructions];
+    //instructions.clipsToBounds=NO;
+    instructions.textAlignment=NSTextAlignmentLeft;
+    instructions.textColor = [UIColor blackColor];
+    instructions.font = [UIFont fontWithName:@"DIN Condensed" size:38.0];
+    instructions.text = @"";
     
-    int h=instructions.frame.size.height;
-    instructionLabel = [ [UILabel alloc ] initWithFrame:CGRectMake(h*.5, 0, instructions.frame.size.width, h+12) ];
-    instructionLabel.textColor = [UIColor blackColor];
-    instructionLabel.backgroundColor = [UIColor clearColor];
-    instructionLabel.font = [UIFont fontWithName:@"DIN Condensed" size:38.0];
-    instructionLabel.text = @"START";
-    instructionLabel.alpha=1.00;
-    [instructions addSubview:instructionLabel];
+    [self.view addSubview:instructions];
+    //[instructions addTextLabel];
+
+//    int h=instructions.frame.size.height;
+//    instructionLabel = [ [UILabel alloc ] initWithFrame:CGRectMake(h*.5, 0, instructions.frame.size.width, h+12) ];
+//    instructionLabel.textColor = [UIColor blackColor];
+//    instructionLabel.backgroundColor = [UIColor clearColor];
+//    instructionLabel.font = [UIFont fontWithName:@"DIN Condensed" size:38.0];
+//    instructionLabel.text = @"START";
+//    instructionLabel.alpha=1.00;
+//    [instructions addSubview:instructionLabel];
     
     //CGSize textSize = [[instructionLabel text] sizeWithAttributes:@{NSFontAttributeName:[instructionLabel font]}];
     //CGFloat strikeWidth = textSize.width;
@@ -187,7 +194,7 @@
     
     //big dot
     int d=250;
-    Dots *mainDot = [[Dots alloc] initWithFrame:CGRectMake(self.view.frame.size.width/2.0-d/2.0,self.view.frame.size.height-d-8,d,d)];
+    mainDot = [[Dots alloc] initWithFrame:CGRectMake(self.view.frame.size.width/2.0-d/2.0,self.view.frame.size.height-d-8,d,d)];
     mainDot.alpha = 1;
     mainDot.backgroundColor = [UIColor clearColor];
     [mainDot setFill:YES];
@@ -371,22 +378,13 @@
     
     //main stopwatch
     NSTimeInterval absoluteTime=fabs(interval);
-    NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: absoluteTime];
-    NSDateFormatter* df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:@"mm:ss.SSS"];
-    NSString* counterString = [df stringFromDate:aDate];
-    [counterLabel setText:counterString];
-    
+    [self timerMainDisplay:absoluteTime];
     
     //goal String
     NSTimeInterval goalInterval=timerGoal;
-    NSDate* gDate = [NSDate dateWithTimeIntervalSince1970: goalInterval];
-    NSDateFormatter* gf = [[NSDateFormatter alloc] init];
-    [gf setDateFormat:@"mm:ss.SSS"];
-    NSString* goalString = [gf stringFromDate:gDate];
-    [counterGoalLabel setText:goalString];
+    [self timerGoalDisplay:goalInterval];
     
-
+    
     //next goal String
     NSTimeInterval nextGoal=[self getLevel:currentLevel+1];
     NSDate* nDate = [NSDate dateWithTimeIntervalSince1970: nextGoal];
@@ -411,6 +409,75 @@
         [self updateTimeDisplay:elapsed];
     }
 }
+
+
+-(void)resetTimerDisplay{
+    
+    //goal String
+    resetCounter*=.95;
+    [self timerGoalDisplay:resetCounter];
+    
+    //main stopwatch
+    NSTimeInterval diff=elapsed-(timerGoal-resetCounter);
+    [self timerMainDisplay:diff];
+    
+    if(resetCounter>.1){
+        [self performSelector:@selector(resetTimerDisplay) withObject:self afterDelay:0.01];
+    }else{
+        [self timerGoalDisplay:0];
+        [self timerMainDisplay:elapsed-timerGoal];
+        
+        [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(animateLevelReset) userInfo:nil repeats:NO];
+
+    }
+}
+
+
+-(void)animateLevelReset{
+    
+    [UIView animateWithDuration:0.4
+                     animations:^{
+                         mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height+8,mainDot.frame.size.width,mainDot.frame.size.height);
+                     }
+                     completion:^(BOOL finished){
+                         
+                         
+                         [UIView animateWithDuration:0.4
+                                          animations:^{
+                                              mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height-mainDot.frame.size.height-8,mainDot.frame.size.width,mainDot.frame.size.height);
+                                          }
+                                          completion:^(BOOL finished){
+                                              
+                                              [self updateDots];
+                                              [self updateTimeDisplay:0];
+                                              [instructions updateText:@"START"];
+                                              
+                                          }];
+                         
+                     }];
+
+    
+}
+
+-(void)timerGoalDisplay:(NSTimeInterval)goal{
+    NSDate* gDate = [NSDate dateWithTimeIntervalSince1970: goal];
+    NSDateFormatter* gf = [[NSDateFormatter alloc] init];
+    [gf setDateFormat:@"mm:ss.SSS"];
+    NSString* goalString = [gf stringFromDate:gDate];
+    [counterGoalLabel setText:goalString];
+}
+
+-(void)timerMainDisplay:(NSTimeInterval)time{
+
+    NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: fabs(time)];
+    NSDateFormatter* df = [[NSDateFormatter alloc] init];
+    if(time>0) [df setDateFormat:@"mm:ss.SSS"];
+    else [df setDateFormat:@"mm:ss.SSS"];
+
+    NSString* counterString = [df stringFromDate:aDate];
+    [counterLabel setText:counterString];
+}
+
 
 
 -(void)updateStats{
@@ -500,23 +567,31 @@
         //startTime +=timerGoal;
         
         [self updateTime];
+        [instructions updateText:@"STOP"];
     }
     //STOP
     else if(running==true){
         running=false;
+        //float accuracyP=100.0-fabs(elapsed-timerGoal)/(float)timerGoal*100.0;
+        //if(accuracyP>=90)
+        //AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+        [instructions updateText:@"RESET"];
+
     }
     
     //RESET
     else
     {
+        
+        resetCounter=timerGoal;
+        [self resetTimerDisplay];
+        
         reset=true;
         
         //save to disk
-        //append array
         NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
         [myDictionary setObject:[NSNumber numberWithFloat:(elapsed-timerGoal)] forKey:@"accuracy"];
         [myDictionary setObject:[NSDate date] forKey:@"date"];
-        
         [self.ArrayOfValues addObject:myDictionary];
         
         
@@ -547,17 +622,13 @@
 
         float accuracyP=100.0-fabs(elapsed-timerGoal)/(float)timerGoal*100.0;
         if(accuracyP>=90){
-            //[levelData replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:currentLevelProgress]];
             [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithFloat:elapsed-timerGoal] forKey:[NSString stringWithFormat:@"progress-accuracy-%i",currentLevelProgress]];
-
             currentLevelProgress++;
             [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:currentLevelProgress] forKey:@"progress"];
             [self saveLevelProgress];
         }
         else{
-            //[levelData replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:0]];
             [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:0] forKey:@"progress"];
-
             [self saveLevelProgress];
         }
         
@@ -570,7 +641,8 @@
 
             [self saveLevelProgress];
             currentLevel++;
-            maxLevel=currentLevel;
+            
+            if(currentLevel>maxLevel)maxLevel=currentLevel;
             
             [self setLevel:currentLevel];
             
@@ -581,8 +653,7 @@
         }
         
         [defaults synchronize];
-        [self updateDots];
-        [self updateTimeDisplay:0];
+
     }
 }
 
