@@ -219,6 +219,7 @@
     mainDot.frame=CGRectMake(self.view.frame.size.width/2.0-d/2.0,self.view.frame.size.height-d-8,d,d);
 }
 
+
 //-(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 //    if ([keyPath isEqual:@"outputVolume"]) {
 //    
@@ -337,11 +338,15 @@
 -(void) updateDots{
     for (int i=0;i<10;i++){        
         //if(i<[[levelData objectAtIndex:currentLevel] integerValue]){
+        Dots* d=[dots objectAtIndex:i ];
+        
         if(i<[[[levelData objectAtIndex:currentLevel] objectForKey:@"progress"] integerValue]){
-          [[dots objectAtIndex:i ] setFill:YES];
+          [d setFill:YES];
             float levelProgressAccuracy=[[[levelData objectAtIndex:currentLevel] objectForKey:[NSString stringWithFormat:@"progress-accuracy-%i",i]] floatValue];
-            if(levelProgressAccuracy>=0)[[dots objectAtIndex:i] setText:[NSString stringWithFormat:@"+%.03fs", levelProgressAccuracy]];
-            else [[dots objectAtIndex:i] setText:[NSString stringWithFormat:@"%.03fs", levelProgressAccuracy]];
+            if(d.label.text.length==0){
+                if(levelProgressAccuracy>=0)[d setText:[NSString stringWithFormat:@"+%.03fs", levelProgressAccuracy]];
+                else [[dots objectAtIndex:i] setText:[NSString stringWithFormat:@"%.03fs", levelProgressAccuracy]];
+            }
         }
         else {
             [[dots objectAtIndex:i] setFill:NO];
@@ -402,12 +407,11 @@
 
 -(void)updateTime{
     if(running){
-        //[counterLabel setText:[NSString stringWithFormat:@"%02u:%02u.%03u",arc4random()%99, arc4random()%60, arc4random()%999]];
-        //[counterLabel setText:[NSString stringWithFormat:@"%02u:%02u.%03u",arc4random()%99, arc4random()%60, arc4random()%999]];
-        NSTimeInterval currentTime=[NSDate timeIntervalSinceReferenceDate];
-        [self updateTimeDisplay:currentTime-startTime];
+        //NSTimeInterval currentTime=[NSDate timeIntervalSinceReferenceDate];
+        //[self updateTimeDisplay:currentTime-startTime];
         
-        [self performSelector:@selector(updateTime) withObject:self afterDelay:arc4random()%5*0.01];
+        [counterLabel setText:[NSString stringWithFormat:@"%02u:%02u.%03u",arc4random()%99, arc4random()%60, arc4random()%999]];
+        [self performSelector:@selector(updateTime) withObject:self afterDelay:arc4random()%10*0.001];
     }
     else{
         NSTimeInterval currentTime=[NSDate timeIntervalSinceReferenceDate];
@@ -444,6 +448,9 @@
     
     int offDist=100;
     [UIView animateWithDuration:0.4
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseIn
+     
                      animations:^{
                          
                          if([self isAccurate]){
@@ -453,8 +460,38 @@
                              mainDot.frame = CGRectMake( dot.frame.origin.x,dot.frame.origin.y,dot.frame.size.width,dot.frame.size.height);
                          }
                          else{
-                             //slide down
+                             //slide down big dot
                              mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height+offDist,mainDot.frame.size.width,mainDot.frame.size.height);
+                             
+                             //drop dots
+                             for (int i=0; i<dots.count; i++){
+                                 Dots* d=[dots objectAtIndex:i];
+
+                                 [UIView animateWithDuration:0.8
+                                                       delay:(arc4random()%10)*.06
+                                                     options:UIViewAnimationOptionCurveEaseIn
+                                                  animations:^{
+                                                    d.frame=CGRectMake(d.frame.origin.x, self.view.frame.size.height,d.frame.size.width,d.frame.size.height);
+                                                  
+                                              }
+                                              completion:^(BOOL finished){
+                                                  d.alpha=0.0;
+                                                  [d resetPosition];
+                                                  //fade in new dots
+                                                  [UIView animateWithDuration:0.8
+                                                                        delay:0.4
+                                                                      options:UIViewAnimationOptionCurveEaseIn
+                                                                   animations:^{
+                                                                           d.alpha=1.0;
+            
+                                                                   }
+                                                                   completion:^(BOOL finished){
+                                                                   }];
+      
+                                              }];
+
+                             }
+                             
                          }
                          
                      }
@@ -591,17 +628,6 @@
         reset=false;
         startTime=[NSDate timeIntervalSinceReferenceDate];
         [self updateTime];
-        
-        [UIView animateWithDuration:1.0
-                         animations:^{
-                             counterLabel.alpha=0.0;
-                         }
-                         completion:^(BOOL finished){
-                             counterLabel.alpha=0.0;
-                         }];
-        
-        
-        
         [instructions updateText:@"STOP"];
     }
     //STOP

@@ -12,11 +12,16 @@
 {
     bool fill;
     UILabel *label;
-    
+    int startX;
+    int startY;
+    CGRect startFrame;
 }
 
 -(void) setFill:(bool) b;
 -(void) setText:(NSString *) s;
+-(void) resetPosition;
+
+@property UILabel *label;
 
 
 

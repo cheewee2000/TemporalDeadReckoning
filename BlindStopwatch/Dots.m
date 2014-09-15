@@ -13,24 +13,26 @@
 - (id)initWithFrame:(CGRect)theFrame {
     self = [super initWithFrame:theFrame];
     if (self) {
-        label=[[UILabel alloc] initWithFrame:CGRectMake(-10, 50, 100, 20)];
-        label.text=@"";
-        label.textAlignment = NSTextAlignmentLeft;
-        [label setTransform:CGAffineTransformMakeRotation(M_PI *.33)];
-        [self addSubview:label];
-        label.backgroundColor = [UIColor clearColor];
-        label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:10];
+        self.label=[[UILabel alloc] initWithFrame:CGRectMake(-10, 50, 100, 20)];
+        self.label.text=@"";
+        self.label.textAlignment = NSTextAlignmentLeft;
+        [self.label setTransform:CGAffineTransformMakeRotation(M_PI *.33)];
+        [self addSubview:self.label];
+        self.label.backgroundColor = [UIColor clearColor];
+        self.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:10];
+        //startY=self.frame.origin.x;
+        //startY=self.frame.origin.y;
+        startFrame=self.frame;
+        
+        
     }
     return self;
 }
 
 - (void)drawRect:(CGRect)rect
 {
-    
     CGFloat lineWidth = 1;
-    
     CGRect borderRect = CGRectInset(rect, lineWidth , lineWidth );
-    
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetRGBStrokeColor(context, 0,0,0, 1.0);
      CGContextSetRGBFillColor(context, 0, 0, 0, 1.0);
@@ -38,22 +40,38 @@
     if(fill) CGContextFillEllipseInRect (context, borderRect);
     CGContextStrokeEllipseInRect(context, borderRect);
     CGContextFillPath(context);
-
 }
+-(void) resetPosition
+{
+    //self.frame=CGRectMake(startX, startY, self.frame.size.width, self.frame.size.height);
+    self.frame=startFrame;
 
+    [self setNeedsDisplay];
+}
 
 -(void) setFill:(bool) b
 {
     fill=b;
     [self setNeedsDisplay];
-
 }
 
 -(void) setText:(NSString *) s
 {
+    self.label.text=s;
+    self.label.alpha=0.0;
+    [UIView animateWithDuration:0.4
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         self.label.alpha=1.0;
 
-    label.text=s;
-    [self setNeedsDisplay];    
+                     }
+                     completion:^(BOOL finished){
+                     }];
+
+    
+    
+    [self setNeedsDisplay];
 }
 
 @end
