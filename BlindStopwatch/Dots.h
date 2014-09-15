@@ -11,9 +11,13 @@
 @interface Dots:UIView
 {
     bool fill;
+    UILabel *label;
+    
 }
 
 -(void) setFill:(bool) b;
+-(void) setText:(NSString *) s;
+
 
 
 @end

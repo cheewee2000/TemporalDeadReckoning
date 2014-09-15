@@ -12,6 +12,7 @@
 #import "Dots.h"
 #import "TextArrow.h"
 #import "ASCView.h"
+#import <Parse/Parse.h>
 
 @class RBVolumeButtons;
 
@@ -44,7 +45,7 @@
     NSInteger nPointsVisible;
     NSArray *dots;
     
-    NSMutableArray *levelProgress;
+    NSMutableArray *levelData;
     int maxLevel;
     int currentLevel;
 

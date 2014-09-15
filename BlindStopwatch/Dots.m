@@ -10,12 +10,26 @@
 
 @implementation Dots:UIView 
 
+- (id)initWithFrame:(CGRect)theFrame {
+    self = [super initWithFrame:theFrame];
+    if (self) {
+        label=[[UILabel alloc] initWithFrame:CGRectMake(-10, 50, 100, 20)];
+        label.text=@"";
+        label.textAlignment = NSTextAlignmentLeft;
+        [label setTransform:CGAffineTransformMakeRotation(M_PI *.33)];
+        [self addSubview:label];
+        label.backgroundColor = [UIColor clearColor];
+        label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:10];
+    }
+    return self;
+}
+
 - (void)drawRect:(CGRect)rect
 {
     
     CGFloat lineWidth = 1;
     
-    CGRect borderRect = CGRectInset(rect, lineWidth * 0.5, lineWidth * 0.5);
+    CGRect borderRect = CGRectInset(rect, lineWidth , lineWidth );
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetRGBStrokeColor(context, 0,0,0, 1.0);
@@ -24,6 +38,7 @@
     if(fill) CGContextFillEllipseInRect (context, borderRect);
     CGContextStrokeEllipseInRect(context, borderRect);
     CGContextFillPath(context);
+
 }
 
 
@@ -33,4 +48,12 @@
     [self setNeedsDisplay];
 
 }
+
+-(void) setText:(NSString *) s
+{
+
+    label.text=s;
+    [self setNeedsDisplay];    
+}
+
 @end

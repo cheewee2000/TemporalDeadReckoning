@@ -25,8 +25,9 @@
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
-
-    
+    [Parse setApplicationId:@"9eQdER3sjOhKgV8Vvc15Dku21LbZWa2NDc3EZdae"
+                  clientKey:@"W2M0sLsEPTKlioA8cYKIPKUkJITzV03mvXgVYEya"];
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
     return YES;
 }

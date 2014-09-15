@@ -33,6 +33,10 @@
     nPointsVisible=20;
 
     
+
+    
+    
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if([defaults objectForKey:@"currentLevel"] == nil) currentLevel=0;
     else currentLevel = (int)[defaults integerForKey:@"currentLevel"];
@@ -86,15 +90,15 @@
     
     
     //instructions
-    instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, 145, self.view.frame.size.width, 15.0)];
+    instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, 137, self.view.frame.size.width-8, 30.0)];
     instructions.backgroundColor = [UIColor clearColor];
     [self.view addSubview:instructions];
     
     int h=instructions.frame.size.height;
-    instructionLabel = [ [UILabel alloc ] initWithFrame:CGRectMake(h, 0, instructions.frame.size.width, h) ];
+    instructionLabel = [ [UILabel alloc ] initWithFrame:CGRectMake(h*.5, 0, instructions.frame.size.width, h+12) ];
     instructionLabel.textColor = [UIColor blackColor];
     instructionLabel.backgroundColor = [UIColor clearColor];
-    instructionLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:(10.0)];
+    instructionLabel.font = [UIFont fontWithName:@"DIN Condensed" size:38.0];
     instructionLabel.text = @"START";
     instructionLabel.alpha=1.00;
     [instructions addSubview:instructionLabel];
@@ -108,7 +112,8 @@
     
     
     //stats
-    UIFont * LF=[UIFont fontWithName:@"HelveticaNeue" size:32];
+    /*
+     UIFont * LF=[UIFont fontWithName:@"HelveticaNeue" size:32];
     UIFont * SMF=[UIFont fontWithName:@"HelveticaNeue" size:8];
     
     lastResults=[[UILabel alloc] initWithFrame:CGRectMake(0, 8, 50, 50)];
@@ -126,6 +131,7 @@
     precision.textColor =  [UIColor blackColor];
     precision.adjustsFontSizeToFitWidth=YES;
     [stats addSubview:precision];
+ 
     
     //UNITS
     UILabel* precisionUnit=[[UILabel alloc] initWithFrame:CGRectMake(precision.frame.origin.x+precision.frame.size.width, 0, 80, 50)];
@@ -159,17 +165,18 @@
     [precisionLabel setTextAlignment:NSTextAlignmentRight];
     precisionLabel.font = SMF;
     [stats addSubview:precisionLabel];
+       */
     
     //Dots
     dots=[NSArray array];
     
     for (int i=0;i<10;i++){
-        Dots *circleView = [[Dots alloc] initWithFrame:CGRectMake(8+(self.view.frame.size.width)/10.0*i,180,15,15)];
-        circleView.alpha = 1;
-        circleView.backgroundColor = [UIColor clearColor];
-        [circleView setFill:NO];
-        [circleView setClipsToBounds:NO];
-        dots = [dots arrayByAddingObject:circleView];
+        Dots *dot = [[Dots alloc] initWithFrame:CGRectMake(16+(self.view.frame.size.width-16)/10.0*i,270,15,15)];
+        dot.alpha = 1;
+        dot.backgroundColor = [UIColor clearColor];
+        [dot setFill:NO];
+        [dot setClipsToBounds:NO];
+        dots = [dots arrayByAddingObject:dot];
         [self.view addSubview:dots[i]];
     }
 
@@ -178,10 +185,25 @@
 
     
     
+    //big dot
+    int d=250;
+    Dots *mainDot = [[Dots alloc] initWithFrame:CGRectMake(self.view.frame.size.width/2.0-d/2.0,self.view.frame.size.height-d-8,d,d)];
+    mainDot.alpha = 1;
+    mainDot.backgroundColor = [UIColor clearColor];
+    [mainDot setFill:YES];
+    [mainDot setClipsToBounds:NO];
+    [self.view addSubview:mainDot];
+    
+    
+    
+    
     //3D
-    ascView=[[ASCView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height*.5, self.view.frame.size.width, self.view.frame.size.height*.5)];
-    [ascView loadScene];
-    [self.view addSubview:ascView];
+//    ascView=[[ASCView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height*.5, self.view.frame.size.width, self.view.frame.size.height*.5)];
+//    [ascView loadScene];
+//    [self.view addSubview:ascView];
+//    
+    
+
     
 
 }
@@ -243,32 +265,42 @@
 #pragma mark LEVELS
 -(void)loadLevelProgress{
     //load values
-    levelProgress = [[NSMutableArray alloc] init];
+    levelData = [[NSMutableArray alloc] init];
     
     //Creating a file path under iOS:
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     
-    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelProgress.dat"];
+    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelProgressDictionary.dat"];
     
     //Load the array
-    levelProgress = [[NSMutableArray alloc] initWithContentsOfFile: File];
+    levelData = [[NSMutableArray alloc] initWithContentsOfFile: File];
     
-    if(levelProgress == nil)
+    if(levelData == nil)
     {
         //Array file didn't exist... create a new one
-        levelProgress = [[NSMutableArray alloc] init];
+        levelData = [[NSMutableArray alloc] init];
         for (int i = 0; i < 13; i++) {
-            [levelProgress addObject:[NSNumber numberWithInt:0] ];
+           // [levelData addObject:[NSNumber numberWithInt:0] ];
+            
+            NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
+            [myDictionary  setObject:[NSNumber numberWithInt:0] forKey:@"progress"];
+            for(int j=0; j<10; j++){
+                [myDictionary setObject:[NSNumber numberWithInt:0] forKey:[NSString stringWithFormat:@"progress-accuracy-%i",j]];
+            }
+            [levelData addObject:myDictionary];
+ 
         }
+        [self saveLevelProgress];
     }
+    
 }
 
 -(void)saveLevelProgress{
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelProgress.dat"];    
-    [levelProgress writeToFile:File atomically:YES];
+    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelProgressDictionary.dat"];    
+    [levelData writeToFile:File atomically:YES];
 }
 
 
@@ -293,9 +325,18 @@
 }
 
 -(void) updateDots{
-    for (int i=0;i<10;i++){
-        if(i<[[levelProgress objectAtIndex:currentLevel] integerValue]) [[dots objectAtIndex:i ] setFill:YES];
-        else [[dots objectAtIndex:i] setFill:NO];
+    for (int i=0;i<10;i++){        
+        //if(i<[[levelData objectAtIndex:currentLevel] integerValue]){
+        if(i<[[[levelData objectAtIndex:currentLevel] objectForKey:@"progress"] integerValue]){
+          [[dots objectAtIndex:i ] setFill:YES];
+            float levelProgressAccuracy=[[[levelData objectAtIndex:currentLevel] objectForKey:[NSString stringWithFormat:@"progress-accuracy-%i",i]] floatValue];
+            if(levelProgressAccuracy>=0)[[dots objectAtIndex:i] setText:[NSString stringWithFormat:@"+%.03fs", levelProgressAccuracy]];
+            else [[dots objectAtIndex:i] setText:[NSString stringWithFormat:@"%.03fs", levelProgressAccuracy]];
+        }
+        else {
+            [[dots objectAtIndex:i] setFill:NO];
+            [[dots objectAtIndex:i] setText:@""];
+        }
     }
 }
 
@@ -373,7 +414,8 @@
 
 
 -(void)updateStats{
-    //results
+/*
+ //results
     lastResults.text=[NSString stringWithFormat:@"%02d",(int)nPointsVisible];
     
     //accuracy
@@ -394,7 +436,8 @@
     //precision
     float uncertainty=[[self.myGraph calculatePointValueMedian] floatValue]-[[self.myGraph calculateMinimumPointValue] floatValue]+[[self.myGraph calculateMaximumPointValue] floatValue]-[[self.myGraph calculatePointValueMedian] floatValue];
     precision.text=[NSString stringWithFormat:@"%d",(int)uncertainty];
-
+*/
+    
 }
 
 
@@ -449,6 +492,7 @@
 //volume buttons
 -(void)buttonPressed{
     
+    //START
     if(running==false && reset){
         running=true;
         reset=false;
@@ -457,9 +501,12 @@
         
         [self updateTime];
     }
+    //STOP
     else if(running==true){
         running=false;
     }
+    
+    //RESET
     else
     {
         reset=true;
@@ -472,29 +519,55 @@
         
         [self.ArrayOfValues addObject:myDictionary];
         
+        
+        //save to parse
+        PFObject *pObject = [PFObject objectWithClassName:@"results"];
+        pObject[@"goal"] = [NSNumber numberWithFloat:(timerGoal)];
+        pObject[@"accuracy"] = [NSNumber numberWithFloat:(elapsed-timerGoal)];
+        pObject[@"date"]=[NSDate date];
+        //pObject[@"timezone"]=[NSTimeZone localTimeZone];
+        
+        NSString*uuid;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        if([defaults stringForKey:@"uuid"] == nil){
+            uuid=CFBridgingRelease(CFUUIDCreateString(NULL, CFUUIDCreate(NULL)));
+            [defaults setObject:uuid forKey:@"uuid"];
+        }
+        else uuid =[defaults stringForKey:@"uuid"];
+        pObject[@"uuid"]=uuid;
+        
+        [pObject saveEventually];
+        
+        
         //update graph
         self.myGraph.animationGraphEntranceTime = 0.8;
         [self.myGraph reloadGraph];
         [self saveValues];
-        int currentLevelProgress=(int)[[levelProgress objectAtIndex:currentLevel]integerValue];
+        int currentLevelProgress=(int)[[[levelData objectAtIndex:currentLevel] objectForKey:@"progress"] integerValue];
 
         float accuracyP=100.0-fabs(elapsed-timerGoal)/(float)timerGoal*100.0;
         if(accuracyP>=90){
+            //[levelData replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:currentLevelProgress]];
+            [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithFloat:elapsed-timerGoal] forKey:[NSString stringWithFormat:@"progress-accuracy-%i",currentLevelProgress]];
+
             currentLevelProgress++;
-            [levelProgress replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:currentLevelProgress]];
+            [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:currentLevelProgress] forKey:@"progress"];
             [self saveLevelProgress];
         }
         else{
-            [levelProgress replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:0]];
+            //[levelData replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:0]];
+            [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:0] forKey:@"progress"];
+
             [self saveLevelProgress];
         }
         
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        //NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         //[defaults setFloat:levelProgress forKey:@"levelProgress"];
-
         
         if(currentLevelProgress>=10){
-            [levelProgress replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:0]];
+            //[levelData replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:0]];
+            [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:0] forKey:@"progress"];
+
             [self saveLevelProgress];
             currentLevel++;
             maxLevel=currentLevel;
