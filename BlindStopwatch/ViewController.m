@@ -178,7 +178,7 @@
     dots=[NSArray array];
     
     for (int i=0;i<10;i++){
-        Dots *dot = [[Dots alloc] initWithFrame:CGRectMake(16+(self.view.frame.size.width-16)/10.0*i,270,15,15)];
+        Dots *dot = [[Dots alloc] initWithFrame:CGRectMake(16+(self.view.frame.size.width-16)/10.0*i,260,15,15)];
         dot.alpha = 1;
         dot.backgroundColor = [UIColor clearColor];
         [dot setFill:NO];
@@ -193,12 +193,12 @@
     
     
     //big dot
-    int d=250;
-    mainDot = [[Dots alloc] initWithFrame:CGRectMake(self.view.frame.size.width/2.0-d/2.0,self.view.frame.size.height-d-8,d,d)];
+    mainDot = [[Dots alloc] init];
     mainDot.alpha = 1;
     mainDot.backgroundColor = [UIColor clearColor];
     [mainDot setFill:YES];
     [mainDot setClipsToBounds:NO];
+    [self resetMainDot];
     [self.view addSubview:mainDot];
     
     
@@ -214,7 +214,10 @@
     
 
 }
-
+-(void)resetMainDot{
+    int d=260;
+    mainDot.frame=CGRectMake(self.view.frame.size.width/2.0-d/2.0,self.view.frame.size.height-d-8,d,d);
+}
 
 //-(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 //    if ([keyPath isEqual:@"outputVolume"]) {
@@ -399,7 +402,11 @@
 
 -(void)updateTime{
     if(running){
-        [counterLabel setText:[NSString stringWithFormat:@"%02u:%02u.%03u",arc4random()%99, arc4random()%60, arc4random()%999]];
+        //[counterLabel setText:[NSString stringWithFormat:@"%02u:%02u.%03u",arc4random()%99, arc4random()%60, arc4random()%999]];
+        //[counterLabel setText:[NSString stringWithFormat:@"%02u:%02u.%03u",arc4random()%99, arc4random()%60, arc4random()%999]];
+        NSTimeInterval currentTime=[NSDate timeIntervalSinceReferenceDate];
+        [self updateTimeDisplay:currentTime-startTime];
+        
         [self performSelector:@selector(updateTime) withObject:self afterDelay:arc4random()%5*0.01];
     }
     else{
@@ -414,7 +421,7 @@
 -(void)resetTimerDisplay{
     
     //goal String
-    resetCounter*=.95;
+    resetCounter*=.93;
     [self timerGoalDisplay:resetCounter];
     
     //main stopwatch
@@ -422,12 +429,12 @@
     [self timerMainDisplay:diff];
     
     if(resetCounter>.1){
-        [self performSelector:@selector(resetTimerDisplay) withObject:self afterDelay:0.01];
+        [self performSelector:@selector(resetTimerDisplay) withObject:self afterDelay:0.0];
     }else{
         [self timerGoalDisplay:0];
         [self timerMainDisplay:elapsed-timerGoal];
         
-        [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(animateLevelReset) userInfo:nil repeats:NO];
+        [NSTimer scheduledTimerWithTimeInterval:.5 target:self selector:@selector(animateLevelReset) userInfo:nil repeats:NO];
 
     }
 }
@@ -435,27 +442,40 @@
 
 -(void)animateLevelReset{
     
+    int offDist=100;
     [UIView animateWithDuration:0.4
                      animations:^{
-                         mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height+8,mainDot.frame.size.width,mainDot.frame.size.height);
+                         
+                         if([self isAccurate]){
+                             //morph to dot array
+                             int levelProgress=(int)[[[levelData objectAtIndex:currentLevel] objectForKey:@"progress"] integerValue];
+                             Dots *dot=[dots objectAtIndex:levelProgress];
+                             mainDot.frame = CGRectMake( dot.frame.origin.x,dot.frame.origin.y,dot.frame.size.width,dot.frame.size.height);
+                         }
+                         else{
+                             //slide down
+                             mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height+offDist,mainDot.frame.size.width,mainDot.frame.size.height);
+                         }
+                         
                      }
                      completion:^(BOOL finished){
+                         [self checkLevelUp];
+                         [self updateDots];
                          
-                         
-                         [UIView animateWithDuration:0.4
+                         //reposition maindot below screen
+                         [self resetMainDot];
+                         mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height+offDist,mainDot.frame.size.width,mainDot.frame.size.height);
+
+                         [UIView animateWithDuration:0.8
                                           animations:^{
                                               mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height-mainDot.frame.size.height-8,mainDot.frame.size.width,mainDot.frame.size.height);
                                           }
                                           completion:^(BOOL finished){
-                                              
-                                              [self updateDots];
                                               [self updateTimeDisplay:0];
                                               [instructions updateText:@"START"];
-                                              
                                           }];
                          
                      }];
-
     
 }
 
@@ -478,7 +498,13 @@
     [counterLabel setText:counterString];
 }
 
-
+-(bool)isAccurate{
+ float accuracyP=100.0-fabs(elapsed-timerGoal)/(float)timerGoal*100.0;
+ if(accuracyP>=90){
+     return YES;
+ }
+ return NO;
+}
 
 -(void)updateStats{
 /*
@@ -564,18 +590,26 @@
         running=true;
         reset=false;
         startTime=[NSDate timeIntervalSinceReferenceDate];
-        //startTime +=timerGoal;
-        
         [self updateTime];
+        
+        [UIView animateWithDuration:1.0
+                         animations:^{
+                             counterLabel.alpha=0.0;
+                         }
+                         completion:^(BOOL finished){
+                             counterLabel.alpha=0.0;
+                         }];
+        
+        
+        
         [instructions updateText:@"STOP"];
     }
     //STOP
     else if(running==true){
         running=false;
-        //float accuracyP=100.0-fabs(elapsed-timerGoal)/(float)timerGoal*100.0;
-        //if(accuracyP>=90)
         //AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
         [instructions updateText:@"RESET"];
+        counterLabel.alpha=1.0;
 
     }
     
@@ -618,45 +652,54 @@
         self.myGraph.animationGraphEntranceTime = 0.8;
         [self.myGraph reloadGraph];
         [self saveValues];
-        int currentLevelProgress=(int)[[[levelData objectAtIndex:currentLevel] objectForKey:@"progress"] integerValue];
 
-        float accuracyP=100.0-fabs(elapsed-timerGoal)/(float)timerGoal*100.0;
-        if(accuracyP>=90){
-            [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithFloat:elapsed-timerGoal] forKey:[NSString stringWithFormat:@"progress-accuracy-%i",currentLevelProgress]];
-            currentLevelProgress++;
-            [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:currentLevelProgress] forKey:@"progress"];
-            [self saveLevelProgress];
-        }
-        else{
-            [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:0] forKey:@"progress"];
-            [self saveLevelProgress];
-        }
         
-        //NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        //[defaults setFloat:levelProgress forKey:@"levelProgress"];
-        
-        if(currentLevelProgress>=10){
-            //[levelData replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:0]];
-            [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:0] forKey:@"progress"];
 
-            [self saveLevelProgress];
-            currentLevel++;
-            
-            if(currentLevel>maxLevel)maxLevel=currentLevel;
-            
-            [self setLevel:currentLevel];
-            
-            [defaults setFloat:currentLevel forKey:@"currentLevel"];
-            [defaults setFloat:maxLevel forKey:@"maxLevel"];
-            
-            [self loadData:currentLevel];
-        }
+
         
         [defaults synchronize];
 
     }
 }
 
+-(void)checkLevelUp{
+    
+    int currentLevelProgress=(int)[[[levelData objectAtIndex:currentLevel] objectForKey:@"progress"] integerValue];
+
+    if([self isAccurate]){
+        [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithFloat:elapsed-timerGoal] forKey:[NSString stringWithFormat:@"progress-accuracy-%i",currentLevelProgress]];
+        currentLevelProgress++;
+        [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:currentLevelProgress] forKey:@"progress"];
+        [self saveLevelProgress];
+    }
+    else{
+        [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:0] forKey:@"progress"];
+        [self saveLevelProgress];
+    }
+    
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    //[defaults setFloat:levelProgress forKey:@"levelProgress"];
+    
+    if(currentLevelProgress>=10){
+        //[levelData replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:0]];
+        [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:0] forKey:@"progress"];
+        
+        [self saveLevelProgress];
+        currentLevel++;
+        
+        if(currentLevel>maxLevel)maxLevel=currentLevel;
+        
+        [self setLevel:currentLevel];
+        
+        [defaults setFloat:currentLevel forKey:@"currentLevel"];
+        [defaults setFloat:maxLevel forKey:@"maxLevel"];
+        
+        [self loadData:currentLevel];
+    }
+    
+    
+}
 
 #pragma mark - SimpleLineGraph Data Source
 
