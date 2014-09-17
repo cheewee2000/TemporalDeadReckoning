@@ -84,8 +84,11 @@
 //}
 
 -(void)updateText:(NSString*) str{
-    
+
     [UIView animateWithDuration:0.1
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+
                      animations:^{
                          self.frame = CGRectMake(-self.frame.size.width,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
                      }
@@ -93,7 +96,12 @@
                          instructionText.text=str;
                          self.frame = CGRectMake(self.frame.size.width,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
 
-                         [UIView animateWithDuration:0.1
+                         [UIView animateWithDuration:0.2
+                                               delay:0
+                              usingSpringWithDamping:.8
+                               initialSpringVelocity:1.0
+                                             options:UIViewAnimationOptionCurveLinear
+                          
                                           animations:^{
                                               self.frame = CGRectMake(0,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
                                           }

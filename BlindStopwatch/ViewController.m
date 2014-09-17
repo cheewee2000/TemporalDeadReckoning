@@ -425,7 +425,7 @@
 -(void)resetTimerDisplay{
     
     //goal String
-    resetCounter*=.93;
+    resetCounter*=.98;
     [self timerGoalDisplay:resetCounter];
     
     //main stopwatch
@@ -438,7 +438,8 @@
         [self timerGoalDisplay:0];
         [self timerMainDisplay:elapsed-timerGoal];
         
-        [NSTimer scheduledTimerWithTimeInterval:.5 target:self selector:@selector(animateLevelReset) userInfo:nil repeats:NO];
+        //pause before level reset animation
+        [NSTimer scheduledTimerWithTimeInterval:.75 target:self selector:@selector(animateLevelReset) userInfo:nil repeats:NO];
 
     }
 }
@@ -446,6 +447,7 @@
 
 -(void)animateLevelReset{
     
+
     int offDist=100;
     [UIView animateWithDuration:0.4
                           delay:0.0
@@ -501,19 +503,64 @@
                          
                          //reposition maindot below screen
                          [self resetMainDot];
-                         mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height+offDist,mainDot.frame.size.width,mainDot.frame.size.height);
-
+                         //mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height+offDist,mainDot.frame.size.width,mainDot.frame.size.height);
+                         //mainDot.frame = CGRectMake(mainDot.frame.origin.x,mainDot.frame.origin.y,0,0);
+                         mainDot.alpha=0.0;
                          [UIView animateWithDuration:0.8
+                                               delay:0.8
+                              //usingSpringWithDamping:.5
+                               //initialSpringVelocity:1.0
+                                             options:UIViewAnimationOptionCurveEaseIn
                                           animations:^{
-                                              mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height-mainDot.frame.size.height-8,mainDot.frame.size.width,mainDot.frame.size.height);
+                                              //mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height-mainDot.frame.size.height-8,mainDot.frame.size.width,mainDot.frame.size.height);
+                                              
+                                              //mainDot.frame = CGRectMake(mainDot.frame.origin.x,mainDot.frame.origin.y,mainDot.frame.size.width,mainDot.frame.size.height);
+
+                                              mainDot.alpha=1.0;
                                           }
                                           completion:^(BOOL finished){
                                               [self updateTimeDisplay:0];
                                               [instructions updateText:@"START"];
+                                              [self resetCounterLabel];
+                                              
+                                              
+                                          }];
+                         
+                     }];
+ 
+    
+}
+
+
+-(void)resetCounterLabel{
+    
+    //move counter with arrow
+    [UIView animateWithDuration:0.1
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+     
+                     animations:^{
+                         counterLabel.frame = CGRectMake(-counterLabel.frame.size.width,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
+                     }
+                     completion:^(BOOL finished){
+                         counterLabel.text=@"00:00.000";
+                         counterLabel.frame = CGRectMake(counterLabel.frame.size.width,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
+                         
+                         [UIView animateWithDuration:0.2
+                                               delay:0
+                              usingSpringWithDamping:.8
+                               initialSpringVelocity:1.0
+                                             options:UIViewAnimationOptionCurveLinear
+                          
+                                          animations:^{
+                                              counterLabel.frame = CGRectMake(0,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
+                                          }
+                                          completion:^(BOOL finished){
                                           }];
                          
                      }];
     
+
 }
 
 -(void)timerGoalDisplay:(NSTimeInterval)goal{
@@ -547,7 +594,7 @@
 /*
  //results
     lastResults.text=[NSString stringWithFormat:@"%02d",(int)nPointsVisible];
-    
+ 
     //accuracy
     int averageAccuracy=0;
     for( int i=0; i<nPointsVisible; i++){
@@ -642,7 +689,6 @@
     //RESET
     else
     {
-        
         resetCounter=timerGoal;
         [self resetTimerDisplay];
         
@@ -678,10 +724,6 @@
         self.myGraph.animationGraphEntranceTime = 0.8;
         [self.myGraph reloadGraph];
         [self saveValues];
-
-        
-
-
         
         [defaults synchronize];
 
@@ -705,10 +747,8 @@
     
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    //[defaults setFloat:levelProgress forKey:@"levelProgress"];
     
     if(currentLevelProgress>=10){
-        //[levelData replaceObjectAtIndex:currentLevel withObject:[NSNumber numberWithInt:0]];
         [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:0] forKey:@"progress"];
         
         [self saveLevelProgress];
