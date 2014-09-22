@@ -25,6 +25,7 @@
     instructionText.alpha=1.00;
     [self addSubview:instructionText];
     [self bringSubviewToFront:instructionText];
+        self.color=[UIColor colorWithRed:1 green:1 blue:0 alpha:1];
 
     }
     return self;
@@ -42,7 +43,11 @@
     CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMinY(rect));  // top left
     CGContextAddLineToPoint(ctx, CGRectGetMinX(rect)+CGRectGetMaxY(rect)/2, CGRectGetMinY(rect));  // mid right
     CGContextClosePath(ctx);
-    CGContextSetRGBFillColor(ctx, 1, 1, 0, 1);
+    
+    CGFloat r,g,b,a;
+    [self.color getRed:&r green:&g blue:&b alpha:&a];
+    
+    CGContextSetRGBFillColor(ctx, r, g, b, a);
     CGContextFillPath(ctx);
     
     
@@ -83,6 +88,39 @@
 //    
 //}
 
+-(void)slideOut{
+    
+    [UIView animateWithDuration:0.1
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         self.frame = CGRectMake(-self.frame.size.width,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
+                     }
+                     completion:^(BOOL finished){
+                     
+                     }];
+    
+    [self setNeedsDisplay];
+}
+-(void)slideIn{
+    
+    //set arrow to right of frame
+    self.frame = CGRectMake(self.frame.size.width*1.25,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
+
+    [UIView animateWithDuration:0.2
+                           delay:0.4
+          usingSpringWithDamping:.8
+           initialSpringVelocity:1.0
+                         options:UIViewAnimationOptionCurveLinear
+                      animations:^{
+                          self.frame = CGRectMake(0,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
+                      }
+                      completion:^(BOOL finished){
+                      }];
+    
+    [self setNeedsDisplay];
+}
+
 -(void)updateText:(NSString*) str{
 
     [UIView animateWithDuration:0.1
@@ -94,10 +132,10 @@
                      }
                      completion:^(BOOL finished){
                          instructionText.text=str;
-                         self.frame = CGRectMake(self.frame.size.width,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
+                         self.frame = CGRectMake(self.frame.size.width*1.25,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
 
                          [UIView animateWithDuration:0.2
-                                               delay:0
+                                               delay:0.4
                               usingSpringWithDamping:.8
                                initialSpringVelocity:1.0
                                              options:UIViewAnimationOptionCurveLinear

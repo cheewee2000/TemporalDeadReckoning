@@ -15,4 +15,8 @@
 }
 -(void)addTextLabel;
 -(void)updateText:(NSString*) str;
+-(void)slideIn;
+-(void)slideOut;
+@property UIColor *color;
+
 @end

@@ -6,6 +6,8 @@
 #import "RBVolumeButtons.h"
 #import <SceneKit/SceneKit.h>
 
+#define LEVELUPSIZE 10
+
 @interface ViewController () {
     int previousStepperValue;
 
@@ -32,11 +34,29 @@
     reset=true;
     nPointsVisible=20;
 
-    
+//    UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipedScreenRight:)];
+//    swipeGesture.numberOfTouchesRequired = 1;
+//    swipeGesture.direction = (UISwipeGestureRecognizerDirectionRight);
+//    [self.view addGestureRecognizer:swipeGesture];
+//    
+//    swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipedScreenLeft:)];
+//    swipeGesture.numberOfTouchesRequired = 1;
+//    swipeGesture.direction = (UISwipeGestureRecognizerDirectionLeft);
+//    [self.view addGestureRecognizer:swipeGesture];
+//    
+//    
+//    swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipedScreenUp:)];
+//    swipeGesture.numberOfTouchesRequired = 1;
+//    swipeGesture.direction = (UISwipeGestureRecognizerDirectionUp);
+//    [self.view addGestureRecognizer:swipeGesture];
+//    
+//    swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipedScreenDown:)];
+//    swipeGesture.numberOfTouchesRequired = 1;
+//    swipeGesture.direction = (UISwipeGestureRecognizerDirectionDown);
+//    [self.view addGestureRecognizer:swipeGesture];
+//    
+//    
 
-    
-    
-    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if([defaults objectForKey:@"currentLevel"] == nil) currentLevel=0;
     else currentLevel = (int)[defaults integerForKey:@"currentLevel"];
@@ -191,6 +211,21 @@
     [self updateTimeDisplay:0];
 
     
+    //Levels
+    levels=[NSArray array];
+    
+    for (int i=0;i<=13;i++){
+        Level *level = [[Level alloc] initWithFrame:CGRectMake((self.view.frame.size.width-20)/13.0*i,self.view.frame.size.height-40,20,40)];
+        level.alpha = 1;
+        level.backgroundColor = [UIColor blackColor];
+        [level setClipsToBounds:NO];
+        levels = [levels arrayByAddingObject:level];
+        [self.view addSubview:levels[i]];
+    }
+    
+    [self updateDots];
+    [self updateTimeDisplay:0];
+    
     
     //big dot
     mainDot = [[Dots alloc] init];
@@ -214,30 +249,117 @@
     
 
 }
--(void)resetMainDot{
-    int d=260;
-    mainDot.frame=CGRectMake(self.view.frame.size.width/2.0-d/2.0,self.view.frame.size.height-d-8,d,d);
+
+//-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+//{
+//    UITouch *touch = (UITouch *)[touches anyObject];
+//    start = [touch locationInView:self.view].x;
+//
+//}
+
+
+-(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    //CGPoint location = [[[event allTouches] anyObject] locationInView:self.view];
+
+    
+    
+    UITouch *aTouch = [touches anyObject];
+    CGPoint location = [aTouch locationInView:mainDot];
+    //CGFloat diff =  location.x;//-mainDot.frame.size.width*.5;
+    
+    //UITouch *aTouch = [touches anyObject];
+    //CGPoint location = [aTouch locationInView:self];
+    CGPoint previousLocation = [aTouch previousLocationInView:mainDot];
+
+    
+    [UIView animateWithDuration:0.2
+                          delay:0.0
+         usingSpringWithDamping:.5
+          initialSpringVelocity:1.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         mainDot.frame = CGRectOffset(mainDot.frame, (location.x - previousLocation.x), 0);
+                         counterGoalLabel.frame = CGRectOffset(counterGoalLabel.frame, (location.x - previousLocation.x), 0);
+                         counterLabel.frame = CGRectOffset(counterLabel.frame, (location.x - previousLocation.x), 0);
+
+                     }
+                     completion:^(BOOL finished){
+                         
+                     }];
+    
+    
 }
 
 
-//-(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-//    if ([keyPath isEqual:@"outputVolume"]) {
-//    
-//    //    MPMusicPlayerController *mpc = [MPMusicPlayerController applicationMusicPlayer];
-//      //  mpc.volume = .5;  //0.0~1.0
-//        
-//        if([[AVAudioSession sharedInstance] outputVolume]<.5 ){
-//            instructionLabel.frame=CGRectSetPos( instructionLabel.frame, 8, 80 );
-//        }
-//        else{
-//            
-//            instructionLabel.frame=CGRectSetPos( instructionLabel.frame, 8, 145 );
-//
-//        }
-//    
-//        [self buttonPressed];
-//    }
-//}
+-(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    
+    
+    if(mainDot.center.x<self.view.frame.size.width*.1 && currentLevel<maxLevel){
+        [UIView animateWithDuration:0.4
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             mainDot.frame = CGRectOffset(mainDot.frame, -self.view.frame.size.width, 0);
+                             counterGoalLabel.frame = CGRectOffset(counterGoalLabel.frame, -self.view.frame.size.width, 0);
+                             counterLabel.frame = CGRectOffset(counterLabel.frame, -self.view.frame.size.width, 0);
+                         }
+                         completion:^(BOOL finished){
+                             currentLevel++;
+                             [self loadLevel];
+                             
+                         }];
+        
+        
+
+    }
+    
+    else if(mainDot.center.x>self.view.frame.size.width*.9 && currentLevel>0){
+        [UIView animateWithDuration:0.4
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             mainDot.frame = CGRectOffset(mainDot.frame, self.view.frame.size.width, 0);
+                             counterGoalLabel.frame = CGRectOffset(counterGoalLabel.frame, self.view.frame.size.width, 0);
+                             counterLabel.frame = CGRectOffset(counterLabel.frame, self.view.frame.size.width, 0);
+                         }
+                         completion:^(BOOL finished){
+                             currentLevel--;
+                             [self loadLevel];
+                             
+                         }];
+        
+        
+    }
+    else{
+
+        [UIView animateWithDuration:0.4
+                              delay:0.0
+             usingSpringWithDamping:.5
+              initialSpringVelocity:1.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             
+                             [self resetMainDot];
+                             counterGoalLabel.frame=CGRectMake(0, 55, counterGoalLabel.frame.size.width, counterGoalLabel.frame.size.height);
+                             counterLabel.frame = CGRectMake(0,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
+
+                         }
+                         completion:^(BOOL finished){
+                             
+                         }];
+        
+        
+    }
+
+}
+
+-(void)resetMainDot{
+    int d=200;
+    mainDot.frame=CGRectMake(self.view.frame.size.width/2.0-d/2.0,self.view.frame.size.height-d-48,d,d);
+}
+
 
 
 #pragma mark DATA
@@ -320,20 +442,102 @@
 -(void)setLevel:(int)level{
     if(level>maxLevel)return;
     else if(level<0)return;
-    const int timeIncrements []= { 1, 2, 5, 10, 20, 30, 60, 120, 180, 300, 600, 1200, 1800 };
-    timerGoal=timeIncrements[level];
-    [self updateTimeDisplay:0];
     
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setInteger:currentLevel forKey:@"currentLevel"];
-    [defaults synchronize];
+    //timergoal out
+    [UIView animateWithDuration:0.4
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         counterGoalLabel.alpha=0.0;
+                         
+                     }
+                     completion:^(BOOL finished){
+                         [self dropDots:NO];
+
+                         //slide out counter
+                         [instructions slideOut];
+                         [self slideOutCounterLabel];
+                         
+                         counterGoalLabel.alpha=1.0;
+                         counterGoalLabel.frame=CGRectMake(0, -counterGoalLabel.frame.size.height, counterGoalLabel.frame.size.width, counterGoalLabel.frame.size.height);
+                         const int timeIncrements []= { 1, 2, 5, 10, 20, 30, 60, 120, 180, 300, 600, 1200, 1800 };
+                         timerGoal=timeIncrements[level];
+                         [self updateTimeDisplay:0];
+                         
+                         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                         [defaults setInteger:currentLevel forKey:@"currentLevel"];
+                         [defaults synchronize];
+                         
+                         //change background color
+                         [UIView animateWithDuration:0.2
+                                               delay:1.0
+                                             options:UIViewAnimationOptionCurveLinear
+                                          animations:^{
+
+                                             NSArray * backgroundColors = [[NSArray alloc] initWithObjects:
+                                                               [UIColor colorWithRed:47/255.0 green:206/255.0 blue:3/255.0 alpha:1],
+                                                               [UIColor colorWithRed:253/255.0 green:242/255.0 blue:62/255.0 alpha:1],
+                                                               [UIColor colorWithRed:255/255.0 green:61/255.0 blue:132/255.0 alpha:1],
+                                                               [UIColor colorWithRed:250/255.0 green:128/255.0 blue:167/255.0 alpha:1],
+                                                               [UIColor colorWithRed:255/255.0 green:191/255.0 blue:53/255.0 alpha:1],
+                                                               nil];
+                                              
+                                              
+                                              int cl=currentLevel%[backgroundColors count];
+                                              self.view.backgroundColor=backgroundColors[cl];
+                                              
+                                              instructions.color=[self inverseColor:backgroundColors[cl]];
+                                              
+                                              
+                                          }
+                                          completion:^(BOOL finished){
+                                              
+                                     
+                                     //move timergoal label back in
+                                     [UIView animateWithDuration:0.4
+                                                           delay:1.0
+                                          usingSpringWithDamping:.5
+                                           initialSpringVelocity:1.0
+                                                         options:UIViewAnimationOptionCurveLinear
+                                                      animations:^{
+
+                                                        [instructions slideIn];
+                                                        [self slideInCounterLabel];
+                                                        //timergoal in
+                                                        counterGoalLabel.frame=CGRectMake(0, 55, counterGoalLabel.frame.size.width, counterGoalLabel.frame.size.height);
+                                                      
+                                                      }
+                                                      completion:^(BOOL finished){
+
+                                                      }];
+                         
+                              }];
+                         
+                         
+                         
+                     }];
+    
+    
+    
+    
+    
+
 }
+
+-(UIColor*) inverseColor:(UIColor*) color
+{
+    CGFloat r,g,b,a;
+    [color getRed:&r green:&g blue:&b alpha:&a];
+    return [UIColor colorWithRed:1.-r green:1.-g blue:1.-b alpha:a];
+}
+
 
 -(int)getLevel:(int)level{
     const int timeIncrements []= { 1, 2, 5, 10, 20, 30, 60, 120, 180, 300, 600, 1200, 1800 };
    return timeIncrements[level];
 }
+
 
 -(void) updateDots{
     for (int i=0;i<10;i++){        
@@ -354,6 +558,8 @@
         }
     }
 }
+
+
 
 //- (IBAction)swipe:(UISwipeGestureRecognizer *)recognizer {
 //    
@@ -422,7 +628,7 @@
 }
 
 
--(void)resetTimerDisplay{
+-(void)countdownTimerLabel{
     
     //goal String
     resetCounter*=.98;
@@ -433,7 +639,7 @@
     [self timerMainDisplay:diff];
     
     if(resetCounter>.1){
-        [self performSelector:@selector(resetTimerDisplay) withObject:self afterDelay:0.0];
+        [self performSelector:@selector(countdownTimerLabel) withObject:self afterDelay:0.0];
     }else{
         [self timerGoalDisplay:0];
         [self timerMainDisplay:elapsed-timerGoal];
@@ -444,95 +650,125 @@
     }
 }
 
+-(void)dropDots: (bool) isLevelUp{
+    
+    [UIView animateWithDuration:0.4
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         
+                            int offDist=100;
+                            //slide down big dot
+                            mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height+offDist,mainDot.frame.size.width,mainDot.frame.size.height);
+                            
+                            //drop dots
+                            for (int i=0; i<dots.count; i++){
+                                Dots* d=[dots objectAtIndex:i];
+                                
+                                [UIView animateWithDuration:0.8
+                                                      delay:(arc4random()%10)*.06
+                                                    options:UIViewAnimationOptionCurveEaseIn
+                                                 animations:^{
+                                                     d.frame=CGRectMake(d.frame.origin.x, self.view.frame.size.height,d.frame.size.width,d.frame.size.height);
+                                                     
+                                                 }
+                                                 completion:^(BOOL finished){
+                                                     d.alpha=0.0;
+                                                     [d resetPosition];
+                                                     [self checkLevelUp];
+                                                     [self updateDots];
+                                                     [self addMainDot];
+                                                     
+
+                                                     //fade in new dots
+                                                     [UIView animateWithDuration:0.8
+                                                                           delay:0.4
+                                                                         options:UIViewAnimationOptionCurveEaseIn
+                                                                      animations:^{
+                                                                          d.alpha=1.0;
+                                                                          
+                                                                      }
+                                                                      completion:^(BOOL finished){
+                                                                          
+                                                             
+                                                                          
+                                                                      }];
+                                                     
+                                                 }];
+                                
+                            }
+                     }
+                     completion:^(BOOL finished){
+                         
+                         if(isLevelUp){
+                             [instructions updateText:@"START"];
+                             [self slideOutInCounterLabel];
+                         }
+                         
+                    }];
+}
+
+-(void)addMainDot{
+    
+    
+    //reposition maindot below screen
+    [self resetMainDot];
+    
+    //mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height+offDist,mainDot.frame.size.width,mainDot.frame.size.height);
+    //mainDot.frame = CGRectMake(mainDot.frame.origin.x,mainDot.frame.origin.y,0,0);
+    mainDot.alpha=0.0;
+    [UIView animateWithDuration:0.8
+                          delay:0.4
+     //usingSpringWithDamping:.5
+     //initialSpringVelocity:1.0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         //mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height-mainDot.frame.size.height-8,mainDot.frame.size.width,mainDot.frame.size.height);
+                         
+                         //mainDot.frame = CGRectMake(mainDot.frame.origin.x,mainDot.frame.origin.y,mainDot.frame.size.width,mainDot.frame.size.height);
+                         mainDot.alpha=1.0;
+                     }
+                     completion:^(BOOL finished){
+                         [self updateTimeDisplay:0];
+                     }];
+}
 
 -(void)animateLevelReset{
     
+    if([self isAccurate]){
 
-    int offDist=100;
     [UIView animateWithDuration:0.4
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseIn
      
                      animations:^{
-                         
-                         if([self isAccurate]){
                              //morph to dot array
                              int levelProgress=(int)[[[levelData objectAtIndex:currentLevel] objectForKey:@"progress"] integerValue];
                              Dots *dot=[dots objectAtIndex:levelProgress];
                              mainDot.frame = CGRectMake( dot.frame.origin.x,dot.frame.origin.y,dot.frame.size.width,dot.frame.size.height);
-                         }
-                         else{
-                             //slide down big dot
-                             mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height+offDist,mainDot.frame.size.width,mainDot.frame.size.height);
-                             
-                             //drop dots
-                             for (int i=0; i<dots.count; i++){
-                                 Dots* d=[dots objectAtIndex:i];
 
-                                 [UIView animateWithDuration:0.8
-                                                       delay:(arc4random()%10)*.06
-                                                     options:UIViewAnimationOptionCurveEaseIn
-                                                  animations:^{
-                                                    d.frame=CGRectMake(d.frame.origin.x, self.view.frame.size.height,d.frame.size.width,d.frame.size.height);
-                                                  
-                                              }
-                                              completion:^(BOOL finished){
-                                                  d.alpha=0.0;
-                                                  [d resetPosition];
-                                                  //fade in new dots
-                                                  [UIView animateWithDuration:0.8
-                                                                        delay:0.4
-                                                                      options:UIViewAnimationOptionCurveEaseIn
-                                                                   animations:^{
-                                                                           d.alpha=1.0;
-            
-                                                                   }
-                                                                   completion:^(BOOL finished){
-                                                                   }];
-      
-                                              }];
-
-                             }
-                             
-                         }
                          
                      }
                      completion:^(BOOL finished){
                          [self checkLevelUp];
                          [self updateDots];
+                         [self addMainDot];
                          
-                         //reposition maindot below screen
-                         [self resetMainDot];
-                         //mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height+offDist,mainDot.frame.size.width,mainDot.frame.size.height);
-                         //mainDot.frame = CGRectMake(mainDot.frame.origin.x,mainDot.frame.origin.y,0,0);
-                         mainDot.alpha=0.0;
-                         [UIView animateWithDuration:0.8
-                                               delay:0.8
-                              //usingSpringWithDamping:.5
-                               //initialSpringVelocity:1.0
-                                             options:UIViewAnimationOptionCurveEaseIn
-                                          animations:^{
-                                              //mainDot.frame = CGRectMake(mainDot.frame.origin.x,self.view.frame.size.height-mainDot.frame.size.height-8,mainDot.frame.size.width,mainDot.frame.size.height);
-                                              
-                                              //mainDot.frame = CGRectMake(mainDot.frame.origin.x,mainDot.frame.origin.y,mainDot.frame.size.width,mainDot.frame.size.height);
-
-                                              mainDot.alpha=1.0;
-                                          }
-                                          completion:^(BOOL finished){
-                                              [self updateTimeDisplay:0];
-                                              [instructions updateText:@"START"];
-                                              [self resetCounterLabel];
-                                              
-                                              
-                                          }];
+                         [instructions updateText:@"START"];
+                         [self slideOutInCounterLabel];
                          
                      }];
+    }
+    else{
+        [self dropDots:YES];
+
+    }
  
     
 }
 
 
--(void)resetCounterLabel{
+-(void)slideOutCounterLabel{
     
     //move counter with arrow
     [UIView animateWithDuration:0.1
@@ -543,25 +779,57 @@
                          counterLabel.frame = CGRectMake(-counterLabel.frame.size.width,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
                      }
                      completion:^(BOOL finished){
-                         counterLabel.text=@"00:00.000";
-                         counterLabel.frame = CGRectMake(counterLabel.frame.size.width,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
-                         
-                         [UIView animateWithDuration:0.2
-                                               delay:0
-                              usingSpringWithDamping:.8
-                               initialSpringVelocity:1.0
-                                             options:UIViewAnimationOptionCurveLinear
-                          
-                                          animations:^{
-                                              counterLabel.frame = CGRectMake(0,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
-                                          }
-                                          completion:^(BOOL finished){
-                                          }];
-                         
-                     }];
+                    }];
+}
+
+
+-(void)slideInCounterLabel{
     
 
+     counterLabel.text=@"00:00.000";
+     counterLabel.frame = CGRectMake(counterLabel.frame.size.width,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
+     
+     [UIView animateWithDuration:0.2
+                           delay:0.4
+          usingSpringWithDamping:.8
+           initialSpringVelocity:1.0
+                         options:UIViewAnimationOptionCurveLinear
+      
+                      animations:^{
+                          counterLabel.frame = CGRectMake(0,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
+                      }
+                      completion:^(BOOL finished){
+                      }];
+    
 }
+
+-(void)slideOutInCounterLabel{
+    
+    
+    counterLabel.text=@"00:00.000";
+    counterLabel.frame = CGRectMake(counterLabel.frame.size.width,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
+    
+    [UIView animateWithDuration:0.2
+                          delay:0.4
+         usingSpringWithDamping:.8
+          initialSpringVelocity:1.0
+                        options:UIViewAnimationOptionCurveLinear
+     
+                     animations:^{
+                         counterLabel.frame = CGRectMake(0,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
+                     }
+                     completion:^(BOOL finished){
+                         [self slideInCounterLabel];
+                     }];
+    
+}
+
+
+
+
+
+
+
 
 -(void)timerGoalDisplay:(NSTimeInterval)goal{
     NSDate* gDate = [NSDate dateWithTimeIntervalSince1970: goal];
@@ -648,6 +916,15 @@
     else currentLevel--;
     sender.value=0;
 
+    [self loadLevel];
+    
+
+
+}
+
+-(void)loadLevel{
+
+    
     if(currentLevel>maxLevel){
         currentLevel=maxLevel;
         return;
@@ -657,13 +934,11 @@
         return;
     }
     
-    [self setLevel:currentLevel];
-    [self updateDots];
-    
     [self loadData:currentLevel];
+    [self setLevel:currentLevel];
+    
     [self.myGraph reloadGraph];
-    [self updateTimeDisplay:0];
-
+    
 }
 
 //volume buttons
@@ -690,7 +965,7 @@
     else
     {
         resetCounter=timerGoal;
-        [self resetTimerDisplay];
+        [self countdownTimerLabel];
         
         reset=true;
         
@@ -748,7 +1023,7 @@
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    if(currentLevelProgress>=10){
+    if(currentLevelProgress>=LEVELUPSIZE){
         [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:0] forKey:@"progress"];
         
         [self saveLevelProgress];

@@ -13,10 +13,11 @@
 #import "TextArrow.h"
 #import "ASCView.h"
 #import <Parse/Parse.h>
+#import "Level.h"
 
 @class RBVolumeButtons;
 
-@interface ViewController : UIViewController <BEMSimpleLineGraphDataSource, BEMSimpleLineGraphDelegate, UIGestureRecognizerDelegate>
+@interface ViewController : UIViewController <BEMSimpleLineGraphDataSource, BEMSimpleLineGraphDelegate>
 //@interface ViewController : UIViewController <JBLineChartViewDelegate, JBLineChartViewDataSource>
 
 {
@@ -43,7 +44,6 @@
     NSString *timeValuesFile;
     
     NSInteger nPointsVisible;
-    NSArray *dots;
     
     NSMutableArray *levelData;
     int maxLevel;
@@ -59,7 +59,13 @@
     float resetCounter;
     
     Dots *mainDot;
+    NSArray *dots;
+
+    NSArray *levels;
     
+    float start;
+    CGPoint offset;
+
 }
 
 

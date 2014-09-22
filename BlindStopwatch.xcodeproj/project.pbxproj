@@ -28,6 +28,7 @@
 		448E78BC19B936C100BF902A /* BEMSimpleLineGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78AD19B936C100BF902A /* BEMSimpleLineGraphView.m */; };
 		448E78BD19B936C100BF902A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78B019B936C100BF902A /* main.m */; };
 		449761A619B9E2B90026E70D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 449761A519B9E2B90026E70D /* Images.xcassets */; };
+		44C2C9FA19C9E330005ACEB7 /* Level.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C2C9F919C9E330005ACEB7 /* Level.m */; };
 		44C2E02E19BE52D3009CFF88 /* Dots.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C2E02D19BE52D3009CFF88 /* Dots.m */; };
 		44F972CA19BE9E310094FCF4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F972C919BE9E310094FCF4 /* ViewController.m */; };
 		44F972CF19BE9F5E0094FCF4 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44F972CD19BE9F5E0094FCF4 /* MainStoryboard.storyboard */; };
@@ -77,6 +78,8 @@
 		448E78AF19B936C100BF902A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = BlindStopwatch/AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		448E78B019B936C100BF902A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = BlindStopwatch/main.m; sourceTree = SOURCE_ROOT; };
 		449761A519B9E2B90026E70D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		44C2C9F819C9E330005ACEB7 /* Level.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Level.h; sourceTree = "<group>"; };
+		44C2C9F919C9E330005ACEB7 /* Level.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Level.m; sourceTree = "<group>"; };
 		44C2E02C19BE52D3009CFF88 /* Dots.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dots.h; sourceTree = "<group>"; };
 		44C2E02D19BE52D3009CFF88 /* Dots.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Dots.m; sourceTree = "<group>"; };
 		44F972C819BE9E310094FCF4 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -222,6 +225,8 @@
 				443CA72E19C0BFDB003BACD8 /* RBVolume */,
 				44F972C819BE9E310094FCF4 /* ViewController.h */,
 				44F972C919BE9E310094FCF4 /* ViewController.m */,
+				44C2C9F819C9E330005ACEB7 /* Level.h */,
+				44C2C9F919C9E330005ACEB7 /* Level.m */,
 				44024E3719C0D7C8000AC66E /* TextArrow.h */,
 				44024E3819C0D7C8000AC66E /* TextArrow.m */,
 				448E78B019B936C100BF902A /* main.m */,
@@ -316,6 +321,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				448E78BB19B936C100BF902A /* BEMLine.m in Sources */,
+				44C2C9FA19C9E330005ACEB7 /* Level.m in Sources */,
 				448E78BA19B936C100BF902A /* BEMCircle.m in Sources */,
 				4458F2B219C2A283000B619B /* ASCView.m in Sources */,
 				448E78BC19B936C100BF902A /* BEMSimpleLineGraphView.m in Sources */,
