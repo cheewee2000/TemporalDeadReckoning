@@ -8,15 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		44024E3919C0D7C8000AC66E /* TextArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 44024E3819C0D7C8000AC66E /* TextArrow.m */; };
+		441793B819D1151300111BFC /* SceneKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4458F2AD19C21E43000B619B /* SceneKit.framework */; };
+		441793BA19D1158100111BFC /* HelloScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 441793B919D1158100111BFC /* HelloScene.m */; };
+		4425478019D111290058FCA8 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4425477F19D111290058FCA8 /* SpriteKit.framework */; };
 		443CA72D19C0B171003BACD8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443CA72C19C0B171003BACD8 /* AVFoundation.framework */; };
 		443CA73119C0BFDB003BACD8 /* RBVolumeButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */; };
 		443CA73219C0C013003BACD8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB5F1475F07400751AE8 /* AudioToolbox.framework */; };
-		4458F2AE19C21E43000B619B /* SceneKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4458F2AD19C21E43000B619B /* SceneKit.framework */; };
-		4458F2B219C2A283000B619B /* ASCView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4458F2B119C2A283000B619B /* ASCView.m */; };
-		4458F2B719C2A776000B619B /* Color.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4458F2B419C2A776000B619B /* Color.jpg */; };
-		4458F2B819C2A776000B619B /* Normal.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4458F2B519C2A776000B619B /* Normal.jpg */; };
-		4458F2B919C2A776000B619B /* Orange.dae in Resources */ = {isa = PBXBuildFile; fileRef = 4458F2B619C2A776000B619B /* Orange.dae */; };
-		4458F2BB19C2AF6D000B619B /* Untitled.dae in Resources */ = {isa = PBXBuildFile; fileRef = 4458F2BA19C2AF6D000B619B /* Untitled.dae */; };
 		44866B4819B78B500084652A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44866B4719B78B500084652A /* QuartzCore.framework */; };
 		448E78B319B936C100BF902A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 448E789D19B936C000BF902A /* InfoPlist.strings */; };
 		448E78B519B936C100BF902A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78A219B936C000BF902A /* AppDelegate.m */; };
@@ -51,16 +48,13 @@
 /* Begin PBXFileReference section */
 		44024E3719C0D7C8000AC66E /* TextArrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextArrow.h; sourceTree = "<group>"; };
 		44024E3819C0D7C8000AC66E /* TextArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextArrow.m; sourceTree = "<group>"; };
+		441793B919D1158100111BFC /* HelloScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelloScene.m; sourceTree = "<group>"; };
+		4425477F19D111290058FCA8 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
+		4425478119D1116E0058FCA8 /* HelloScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelloScene.h; sourceTree = "<group>"; };
 		443CA72C19C0B171003BACD8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		443CA72F19C0BFDB003BACD8 /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
 		443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
 		4458F2AD19C21E43000B619B /* SceneKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SceneKit.framework; path = System/Library/Frameworks/SceneKit.framework; sourceTree = SDKROOT; };
-		4458F2B019C2A283000B619B /* ASCView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASCView.h; sourceTree = "<group>"; };
-		4458F2B119C2A283000B619B /* ASCView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASCView.m; sourceTree = "<group>"; };
-		4458F2B419C2A776000B619B /* Color.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Color.jpg; sourceTree = "<group>"; };
-		4458F2B519C2A776000B619B /* Normal.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Normal.jpg; sourceTree = "<group>"; };
-		4458F2B619C2A776000B619B /* Orange.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = Orange.dae; sourceTree = "<group>"; };
-		4458F2BA19C2AF6D000B619B /* Untitled.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = Untitled.dae; sourceTree = "<group>"; };
 		44866B4719B78B500084652A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		448E789E19B936C000BF902A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		448E78A219B936C000BF902A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = BlindStopwatch/AppDelegate.m; sourceTree = SOURCE_ROOT; };
@@ -109,6 +103,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				441793B819D1151300111BFC /* SceneKit.framework in Frameworks */,
+				4425478019D111290058FCA8 /* SpriteKit.framework in Frameworks */,
 				44FD6DA619C49AB3006C7099 /* SystemConfiguration.framework in Frameworks */,
 				44FD6DA419C49AAB006C7099 /* StoreKit.framework in Frameworks */,
 				44FD6DAA19C49C3E006C7099 /* ParseFacebookUtils.framework in Frameworks */,
@@ -118,7 +114,6 @@
 				44FD6D9C19C49A8B006C7099 /* CoreLocation.framework in Frameworks */,
 				44FD6D9A19C49A86006C7099 /* CFNetwork.framework in Frameworks */,
 				443CA73219C0C013003BACD8 /* AudioToolbox.framework in Frameworks */,
-				4458F2AE19C21E43000B619B /* SceneKit.framework in Frameworks */,
 				44FD6D9819C49A6D006C7099 /* Parse.framework in Frameworks */,
 				443CA72D19C0B171003BACD8 /* AVFoundation.framework in Frameworks */,
 				44866B4819B78B500084652A /* QuartzCore.framework in Frameworks */,
@@ -140,16 +135,6 @@
 				443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */,
 			);
 			path = RBVolume;
-			sourceTree = "<group>";
-		};
-		4458F2B319C2A776000B619B /* Orange_dae */ = {
-			isa = PBXGroup;
-			children = (
-				4458F2B419C2A776000B619B /* Color.jpg */,
-				4458F2B519C2A776000B619B /* Normal.jpg */,
-				4458F2B619C2A776000B619B /* Orange.dae */,
-			);
-			path = Orange_dae;
 			sourceTree = "<group>";
 		};
 		448E789C19B936C000BF902A /* en.lproj */ = {
@@ -196,6 +181,7 @@
 		70C2EB3F1475EF4F00751AE8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4425477F19D111290058FCA8 /* SpriteKit.framework */,
 				44FD6DA919C49C3E006C7099 /* ParseFacebookUtils.framework */,
 				44FD6DA719C49BB7006C7099 /* Bolts.framework */,
 				44FD6DA519C49AB3006C7099 /* SystemConfiguration.framework */,
@@ -225,6 +211,10 @@
 				443CA72E19C0BFDB003BACD8 /* RBVolume */,
 				44F972C819BE9E310094FCF4 /* ViewController.h */,
 				44F972C919BE9E310094FCF4 /* ViewController.m */,
+				44C2E02C19BE52D3009CFF88 /* Dots.h */,
+				44C2E02D19BE52D3009CFF88 /* Dots.m */,
+				4425478119D1116E0058FCA8 /* HelloScene.h */,
+				441793B919D1158100111BFC /* HelloScene.m */,
 				44C2C9F819C9E330005ACEB7 /* Level.h */,
 				44C2C9F919C9E330005ACEB7 /* Level.m */,
 				44024E3719C0D7C8000AC66E /* TextArrow.h */,
@@ -240,12 +230,6 @@
 				448E78A419B936C000BF902A /* Default-568h@2x.png */,
 				448E78A519B936C000BF902A /* Default@2x.png */,
 				448E78A619B936C000BF902A /* Default.png */,
-				44C2E02C19BE52D3009CFF88 /* Dots.h */,
-				44C2E02D19BE52D3009CFF88 /* Dots.m */,
-				4458F2B019C2A283000B619B /* ASCView.h */,
-				4458F2B119C2A283000B619B /* ASCView.m */,
-				4458F2BA19C2AF6D000B619B /* Untitled.dae */,
-				4458F2B319C2A776000B619B /* Orange_dae */,
 			);
 			path = BlindStopwatch;
 			sourceTree = SOURCE_ROOT;
@@ -301,13 +285,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				448E78B919B936C100BF902A /* Default.png in Resources */,
-				4458F2BB19C2AF6D000B619B /* Untitled.dae in Resources */,
 				449761A619B9E2B90026E70D /* Images.xcassets in Resources */,
-				4458F2B819C2A776000B619B /* Normal.jpg in Resources */,
 				44F972CF19BE9F5E0094FCF4 /* MainStoryboard.storyboard in Resources */,
-				4458F2B719C2A776000B619B /* Color.jpg in Resources */,
 				448E78B719B936C100BF902A /* Default-568h@2x.png in Resources */,
-				4458F2B919C2A776000B619B /* Orange.dae in Resources */,
 				448E78B819B936C100BF902A /* Default@2x.png in Resources */,
 				448E78B319B936C100BF902A /* InfoPlist.strings in Resources */,
 			);
@@ -323,12 +303,12 @@
 				448E78BB19B936C100BF902A /* BEMLine.m in Sources */,
 				44C2C9FA19C9E330005ACEB7 /* Level.m in Sources */,
 				448E78BA19B936C100BF902A /* BEMCircle.m in Sources */,
-				4458F2B219C2A283000B619B /* ASCView.m in Sources */,
 				448E78BC19B936C100BF902A /* BEMSimpleLineGraphView.m in Sources */,
 				44F972CA19BE9E310094FCF4 /* ViewController.m in Sources */,
 				448E78BD19B936C100BF902A /* main.m in Sources */,
 				44024E3919C0D7C8000AC66E /* TextArrow.m in Sources */,
 				44C2E02E19BE52D3009CFF88 /* Dots.m in Sources */,
+				441793BA19D1158100111BFC /* HelloScene.m in Sources */,
 				448E78B519B936C100BF902A /* AppDelegate.m in Sources */,
 				443CA73119C0BFDB003BACD8 /* RBVolumeButtons.m in Sources */,
 			);
@@ -367,8 +347,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: cw wang (XZCX966PV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: cw wang (XZCX966PV5)";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -387,7 +367,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "6D115A24-6CA5-445C-981F-0534ADD95C14";
 				SDKROOT = iphoneos;
@@ -405,8 +385,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: cw wang (XZCX966PV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: cw wang (XZCX966PV5)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -418,7 +398,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "6D115A24-6CA5-445C-981F-0534ADD95C14";
 				SDKROOT = iphoneos;
@@ -441,7 +421,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BlindStopwatch/BlindStopwatch-Prefix.pch";
 				INFOPLIST_FILE = "BlindStopwatch/BlindStopwatch-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = BlindStopwatch;
 				PROVISIONING_PROFILE = "6D115A24-6CA5-445C-981F-0534ADD95C14";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -464,7 +444,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BlindStopwatch/BlindStopwatch-Prefix.pch";
 				INFOPLIST_FILE = "BlindStopwatch/BlindStopwatch-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = BlindStopwatch;
 				PROVISIONING_PROFILE = "6D115A24-6CA5-445C-981F-0534ADD95C14";
 				TARGETED_DEVICE_FAMILY = "1,2";

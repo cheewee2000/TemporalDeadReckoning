@@ -19,15 +19,47 @@
         [self.label setTransform:CGAffineTransformMakeRotation(M_PI *.33)];
         [self addSubview:self.label];
         self.label.backgroundColor = [UIColor clearColor];
-        self.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:10];
-        //startY=self.frame.origin.x;
-        //startY=self.frame.origin.y;
+        self.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:11];
         startFrame=self.frame;
         
         
     }
     return self;
 }
+
+
+
+- (void) animateAlongPath:(CGRect)orbit rotate:(float) radians speed:(float)speed{
+    // Set up path movement
+    CAKeyframeAnimation *pathAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
+    pathAnimation.calculationMode = kCAAnimationPaced;
+    pathAnimation.fillMode = kCAFillModeForwards;
+    pathAnimation.removedOnCompletion = NO;
+    pathAnimation.repeatCount = INFINITY;
+    pathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    pathAnimation.duration = 3.0;
+    pathAnimation.speed =speed;
+    
+    // Create a circle path
+    CGMutablePathRef curvedPath = CGPathCreateMutable();
+    CGRect circleContainer = orbit; // create a circle from this square, it could be the frame of an UIView
+    
+    CGPathAddEllipseInRect(curvedPath, NULL, circleContainer);
+    
+    CGRect bounds = CGPathGetBoundingBox(curvedPath); // might want to use CGPathGetPathBoundingBox
+    CGPoint center = CGPointMake(CGRectGetMidX(bounds), CGRectGetMidY(bounds));
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    transform = CGAffineTransformTranslate(transform, center.x, center.y);
+    transform = CGAffineTransformRotate(transform, radians);
+    transform = CGAffineTransformTranslate(transform, -center.x, -center.y);
+    CGPathRef rotatedPath=CGPathCreateCopyByTransformingPath(curvedPath, &transform);
+
+    pathAnimation.path = rotatedPath;
+    CGPathRelease(curvedPath);
+    
+    [self.layer addAnimation:pathAnimation forKey:@"myCircleAnimation"];
+}
+
 
 - (void)drawRect:(CGRect)rect
 {
@@ -43,9 +75,7 @@
 }
 -(void) resetPosition
 {
-    //self.frame=CGRectMake(startX, startY, self.frame.size.width, self.frame.size.height);
     self.frame=startFrame;
-
     [self setNeedsDisplay];
 }
 
@@ -64,13 +94,9 @@
                         options:UIViewAnimationOptionCurveEaseIn
                      animations:^{
                          self.label.alpha=1.0;
-
                      }
                      completion:^(BOOL finished){
                      }];
-
-    
-    
     [self setNeedsDisplay];
 }
 

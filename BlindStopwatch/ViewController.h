@@ -58,9 +58,12 @@
     ASCView * ascView;
     float resetCounter;
     
-    Dots *mainDot;
     NSArray *dots;
-
+    
+    Dots *mainDot;
+    NSArray *satellites;
+    UIView * blob;
+    
     NSArray *levels;
     
     float start;
