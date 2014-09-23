@@ -204,24 +204,17 @@
     
     //satellites
     satellites=[NSArray array];
-    
     for (int i=0;i<10;i++){
-        float s=30+arc4random()%100;
-        Dots *sat = [[Dots alloc] initWithFrame:CGRectMake(16+(self.view.frame.size.width-16)/10.0*i,260,s,s)];
+        Dots *sat = [[Dots alloc] init];
         sat.alpha = 1;
         sat.backgroundColor = [UIColor clearColor];
         [sat setFill:YES];
         [sat setClipsToBounds:NO];
-        int dir=(arc4random() % 2 ? 1 : -1);
-        //if(arc4random()%1==0)dir=-1;
-        float h=mainDot.frame.size.height*(arc4random()%7/10.0);
-        
-        CGRect orbit=CGRectMake(mainDot.frame.origin.x+s*.25, mainDot.center.y-h/2.0, mainDot.frame.size.width-s*.5, h);
-        [sat animateAlongPath:orbit rotate:i/10.0*M_PI_2*2.0 speed:dir*((10.0+arc4random()%60)/100.0)];
-
         satellites = [satellites arrayByAddingObject:sat];
         [blob addSubview:satellites[i]];
     }
+    [self setupSatellites];
+
 
     
 
@@ -247,6 +240,19 @@
     
 }
 
+-(void)setupSatellites{
+    for (int i=0;i<10;i++){
+        float s=30+arc4random()%100;
+        Dots *sat= [satellites objectAtIndex:i];
+        sat.frame=CGRectMake(16+(self.view.frame.size.width-16)/10.0*i,260,s,s);
+        int dir=(arc4random() % 2 ? 1 : -1);
+        float h=mainDot.frame.size.height*(arc4random()%7/10.0);
+        
+        CGRect orbit=CGRectMake(mainDot.frame.origin.x+s*.25, mainDot.center.y-h/2.0, mainDot.frame.size.width-s*.5, h);
+        [sat animateAlongPath:orbit rotate:i/10.0*M_PI_2*2.0 speed:dir*((10.0+arc4random()%60)/100.0)];
+
+    }
+}
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 
@@ -369,9 +375,8 @@
 
 -(void)resetMainDot{
     int d=200;
-    mainDot.frame=CGRectMake(self.view.frame.size.width/2.0-d/2.0,self.view.frame.size.height-d-48,d,d);
-
-    blob.frame=CGRectMake(0,0,self.view.frame.size.width,self.view.frame.size.height);
+    mainDot.frame=CGRectMake(self.view.frame.size.width/2.0-d/2.0,self.view.frame.size.width/2.0-d/2.0,d,d);
+    blob.frame=CGRectMake(0,self.view.frame.size.height*.5,self.view.frame.size.width,self.view.frame.size.height*.5);
 
 }
 
@@ -670,16 +675,34 @@
     
     //reposition maindot below screen
     [self resetMainDot];
-    blob.alpha=0.0;
+    //blob.alpha=0.0;
+    //blob.frame=CGRectMake(100,1, 1, 1);
+    blob.transform = CGAffineTransformScale(CGAffineTransformIdentity, .00001, .000001);
+
+    //mainDot.frame = CGRectMake(mainDot.center.x, mainDot.center.y, 1,1);
+//    for (int i=0;i<10;i++){
+//        Dots *sat = [satellites objectAtIndex:i];
+//        sat.frame = CGRectMake(mainDot.center.x, mainDot.center.y, 1,1);
+//    }
     [UIView animateWithDuration:0.8
                           delay:0.4
-
+         usingSpringWithDamping:.5
+          initialSpringVelocity:1.0
                         options:UIViewAnimationOptionCurveEaseIn
                      animations:^{
-                         blob.alpha=1.0;
+                         //blob.alpha=1.0;
+                         blob.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+
+                         //[self resetMainDot];
+                         
                      }
                      completion:^(BOOL finished){
                          //[self updateTimeDisplay:0];
+                         
+
+//                         [self setupSatellites];
+
+                         
                      }];
 }
 
@@ -733,7 +756,7 @@
                         //Dots *sat=[satellites objectAtIndex:levelProgress];
                          
                         //sat.frame = CGRectMake( dot.frame.origin.x,dot.frame.origin.y,dot.frame.size.width,dot.frame.size.height);
-                        mainDot.frame = CGRectMake( dot.frame.origin.x,dot.frame.origin.y,dot.frame.size.width,dot.frame.size.height);
+                        mainDot.frame = CGRectMake( dot.frame.origin.x,dot.frame.origin.y-self.view.frame.size.height*.5,dot.frame.size.width,dot.frame.size.height);
                         //sat.frame = CGRectMake( dot.frame.origin.x,dot.frame.origin.y,dot.frame.size.width,dot.frame.size.height);
 
                      }
