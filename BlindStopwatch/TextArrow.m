@@ -17,10 +17,10 @@
         
     int h=self.frame.size.height;
         
-    instructionText = [ [UILabel alloc ] initWithFrame:CGRectMake(h*.5, 0, self.frame.size.width, h+11) ];
-    instructionText.textColor = [UIColor blackColor];
+    instructionText = [ [UILabel alloc ] initWithFrame:CGRectMake(h*.5, 0, self.frame.size.width, h+9) ];
+    instructionText.textColor = [UIColor whiteColor];
     instructionText.backgroundColor = [UIColor clearColor];
-    instructionText.font = [UIFont fontWithName:@"DIN Condensed" size:36.0];
+    instructionText.font = [UIFont fontWithName:@"DIN Condensed" size:33.0];
     instructionText.text = @"START";
     instructionText.alpha=1.00;
     [self addSubview:instructionText];
@@ -108,7 +108,7 @@
     self.frame = CGRectMake(self.frame.size.width*1.25,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
 
     [UIView animateWithDuration:0.2
-                           delay:0.4
+                           delay:0.0
           usingSpringWithDamping:.8
            initialSpringVelocity:1.0
                          options:UIViewAnimationOptionCurveLinear
@@ -126,7 +126,6 @@
     [UIView animateWithDuration:0.1
                           delay:0
                         options:UIViewAnimationOptionCurveEaseIn
-
                      animations:^{
                          self.frame = CGRectMake(-self.frame.size.width,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
                      }
@@ -135,7 +134,7 @@
                          self.frame = CGRectMake(self.frame.size.width*1.25,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
 
                          [UIView animateWithDuration:0.2
-                                               delay:0.4
+                                               delay:0.0
                               usingSpringWithDamping:.8
                                initialSpringVelocity:1.0
                                              options:UIViewAnimationOptionCurveLinear
