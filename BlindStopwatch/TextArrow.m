@@ -121,8 +121,9 @@
     [self setNeedsDisplay];
 }
 
--(void)updateText:(NSString*) str{
+-(void)updateText:(NSString*) str animate:(BOOL) animate{
 
+    if(animate){
     [UIView animateWithDuration:0.1
                           delay:0
                         options:UIViewAnimationOptionCurveEaseIn
@@ -146,6 +147,10 @@
                                           }];
                          
     }];
+    }
+    else{
+        instructionText.text=str;
+    }
     
     [self setNeedsDisplay];
 }

@@ -204,7 +204,7 @@
     
     //satellites
     satellites=[NSArray array];
-    for (int i=0;i<10;i++){
+    for (int i=0;i<20;i++){
         Dots *sat = [[Dots alloc] init];
         sat.alpha = 1;
         sat.backgroundColor = [UIColor clearColor];
@@ -265,15 +265,15 @@
 }
 
 -(void)setupSatellites{
-    for (int i=0;i<10;i++){
-        float s=30+arc4random()%100;
+    for (int i=0;i<[satellites count];i++){
+        float satD=30+arc4random()%100;
         Dots *sat= [satellites objectAtIndex:i];
-        sat.frame=CGRectMake(16+(self.view.frame.size.width-16)/10.0*i,260,s,s);
+        sat.frame=CGRectMake(16+(self.view.frame.size.width-16)/10.0*i,260,satD,satD);
         int dir=(arc4random() % 2 ? 1 : -1);
         float h=mainDot.frame.size.height*(arc4random()%7/10.0);
         
-        CGRect orbit=CGRectMake(mainDot.frame.origin.x+s*.25, mainDot.center.y-h/2.0, mainDot.frame.size.width-s*.5, h);
-        [sat animateAlongPath:orbit rotate:i/10.0*M_PI_2*2.0 speed:dir*((10.0+arc4random()%60)/100.0)];
+        CGRect orbit=CGRectMake(mainDot.frame.origin.x+satD*.25, mainDot.center.y-h/2.0, mainDot.frame.size.width-satD*.5, h);
+        [sat animateAlongPath:orbit rotate:i/10.0*M_PI_2*2.0 speed:dir*((10.0+arc4random()%40)/100.0)];
 
     }
 }
@@ -532,11 +532,19 @@
                           
                           int cl=currentLevel%[backgroundColors count];
                           self.view.backgroundColor=backgroundColors[cl];
-                          instructions.color=[self inverseColor:backgroundColors[cl]];
                           
+            
+                          
+
                     }
                       completion:^(BOOL finished){
 
+             
+ 
+                          
+                          
+                          
+                          
                          //move timergoal label back in
                          [UIView animateWithDuration:0.6
                                                delay:0.0
@@ -544,7 +552,11 @@
                                initialSpringVelocity:1.0
                                              options:UIViewAnimationOptionCurveLinear
                                           animations:^{
-
+                                              
+                                              UIColor * inverse=[self inverseColor:self.view.backgroundColor];
+                                              [instructions updateText:@"START" animate:NO];
+                                              [instructions setColor:inverse];
+                                              
                                             //timergoal in
                                               counterGoalLabel.frame=CGRectMake(0, 55, counterGoalLabel.frame.size.width, counterGoalLabel.frame.size.height);
                                               counterLabel.frame = CGRectMake(0,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
@@ -553,7 +565,6 @@
                                               //[instructions slideOut];
                                               //[instructions slideIn];
 
-                                              [instructions updateText:@"START"];
                                               running=false;
                                               reset=true;
                                               
@@ -571,6 +582,8 @@
                                                                    }
                                                                    completion:^(BOOL finished){
 
+                                                             
+                                                                       
                                                                    }];
                                               }
 
@@ -745,7 +758,7 @@
                          [self updateDots];
 
                          
-                         [instructions updateText:@"START"];
+                         [instructions updateText:@"START" animate:YES];
                          
                          //fade in new counters
                          [UIView animateWithDuration:0.8
@@ -799,7 +812,7 @@
                                               [self updateDots];
 
                                               
-                                              [instructions updateText:@"START"];
+                                              [instructions updateText:@"START" animate:YES];
                                               
                                               //reset tiny dot
                                               [self resetMainDot];
@@ -1066,13 +1079,13 @@
         reset=false;
         startTime=[NSDate timeIntervalSinceReferenceDate];
         [self updateTime];
-        [instructions updateText:@"STOP"];
+        [instructions updateText:@"STOP" animate:YES];
     }
     //STOP
     else if(running==true){
         running=false;
         //AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-        [instructions updateText:@"RESET"];
+        [instructions updateText:@"RESET" animate:YES];
         counterLabel.alpha=1.0;
 
     }
