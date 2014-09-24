@@ -26,7 +26,6 @@
     IBOutlet UILabel *counterLabel;
     IBOutlet UILabel *counterGoalLabel;
     IBOutlet UILabel *nextLevelLabel;
-//    IBOutlet UILabel *instructionLabel;
 
     
     IBOutlet UIView *stats;
@@ -68,6 +67,8 @@
     
     float start;
     CGPoint offset;
+    
+    int trialSequence;
 
 }
 

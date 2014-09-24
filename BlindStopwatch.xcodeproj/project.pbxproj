@@ -8,9 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		44024E3919C0D7C8000AC66E /* TextArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 44024E3819C0D7C8000AC66E /* TextArrow.m */; };
-		441793B819D1151300111BFC /* SceneKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4458F2AD19C21E43000B619B /* SceneKit.framework */; };
-		441793BA19D1158100111BFC /* HelloScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 441793B919D1158100111BFC /* HelloScene.m */; };
-		4425478019D111290058FCA8 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4425477F19D111290058FCA8 /* SpriteKit.framework */; };
 		443CA72D19C0B171003BACD8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443CA72C19C0B171003BACD8 /* AVFoundation.framework */; };
 		443CA73119C0BFDB003BACD8 /* RBVolumeButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */; };
 		443CA73219C0C013003BACD8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB5F1475F07400751AE8 /* AudioToolbox.framework */; };
@@ -48,9 +45,7 @@
 /* Begin PBXFileReference section */
 		44024E3719C0D7C8000AC66E /* TextArrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextArrow.h; sourceTree = "<group>"; };
 		44024E3819C0D7C8000AC66E /* TextArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextArrow.m; sourceTree = "<group>"; };
-		441793B919D1158100111BFC /* HelloScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelloScene.m; sourceTree = "<group>"; };
 		4425477F19D111290058FCA8 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
-		4425478119D1116E0058FCA8 /* HelloScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelloScene.h; sourceTree = "<group>"; };
 		443CA72C19C0B171003BACD8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		443CA72F19C0BFDB003BACD8 /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
 		443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
@@ -103,8 +98,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				441793B819D1151300111BFC /* SceneKit.framework in Frameworks */,
-				4425478019D111290058FCA8 /* SpriteKit.framework in Frameworks */,
 				44FD6DA619C49AB3006C7099 /* SystemConfiguration.framework in Frameworks */,
 				44FD6DA419C49AAB006C7099 /* StoreKit.framework in Frameworks */,
 				44FD6DAA19C49C3E006C7099 /* ParseFacebookUtils.framework in Frameworks */,
@@ -213,8 +206,6 @@
 				44F972C919BE9E310094FCF4 /* ViewController.m */,
 				44C2E02C19BE52D3009CFF88 /* Dots.h */,
 				44C2E02D19BE52D3009CFF88 /* Dots.m */,
-				4425478119D1116E0058FCA8 /* HelloScene.h */,
-				441793B919D1158100111BFC /* HelloScene.m */,
 				44C2C9F819C9E330005ACEB7 /* Level.h */,
 				44C2C9F919C9E330005ACEB7 /* Level.m */,
 				44024E3719C0D7C8000AC66E /* TextArrow.h */,
@@ -308,7 +299,6 @@
 				448E78BD19B936C100BF902A /* main.m in Sources */,
 				44024E3919C0D7C8000AC66E /* TextArrow.m in Sources */,
 				44C2E02E19BE52D3009CFF88 /* Dots.m in Sources */,
-				441793BA19D1158100111BFC /* HelloScene.m in Sources */,
 				448E78B519B936C100BF902A /* AppDelegate.m in Sources */,
 				443CA73119C0BFDB003BACD8 /* RBVolumeButtons.m in Sources */,
 			);

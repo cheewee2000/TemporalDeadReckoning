@@ -19,5 +19,6 @@
 -(void)slideIn;
 -(void)slideOut;
 @property UIColor *color;
+@property UILabel *rightLabel;
 
 @end

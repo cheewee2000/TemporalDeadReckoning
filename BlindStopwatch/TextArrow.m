@@ -15,18 +15,28 @@
     self = [super initWithFrame:theFrame];
     if (self) {
         
-    int h=self.frame.size.height;
+        int h=self.frame.size.height;
+            
+        instructionText = [ [UILabel alloc ] initWithFrame:CGRectMake(h*.5, 0, self.frame.size.width, h+9) ];
+        instructionText.textColor = [UIColor whiteColor];
+        instructionText.backgroundColor = [UIColor clearColor];
+        instructionText.font = [UIFont fontWithName:@"DIN Condensed" size:33.0];
+        instructionText.text = @"START";
+        instructionText.alpha=1.00;
+        [self addSubview:instructionText];
+        [self bringSubviewToFront:instructionText];
         
-    instructionText = [ [UILabel alloc ] initWithFrame:CGRectMake(h*.5, 0, self.frame.size.width, h+9) ];
-    instructionText.textColor = [UIColor whiteColor];
-    instructionText.backgroundColor = [UIColor clearColor];
-    instructionText.font = [UIFont fontWithName:@"DIN Condensed" size:33.0];
-    instructionText.text = @"START";
-    instructionText.alpha=1.00;
-    [self addSubview:instructionText];
-    [self bringSubviewToFront:instructionText];
+        self.rightLabel = [ [UILabel alloc ] initWithFrame:CGRectMake(h*.5, 0, self.frame.size.width-h*.5-5, h+9) ];
+        self.rightLabel.textColor = [UIColor whiteColor];
+        self.rightLabel.textAlignment=NSTextAlignmentRight;
+        self.rightLabel.backgroundColor = [UIColor clearColor];
+        self.rightLabel.font = [UIFont fontWithName:@"DIN Condensed" size:33.0];
+        self.rightLabel.text = @"";
+        self.rightLabel.alpha=1.00;
+        [self addSubview:self.rightLabel];
+        [self bringSubviewToFront:self.rightLabel];
+        
         self.color=[UIColor colorWithRed:1 green:1 blue:0 alpha:1];
-
     }
     return self;
 }
@@ -55,38 +65,6 @@
 
 }
 
-
-//- (void)drawTextInRect:(CGRect)rect
-//{
-//    
-//    self.textColor = [UIColor blackColor];
-//    self.backgroundColor = [UIColor clearColor];
-//    self.font = [UIFont fontWithName:@"DIN Condensed" size:38.0];
-//    self.text = @"START";
-//    self.alpha=1.00;
-//    
-//    [super drawTextInRect:rect];
-//    
-//
-//    
-//    
-//}
-
-
-//-(void)addTextLabel{
-//    
-//    UILabel *instructionLabel;
-//    int h=self.frame.size.height;
-//    instructionLabel = [ [UILabel alloc ] initWithFrame:CGRectMake(h*.5, 0, self.frame.size.width, h+12+30) ];
-//    instructionLabel.textColor = [UIColor blackColor];
-//    instructionLabel.backgroundColor = [UIColor clearColor];
-//    instructionLabel.font = [UIFont fontWithName:@"DIN Condensed" size:38.0];
-//    instructionLabel.text = @"START";
-//    instructionLabel.alpha=1.00;
-//    [self addSubview:instructionLabel];
-//    [self bringSubviewToFront:instructionLabel];
-//    
-//}
 
 -(void)slideOut{
     
