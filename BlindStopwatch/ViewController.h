@@ -22,10 +22,14 @@
 
 {
 
+    int screenWidth,screenHeight;
+    
     float launchVolume;
     IBOutlet UILabel *counterLabel;
     IBOutlet UILabel *counterGoalLabel;
     IBOutlet UILabel *nextLevelLabel;
+    
+    UILabel *goalPrecision;
 
     
     IBOutlet UIView *stats;
