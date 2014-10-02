@@ -24,14 +24,27 @@
 
     int screenWidth,screenHeight;
     
-    float launchVolume;
+    //float launchVolume;
+    
+    UIView *labelContainer;
+    
     IBOutlet UILabel *counterLabel;
     IBOutlet UILabel *counterGoalLabel;
+    IBOutlet UILabel *differencelLabel;
+    TextArrow* instructions;
+
     IBOutlet UILabel *nextLevelLabel;
     
     UILabel *goalPrecision;
 
     
+    
+    UIVisualEffectView *labelContainerBlur;
+
+    
+    
+    UIVisualEffectView *blobBlur;
+
     IBOutlet UIView *stats;
     UILabel *lastResults;
     UILabel *accuracy;
@@ -52,22 +65,20 @@
     int maxLevel;
     int currentLevel;
 
-    MPVolumeView *volumeView;
-    
+    //MPVolumeView *volumeView;
     RBVolumeButtons *_buttonStealer;
 
-    TextArrow* instructions;
     
     ASCView * ascView;
     float resetCounter;
     
-    NSArray *dots;
     
     Dots *mainDot;
     NSArray *satellites;
     UIView * blob;
-    
-    NSArray *levels;
+    NSArray *dots;
+
+    //NSArray *levels;
     
     float start;
     CGPoint offset;

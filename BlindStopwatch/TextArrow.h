@@ -9,8 +9,8 @@
 
 
 @interface TextArrow :UILabel{
-    UILabel *instructionText;
-
+    CGRect saveFrame;
+    
     
 }
 //-(void)addTextLabel;
@@ -18,7 +18,12 @@
 
 -(void)slideIn;
 -(void)slideOut;
+-(void)resetFrame;
+-(void)update:(NSString*) str rightLabel:(NSString*) rStr color:(UIColor*)c animate:(BOOL) animate;
+-(void)resetFrameY;
+
 @property UIColor *color;
 @property UILabel *rightLabel;
+@property UILabel *instructionText;
 
 @end
