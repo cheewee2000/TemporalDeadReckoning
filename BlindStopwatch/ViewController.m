@@ -36,8 +36,13 @@
     screenHeight=self.view.frame.size.height;
     screenWidth=self.view.frame.size.width;
 
-    //running=false;
-    //reset=true;
+    /* Create the Tap Gesture Recognizer */
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
+    
+    tapGestureRecognizer.numberOfTouchesRequired = 1;
+    tapGestureRecognizer.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:tapGestureRecognizer];
+    
     trialSequence=0;
     
     labelContainer=[[UIView alloc] initWithFrame:self.view.frame];
@@ -578,6 +583,9 @@
 //
 //    }
 }
+
+
+
 -(void)updateInstructionReset{
     [instructions updateText:@"RESET" animate:YES];
     
