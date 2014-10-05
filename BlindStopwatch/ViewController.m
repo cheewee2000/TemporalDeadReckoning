@@ -5,14 +5,12 @@
 #define CGRectSetPos( r, x, y ) CGRectMake( x, y, r.size.width, r.size.height )
 #import "RBVolumeButtons.h"
 
-#import "HelloScene.h"
 
-
-#define LEVELUPSIZE 10
+#define LEVELUPSIZE 1
+#define NUMHEARTS 3
 
 @interface ViewController () {
-    int previousStepperValue;
-
+    
 }
 @end
 
@@ -37,11 +35,10 @@
     screenWidth=self.view.frame.size.width;
 
     /* Create the Tap Gesture Recognizer */
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
-    
-    tapGestureRecognizer.numberOfTouchesRequired = 1;
-    tapGestureRecognizer.numberOfTapsRequired = 1;
-    [self.view addGestureRecognizer:tapGestureRecognizer];
+//    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
+//    tapGestureRecognizer.numberOfTouchesRequired = 1;
+//    tapGestureRecognizer.numberOfTapsRequired = 1;
+//    [self.view addGestureRecognizer:tapGestureRecognizer];
     
     trialSequence=0;
     
@@ -63,13 +60,11 @@
 
     [self.view bringSubviewToFront:instructions];
     
-    //goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(screenWidth*.5, 250, screenWidth*.5-8, 40)];
     goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(screenWidth*.5, counterGoalLabel.frame.size.height-30, screenWidth*.5-8, 40)];
     goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:38.0];
     goalPrecision.textAlignment=NSTextAlignmentRight;
     goalPrecision.textColor = [UIColor whiteColor];
     goalPrecision.text = @"";
-    //[self.view addSubview:goalPrecision];
     [counterGoalLabel addSubview:goalPrecision];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -81,7 +76,7 @@
 
     [self setLevel:currentLevel];
     [self loadData:currentLevel];
-    [self loadLevelProgress];
+    //[self loadLevelProgress];
     
     id progressDelegate = self;
 
@@ -124,8 +119,6 @@
 //    UIPinchGestureRecognizer *pinch =[[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(scalePiece:)];
 //    [pinch setDelegate:self];
 //    [self.myGraph addGestureRecognizer:pinch];
-    
-    
     
     
     //stats
@@ -188,42 +181,44 @@
     
     blob=[[UIView alloc] init];
     [self.view addSubview:blob];
-    
     //set blob frame
     [self resetMainDot];
     
+    //dot array for level progress
+    progressView=[[LevelProgressView alloc] initWithFrame:self.view.frame];
+    progressView.frame=CGRectOffset(progressView.frame, 0, screenHeight-44);
+    [self.view addSubview:progressView];
+    
     //Dots
     dots=[NSArray array];
-    
-    for (int i=0;i<10;i++){
-        Dots *dot = [[Dots alloc] initWithFrame:CGRectMake(16+(self.view.frame.size.width-16)/10.0*i,blob.frame.size.height-44,15,15)];
+    for (int i=0; i<100; i++){
+        Dots *dot = [[Dots alloc] initWithFrame:CGRectMake(16+(screenWidth-16)/10.0*(i%10),15+50*floor(i/10),15,15)];
         dot.alpha = 1;
         dot.backgroundColor = [UIColor clearColor];
         [dot setFill:NO];
         [dot setClipsToBounds:NO];
         dots = [dots arrayByAddingObject:dot];
-        [blob addSubview:dots[i]];
+        [progressView addSubview:dots[i]];
     }
-
-
-    
-    //Levels
-//    levels=[NSArray array];
-//    
-//    for (int i=0;i<=13;i++){
-//        Level *level = [[Level alloc] initWithFrame:CGRectMake((self.view.frame.size.width-20)/13.0*i,self.view.frame.size.height-40,20,40)];
-//        level.alpha = 1;
-//        level.backgroundColor = [UIColor blackColor];
-//        [level setClipsToBounds:NO];
-//        levels = [levels arrayByAddingObject:level];
-//        [self.view addSubview:levels[i]];
-//    }
     
     [self updateDots];
     [self updateTimeDisplay:0];
     
+    //life hearsts
+    if([defaults objectForKey:@"life"] == nil) life=0;
+    else life = (int)[defaults integerForKey:@"life"];
+    hearts=[NSArray array];
+    for (int i=0; i<NUMHEARTS; i++){
+        Dots *heart = [[Dots alloc] initWithFrame:CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15)];
+        heart.alpha = 1;
+        heart.backgroundColor = [UIColor clearColor];
+        [heart setFill:YES];
+        [heart setClipsToBounds:NO];
+        hearts = [hearts arrayByAddingObject:heart];
+        [self.view addSubview:hearts[i]];
+    }
 
-    
+
     //big dot
     mainDot = [[Dots alloc] init];
     mainDot.alpha = 1;
@@ -251,49 +246,6 @@
     
     
 
-    // Set vertical effect
-    /*
-    int effect=20;
-    UIInterpolatingMotionEffect *verticalMotionEffect =
-    [[UIInterpolatingMotionEffect alloc]
-     initWithKeyPath:@"center.y"
-     type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-    verticalMotionEffect.minimumRelativeValue = @(-effect);
-    verticalMotionEffect.maximumRelativeValue = @(effect);
-    
-    // Set horizontal effect
-    UIInterpolatingMotionEffect *horizontalMotionEffect =
-    [[UIInterpolatingMotionEffect alloc]
-     initWithKeyPath:@"center.x"
-     type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-    horizontalMotionEffect.minimumRelativeValue = @(-effect);
-    horizontalMotionEffect.maximumRelativeValue = @(effect);
-    
-    // Create group to combine both
-    UIMotionEffectGroup *group = [UIMotionEffectGroup new];
-    group.motionEffects = @[horizontalMotionEffect, verticalMotionEffect];
-    
-    // Add both effects to your view
-    [blob addMotionEffect:group];
-     */
-    
-    
-    //3D
-//    ascView=[[ASCView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height*.5, self.view.frame.size.width, self.view.frame.size.height*.5)];
-//    [ascView loadScene];
-//    [self.view addSubview:ascView];
-//    
-    
-
-        
-//    SKView *spriteView = (SKView *) self.view;
-//    spriteView.showsDrawCount = YES;
-//    spriteView.showsNodeCount = YES;
-//    spriteView.showsFPS = YES;
-//
-    //HelloScene* hello = [[HelloScene alloc] initWithSize:CGSizeMake(768,1024)];
-    //SKView *spriteView = (SKView *) self.view;
-    //[spriteView presentScene: hello];
     
     UIBlurEffect *blurEffect= [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
     
@@ -302,7 +254,6 @@
     labelContainerBlur.alpha=0;
     [labelContainer addSubview:labelContainerBlur];
    
-    
     blobBlur = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
     blobBlur.frame = self.view.bounds;
     blobBlur.alpha=0.0;
@@ -312,29 +263,40 @@
     
     
     
+    
+    
 }
 
 
 -(void) updateDots{
-    for (int i=0;i<10;i++){
-        //if(i<[[levelData objectAtIndex:currentLevel] integerValue]){
-        Dots* d=[dots objectAtIndex:i ];
+    for (int i=0;i<[dots count];i++){
+        Dots* d=[dots objectAtIndex:i];
         
-        if(i<[[[levelData objectAtIndex:currentLevel] objectForKey:@"progress"] integerValue]){
+        if(i<currentLevel){
+
             [d setFill:YES];
-            float levelProgressAccuracy=[[[levelData objectAtIndex:currentLevel] objectForKey:[NSString stringWithFormat:@"progress-accuracy-%i",i]] floatValue];
-            if(d.label.text.length==0){
+            float levelProgressAccuracy=[[[levelData objectAtIndex:currentLevel] objectForKey:@"accuracy"] floatValue];
+            //if(d.label.text.length==0){
                 if(levelProgressAccuracy>=0)[d setText:[NSString stringWithFormat:@"+%.03fs", levelProgressAccuracy]];
                 else [[dots objectAtIndex:i] setText:[NSString stringWithFormat:@"%.03fs", levelProgressAccuracy]];
-            }
+            //}
         }
         else {
             [[dots objectAtIndex:i] setFill:NO];
             [[dots objectAtIndex:i] setText:@""];
         }
     }
+    
 }
-
+-(void) updateLife{
+    for (int i=0;i<NUMHEARTS;i++){
+        Dots* d=[hearts objectAtIndex:i];
+        if(i<life) [d setFill:YES];
+        else [d setFill:NO];
+    }
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setInteger:life forKey:@"life"];
+}
 
 
 #pragma mark - Setup
@@ -385,16 +347,16 @@
                          instructions.frame = CGRectOffset(instructions.frame, (location.x - previousLocation.x)*.3, 0);
                          //counterLabel.frame = CGRectOffset(counterLabel.frame, (location.x - previousLocation.x)*.1, 0);
 
-                         for (int i=0;i<10;i++){
-                             Dots *dot = [dots objectAtIndex:i];
-                             if(location.x-previousLocation.x>0)dot.frame=CGRectOffset(dot.frame, (location.x - previousLocation.x)*(1+i)*.25, 0);
-                             else dot.frame=CGRectOffset(dot.frame, (location.x - previousLocation.x)*(10-i)*.25, 0);
-                             
-                             //Dots *sat = [satellites objectAtIndex:i];
-
-                             //if(location.x-previousLocation.x>0)sat.frame=CGRectOffset(sat.frame, (location.x - previousLocation.x)*(1+i)*.12, 0);
-                             //else sat.frame=CGRectOffset(sat.frame, (location.x - previousLocation.x)*(10-i)*.12, 0);
-                         }
+//                         for (int i=0;i<10;i++){
+//                             Dots *dot = [dots objectAtIndex:i];
+//                             if(location.x-previousLocation.x>0)dot.frame=CGRectOffset(dot.frame, (location.x - previousLocation.x)*(1+i)*.25, 0);
+//                             else dot.frame=CGRectOffset(dot.frame, (location.x - previousLocation.x)*(10-i)*.25, 0);
+//                             
+//                             //Dots *sat = [satellites objectAtIndex:i];
+//
+//                             //if(location.x-previousLocation.x>0)sat.frame=CGRectOffset(sat.frame, (location.x - previousLocation.x)*(1+i)*.12, 0);
+//                             //else sat.frame=CGRectOffset(sat.frame, (location.x - previousLocation.x)*(10-i)*.12, 0);
+//                         }
                      }
                      completion:^(BOOL finished){
                          
@@ -407,65 +369,61 @@
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     
-    if(blob.center.x<self.view.frame.size.width*.1 && currentLevel<maxLevel && trialSequence==0){
-        [UIView animateWithDuration:0.2
-                              delay:0.0
-                            options:UIViewAnimationOptionCurveLinear
-                         animations:^{
-                             blob.frame = CGRectOffset(blob.frame, -self.view.frame.size.width, 0);
-                             counterGoalLabel.frame = CGRectOffset(counterGoalLabel.frame, -self.view.frame.size.width, 0);
-                             //counterLabel.frame = CGRectOffset(counterLabel.frame, -self.view.frame.size.width, 0);
-                             instructions.frame = CGRectOffset(instructions.frame, -self.view.frame.size.width, 0);
-
-                             for (int i=0;i<10;i++){
-                                 Dots *dot = [dots objectAtIndex:i];
-                                 dot.frame = CGRectOffset(dot.frame, -self.view.frame.size.width, 0);
-                             }
-                         }
-                         completion:^(BOOL finished){
-                             currentLevel++;
-                             counterGoalLabel.frame = CGRectOffset(counterGoalLabel.frame, self.view.frame.size.width*3, 0);
-                             //counterLabel.frame = CGRectOffset(counterLabel.frame, self.view.frame.size.width*3, 0);
-                             instructions.frame = CGRectOffset(instructions.frame, self.view.frame.size.width*3, 0);
-
-                             [self loadLevel];
-                             
-                         }];
-        
-        
-
-    }
-    
-    else if(blob.center.x>self.view.frame.size.width*.9 && currentLevel>0 && trialSequence==0){
-        [UIView animateWithDuration:0.2
-                              delay:0.0
-                            options:UIViewAnimationOptionCurveLinear
-                         animations:^{
-                             blob.frame = CGRectOffset(blob.frame, self.view.frame.size.width, 0);
-                             counterGoalLabel.frame = CGRectOffset(counterGoalLabel.frame, self.view.frame.size.width, 0);
-                             //counterLabel.frame = CGRectOffset(counterLabel.frame, self.view.frame.size.width, 0);
-                             instructions.frame = CGRectOffset(instructions.frame, self.view.frame.size.width, 0);
-
-                             for (int i=0;i<10;i++){
-                                 Dots *dot = [dots objectAtIndex:i];
-                                 dot.frame = CGRectOffset(dot.frame, self.view.frame.size.width, 0);
-                             }
-                         }
-                         completion:^(BOOL finished){
-                             currentLevel--;
-                             counterGoalLabel.frame = CGRectOffset(counterGoalLabel.frame, -self.view.frame.size.width*3, 0);
-                             //counterLabel.frame = CGRectOffset(counterLabel.frame, -self.view.frame.size.width*3, 0);
-                             instructions.frame = CGRectOffset(instructions.frame, -self.view.frame.size.width*3, 0);
-
-                             [self loadLevel];
-                             
-                         }];
-        
-        
-    }
-    
-    //bounce back
-    else{
+//    if(blob.center.x<self.view.frame.size.width*.1 && currentLevel<maxLevel && trialSequence==0){
+//        [UIView animateWithDuration:0.2
+//                              delay:0.0
+//                            options:UIViewAnimationOptionCurveLinear
+//                         animations:^{
+//                             blob.frame = CGRectOffset(blob.frame, -self.view.frame.size.width, 0);
+//                             counterGoalLabel.frame = CGRectOffset(counterGoalLabel.frame, -self.view.frame.size.width, 0);
+//                             //counterLabel.frame = CGRectOffset(counterLabel.frame, -self.view.frame.size.width, 0);
+//                             instructions.frame = CGRectOffset(instructions.frame, -self.view.frame.size.width, 0);
+//
+////                             for (int i=0;i<10;i++){
+////                                 Dots *dot = [dots objectAtIndex:i];
+////                                 dot.frame = CGRectOffset(dot.frame, -self.view.frame.size.width, 0);
+////                             }
+//                         }
+//                         completion:^(BOOL finished){
+//                             counterGoalLabel.frame = CGRectOffset(counterGoalLabel.frame, self.view.frame.size.width*3, 0);
+//                             //counterLabel.frame = CGRectOffset(counterLabel.frame, self.view.frame.size.width*3, 0);
+//                             instructions.frame = CGRectOffset(instructions.frame, self.view.frame.size.width*3, 0);
+//
+//                             
+//                         }];
+//        
+//        
+//
+//    }
+//    
+//    else if(blob.center.x>self.view.frame.size.width*.9 && currentLevel>0 && trialSequence==0){
+//        [UIView animateWithDuration:0.2
+//                              delay:0.0
+//                            options:UIViewAnimationOptionCurveLinear
+//                         animations:^{
+//                             blob.frame = CGRectOffset(blob.frame, self.view.frame.size.width, 0);
+//                             counterGoalLabel.frame = CGRectOffset(counterGoalLabel.frame, self.view.frame.size.width, 0);
+//                             //counterLabel.frame = CGRectOffset(counterLabel.frame, self.view.frame.size.width, 0);
+//                             instructions.frame = CGRectOffset(instructions.frame, self.view.frame.size.width, 0);
+//
+////                             for (int i=0;i<10;i++){
+////                                 Dots *dot = [dots objectAtIndex:i];
+////                                 dot.frame = CGRectOffset(dot.frame, self.view.frame.size.width, 0);
+////                             }
+//                         }
+//                         completion:^(BOOL finished){
+//                             counterGoalLabel.frame = CGRectOffset(counterGoalLabel.frame, -self.view.frame.size.width*3, 0);
+//                             //counterLabel.frame = CGRectOffset(counterLabel.frame, -self.view.frame.size.width*3, 0);
+//                             instructions.frame = CGRectOffset(instructions.frame, -self.view.frame.size.width*3, 0);
+//
+//                             
+//                         }];
+//        
+//        
+//    }
+//    
+//    //bounce back
+//    else{
 
         [UIView animateWithDuration:0.4
                               delay:0.0
@@ -479,18 +437,18 @@
                              counterLabel.frame = CGRectMake(0,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
                              instructions.frame = CGRectMake(0,instructions.frame.origin.y,instructions.frame.size.width,instructions.frame.size.height);
 
-                             for (int i=0;i<10;i++){
-                                 Dots *dot = [dots objectAtIndex:i];
-                                 [dot resetPosition];
-                                 
-                             }
+//                             for (int i=0;i<10;i++){
+//                                 Dots *dot = [dots objectAtIndex:i];
+//                                 [dot resetPosition];
+//                                 
+//                             }
                          }
                          completion:^(BOOL finished){
                              
                          }];
         
         
-    }
+   // }
 
 }
 
@@ -524,10 +482,9 @@
     sender.value=0;
     
     [self loadLevel];
-    
-    
-    
+
 }
+
 //volume buttons
 -(void)buttonPressed{
     
@@ -595,7 +552,8 @@
     //if(timerGoal<10)stop=[NSString stringWithFormat:@"±%i MS",(int)(timerGoal*.1*1000)];
     //else  stop=[NSString stringWithFormat:@"±%i SEC",(int)(timerGoal*.1)];
     
-    NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: timerGoal*.1];
+//    NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: timerGoal*.1];
+    NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: [self getLevelAccuracy:currentLevel]];
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
     [df setDateFormat:@"±m:ss.SSS"];
     stop = [df stringFromDate:aDate];
@@ -605,16 +563,12 @@
     goalPrecision.text=stop;
     
 }
--(void)saveTrial{
-    //resetCounter=timerGoal;
-    //[self countdownTimerLabel];
-    
+-(void)saveTrialData{
     //save to disk
     NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
     [myDictionary setObject:[NSNumber numberWithFloat:(elapsed-timerGoal)] forKey:@"accuracy"];
     [myDictionary setObject:[NSDate date] forKey:@"date"];
     [self.ArrayOfValues addObject:myDictionary];
-    
     
     //save to parse
     PFObject *pObject = [PFObject objectWithClassName:@"results"];
@@ -640,8 +594,6 @@
     [self saveValues];
     
     [defaults synchronize];
-    
-    
 }
 
 
@@ -679,72 +631,67 @@
 
 
 #pragma mark LEVELS
--(void)loadLevelProgress{
-    //load values
-    levelData = [[NSMutableArray alloc] init];
-    
-    //Creating a file path under iOS:
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    
-    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelProgressDictionary.dat"];
-    
-    //Load the array
-    levelData = [[NSMutableArray alloc] initWithContentsOfFile: File];
-    
-    if(levelData == nil)
-    {
-        //Array file didn't exist... create a new one
-        levelData = [[NSMutableArray alloc] init];
-        for (int i = 0; i < 13; i++) {
-           // [levelData addObject:[NSNumber numberWithInt:0] ];
-            
-            NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
-            [myDictionary  setObject:[NSNumber numberWithInt:0] forKey:@"progress"];
-            for(int j=0; j<10; j++){
-                [myDictionary setObject:[NSNumber numberWithInt:0] forKey:[NSString stringWithFormat:@"progress-accuracy-%i",j]];
-            }
-            [levelData addObject:myDictionary];
- 
-        }
-        [self saveLevelProgress];
-    }
-    
-}
+//-(void)loadLevelProgress{
+//    //load values
+//    levelData = [[NSMutableArray alloc] init];
+//    
+//    //Creating a file path under iOS:
+//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    NSString *documentsDirectory = [paths objectAtIndex:0];
+//    
+//    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelProgressDictionary.dat"];
+//    
+//    //Load the array
+//    levelData = [[NSMutableArray alloc] initWithContentsOfFile: File];
+//    
+//    if(levelData == nil)
+//    {
+//        //Array file didn't exist... create a new one
+//        levelData = [[NSMutableArray alloc] init];
+//        for (int i = 0; i < [dots count]; i++) {
+//            
+//            NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
+//            [myDictionary  setObject:[NSNumber numberWithInt:0] forKey:@"accuracy"];
+////            for(int j=0; j<10; j++){
+////                [myDictionary setObject:[NSNumber numberWithInt:0] forKey:[NSString stringWithFormat:@"progress-accuracy-%i",j]];
+////            }
+//            [levelData addObject:myDictionary];
+// 
+//        }
+//        [self saveLevelProgress];
+//    }
+//    
+//}
 
--(void)saveLevelProgress{
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelProgressDictionary.dat"];    
-    [levelData writeToFile:File atomically:YES];
-}
-
-
+//-(void)saveLevelProgress{
+//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    NSString *documentsDirectory = [paths objectAtIndex:0];
+//    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelProgressDictionary.dat"];    
+//    [levelData writeToFile:File atomically:YES];
+//}
 
 
 -(void)setLevel:(int)level{
-    if(level>maxLevel)return;
-    else if(level<0)return;
-
     
-    for (int i=0; i<dots.count; i++){
-        Dots* d=[dots objectAtIndex:i];
-        d.alpha=0;
-        [d resetPosition];
+
+    [self updateDots];
+    
+    timerGoal=[self getLevel:level];
+     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+     [defaults setInteger:currentLevel forKey:@"currentLevel"];
+    
+    if(level>=maxLevel){
+        maxLevel=level;
+        [defaults setInteger:maxLevel forKey:@"maxLevel"];
 
     }
     
-    [self updateDots];
     
-     const int timeIncrements []= { 1, 2, 5, 10, 20, 30, 60, 120, 180, 300, 600, 1200, 1800 };
-    
-    timerGoal=timeIncrements[level];
-     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-     [defaults setInteger:currentLevel forKey:@"currentLevel"];
      [defaults synchronize];
     
     [self updateTimeDisplay:0];
 
+    
      //change background color
      [UIView animateWithDuration:0.4
                            delay:0.0
@@ -778,12 +725,6 @@
                     }
                       completion:^(BOOL finished){
 
-             
- 
-                          
-                          
-                          
-                          
                          //move timergoal label back in
                          [UIView animateWithDuration:0.6
                                                delay:0.0
@@ -796,6 +737,8 @@
                                               [instructions updateText:@"START" animate:NO];
                                               [self setTimerGoalMarginDisplay];
                                               [instructions setColor:inverse];
+                                              progressView.backgroundColor=inverse;
+                                              
                                               
                                             //timergoal in
                                               counterGoalLabel.frame=CGRectMake(0, counterGoalLabel.frame.origin.y, counterGoalLabel.frame.size.width, counterGoalLabel.frame.size.height);
@@ -807,28 +750,26 @@
                                               //[instructions slideOut];
                                               //[instructions slideIn];
 
-                                              //running=false;
-                                              //reset=true;
                                               trialSequence=0;
                                               
                                               [self addBlob];
 
                                               
-                                              for (int i=0; i<dots.count; i++){
-
-                                                  [UIView animateWithDuration:0.8
-                                                                        delay:arc4random()%10/10.0
-                                                                      options:UIViewAnimationOptionCurveLinear
-                                                                   animations:^{
-                                                                           Dots* d=[dots objectAtIndex:i];
-                                                                           d.alpha=1.0;
-                                                                   }
-                                                                   completion:^(BOOL finished){
-
-                                                             
-                                                                       
-                                                                   }];
-                                              }
+//                                              for (int i=0; i<dots.count; i++){
+//
+//                                                  [UIView animateWithDuration:0.8
+//                                                                        delay:arc4random()%10/10.0
+//                                                                      options:UIViewAnimationOptionCurveLinear
+//                                                                   animations:^{
+//                                                                           Dots* d=[dots objectAtIndex:i];
+//                                                                           d.alpha=1.0;
+//                                                                   }
+//                                                                   completion:^(BOOL finished){
+//
+//                                                             
+//                                                                       
+//                                                                   }];
+//                                              }
 
                                               
                                               
@@ -838,80 +779,63 @@
      
           }];
     
-                         
-                         
-                
-    
-    
-    
-    
-    
-
 }
 
--(int)getLevel:(int)level{
-    const int timeIncrements []= { 1, 2, 5, 10, 20, 30, 60, 120, 180, 300, 600, 1200, 1800 };
-   return timeIncrements[level];
+-(float)getLevel:(int)level{
+//    const int timeIncrements []= { .25, .5, 1, 1.5, 2, 2.5, 3, 3.5, 4.5, 5,
+//        5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10,
+//        11,12,13,14,15,16,17,18,19,20,
+//        21,22,23,24,25,26,27,28,29,30,
+//        32,34,36,38,40,42,44,46,48,50,
+//        52,
+//        , 60, 120, 180, 300, 600, 1200, 1800 };
+//   return timeIncrements[level];
+    
+    float l;
+    l=.5+level*.25;
+    
+    return l;
 }
+
+-(float)getLevelAccuracy:(int)level{
+    if([self getLevel:level]<=10) return .25;
+    else if([self getLevel:level]<=20) return .5;
+    else  return 1.0;
+}
+
 
 -(void)checkLevelUp{
     
-    int currentLevelProgress=(int)[[[levelData objectAtIndex:currentLevel] objectForKey:@"progress"] integerValue];
+    //int currentLevelProgress=(int)[[[levelData objectAtIndex:currentLevel] objectForKey:@"progress"] integerValue];
+    
     
     if([self isAccurate]){
-        [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithFloat:elapsed-timerGoal] forKey:[NSString stringWithFormat:@"progress-accuracy-%i",currentLevelProgress]];
-        currentLevelProgress++;
-        [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:currentLevelProgress] forKey:@"progress"];
-        [self saveLevelProgress];
+        currentLevel++;
+        life=NUMHEARTS;
     }
     else{
-        [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:0] forKey:@"progress"];
-        [self saveLevelProgress];
+        life--;
     }
     
+    if(life==0) currentLevel=0;
+
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    //[self saveLevelProgress];
+    //[self loadLevel];
     
-    if(currentLevelProgress>=LEVELUPSIZE){
-        [[levelData objectAtIndex:currentLevel] setObject:[NSNumber numberWithInt:0] forKey:@"progress"];
-        
-        [self saveLevelProgress];
-        currentLevel++;
-        
-        if(currentLevel>maxLevel)maxLevel=currentLevel;
-        
-        [self setLevel:currentLevel];
-        
-        [defaults setFloat:currentLevel forKey:@"currentLevel"];
-        [defaults setFloat:maxLevel forKey:@"maxLevel"];
-        
-        [self loadData:currentLevel];
-    }
-    
+    //need delay here for currentLevel to get set !!!!!!
+    [self performSelector:@selector(loadLevel) withObject:self afterDelay:1.0];
+
     
 }
 
 
 -(void)loadLevel{
-    
-    
-    if(currentLevel>maxLevel){
-        currentLevel=maxLevel;
-        return;
-    }
-    else if (currentLevel<0){
-        currentLevel=0;
-        return;
-    }
-    
-    [self loadData:currentLevel];
+    [self updateLife];
     [self setLevel:currentLevel];
-    
+    [self loadData:currentLevel];
     [self.myGraph reloadGraph];
-    
 }
-
-
 
 
 # pragma mark LABELS
@@ -936,29 +860,23 @@
 
 
 -(void)updateTime{
+    
+    NSTimeInterval currentTime=[NSDate timeIntervalSinceReferenceDate];
+    elapsed = currentTime-startTime;
+    
     if(trialSequence==1){
-        NSTimeInterval currentTime=[NSDate timeIntervalSinceReferenceDate];
-        [self updateTimeDisplay:currentTime-startTime];
-        [self performSelector:@selector(updateTime) withObject:self afterDelay:.01];
-        
-        
-        //[counterLabel setText:[NSString stringWithFormat:@"%02u:%02u.%03u",arc4random()%99, arc4random()%60, arc4random()%999]];
-        
-        //[self performSelector:@selector(updateTime) withObject:self afterDelay:arc4random()%10*0.001];
-        
+
+        if(elapsed<1){
+            [self updateTimeDisplay:currentTime-startTime];
+            [self performSelector:@selector(updateTime) withObject:self afterDelay:.01];
+        }else{
+            [counterLabel setText:[NSString stringWithFormat:@"%02u:%02u.%03u",arc4random()%99, arc4random()%60, arc4random()%999]];
+            [self performSelector:@selector(updateTime) withObject:self afterDelay:arc4random()%10*0.001];
+        }
     }
     else{
-        NSTimeInterval currentTime=[NSDate timeIntervalSinceReferenceDate];
-        //elapsed = startTime - currentTime;
-        elapsed = currentTime-startTime;
         [self updateTimeDisplay:elapsed];
-        
-        //[instructions updateText:@"RESET" animate:YES];
-        //NSString * scoreString=[NSString stringWithFormat:@"SCORE %i%%",(int)(((timerGoal-fabs(elapsed-timerGoal))/timerGoal)*100.0)];
-        //instructions.rightLabel.text=scoreString;
-        
         [self animateLevelDotScore];
-
     }
 }
 
@@ -1112,22 +1030,12 @@
 }
 
 -(void)countdownTimerLabel{
-    
-    //goal String
-    //resetCounter*=.99;
+
     resetCounter*=1.05;
-    //[self timerGoalDisplay:resetCounter];
-    
-    //main stopwatch
-    //NSTimeInterval diff=elapsed-(timerGoal-resetCounter);
-    //[self timerMainDisplay:diff];
+
     
     //count up
     [self timerDiffDisplay:resetCounter];
-    
-    //NSString * scoreString=[NSString stringWithFormat:@"%i%%",(int)(((timerGoal-fabs(diff))/timerGoal)*100.0)];
-    //instructions.rightLabel.text=scoreString;
-    
     
     if(resetCounter<=fabs(elapsed-timerGoal)){
         [self performSelector:@selector(countdownTimerLabel) withObject:self afterDelay:0.0];
@@ -1142,10 +1050,6 @@
         //drop dots or morph to levedots
         [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:1.5];
 
-        
-        //NSString * scoreString=[NSString stringWithFormat:@"%i%%",(int)(((timerGoal-fabs(elapsed-timerGoal))/timerGoal)*100.0)];
-        //instructions.rightLabel.text=scoreString;
-        
         trialSequence=2;
         //[instructions updateText:@"RESET" animate:YES];
         
@@ -1172,11 +1076,9 @@
 }
 
 -(void)morphOrDropDots{
-
-    
     
     if([self isAccurate]){
-        [UIView animateWithDuration:0.8
+        [UIView animateWithDuration:0.4
                               delay:1.0
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^{
@@ -1184,9 +1086,7 @@
                              counterGoalLabel.alpha=0.0;
                              blobBlur.alpha=0;
                              labelContainerBlur.alpha=0.0;
-
-                             
-                             
+                             progressView.frame=self.view.frame;
                          }
                          completion:^(BOOL finished){
  
@@ -1195,18 +1095,15 @@
                                               delay:0.5
                                             options:UIViewAnimationOptionCurveEaseInOut
                                          animations:^{
-                                
-                                             //morph to dot array
-                                             int levelProgress=(int)[[[levelData objectAtIndex:currentLevel] objectForKey:@"progress"] integerValue];
-                                             Dots *dot=[dots objectAtIndex:levelProgress];
+                                             Dots *dot=[dots objectAtIndex:currentLevel];
                                              mainDot.frame = CGRectMake( dot.frame.origin.x,dot.frame.origin.y,dot.frame.size.width,dot.frame.size.height);
                                              
-                                         
                                          }
                                          completion:^(BOOL finished){
+                                             
                                              [self checkLevelUp];
                                              [self updateDots];
-                                             [self saveTrial];
+                                             [self saveTrialData];
                                              [self performSelector:@selector(animateLevelReset) withObject:self afterDelay:.5];
                                          }];
                         }];
@@ -1237,27 +1134,29 @@
                                      //slide down big dot
                                      blob.frame = CGRectMake(blob.frame.origin.x,self.view.frame.size.height+offDist,blob.frame.size.width,blob.frame.size.height);
                                      
-                                     //drop dots
-                                     for (int i=0; i<dots.count; i++){
-                                         Dots* d=[dots objectAtIndex:i];
-                                         
-                                         [UIView animateWithDuration:0.8
-                                                               delay:(arc4random()%10)*.1
-                                                             options:UIViewAnimationOptionCurveEaseIn
-                                                          animations:^{
-                                                              d.frame=CGRectMake(d.frame.origin.x, self.view.frame.size.height,d.frame.size.width,d.frame.size.height);
-                                                              
-                                                          }
-                                                          completion:^(BOOL finished){
-                                                              
-                                                              
-                                                          }];
-                                         
+                                     if(life==0){
+                                         //drop dots
+                                         for (int i=0; i<dots.count; i++){
+                                             Dots* d=[dots objectAtIndex:i];
+                                             
+                                             [UIView animateWithDuration:0.8
+                                                                   delay:(arc4random()%10)*.1
+                                                                 options:UIViewAnimationOptionCurveEaseIn
+                                                              animations:^{
+                                                                  d.frame=CGRectMake(d.frame.origin.x, self.view.frame.size.height,d.frame.size.width,d.frame.size.height);
+                                                                  
+                                                              }
+                                                              completion:^(BOOL finished){
+                                                                  
+                                                                  
+                                                              }];
+                                             
+                                         }
                                      }
                                  }
                                  completion:^(BOOL finished){
 
-                                     [self saveTrial];
+                                     [self saveTrialData];
                                      [self performSelector:@selector(animateLevelReset) withObject:self afterDelay:.5];
                                      
                                  }];
@@ -1298,6 +1197,7 @@
                 initialSpringVelocity:1.0
                               options:UIViewAnimationOptionCurveLinear
                            animations:^{
+                               progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight);
                                [self resetMainDot];
 
                            }
@@ -1344,28 +1244,30 @@
                          animations:^{
                              counterLabel.alpha=0.0;
                              counterGoalLabel.alpha=0.0;
-                             
-                             //drop dots
-                             for (int i=0; i<dots.count; i++){
-                                 Dots* d=[dots objectAtIndex:i];
-                  
-                                      d.alpha=0.0;
-                                      [d resetPosition];
-  
-                                      
-                                      //fade in new dots
-                                      [UIView animateWithDuration:0.8
-                                                            delay:0.4
-                                                          options:UIViewAnimationOptionCurveEaseIn
-                                                       animations:^{
-                                                           d.alpha=1.0;
-                                                       }
-                                                       completion:^(BOOL finished){
-                                                           
-                                                       }];
-                                 
-                                 
-                                 
+                             progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight);
+
+                             if(life==0){
+                                 //drop dots
+                                 for (int i=0; i<dots.count; i++){
+                                     Dots* d=[dots objectAtIndex:i];
+                      
+                                          d.alpha=0.0;
+                                          [d resetPosition];
+      
+                                          
+                                          //fade in new dots
+                                          [UIView animateWithDuration:0.8
+                                                                delay:0.4
+                                                              options:UIViewAnimationOptionCurveEaseIn
+                                                           animations:^{
+
+                                                               d.alpha=1.0;
+                                                           }
+                                                           completion:^(BOOL finished){
+                                                               
+                                                           }];
+        
+                                 }
                              }
                          }
                          completion:^(BOOL finished){
@@ -1383,6 +1285,7 @@
                                                   
                                                   [self checkLevelUp];
                                                   [self updateDots];
+                                                  
 
                                                   //fade in new counters
                                                   [UIView animateWithDuration:0.8
@@ -1491,11 +1394,18 @@
 
 
 -(bool)isAccurate{
-    float accuracyP=100.0-fabs(elapsed-timerGoal)/(float)timerGoal*100.0;
-    if(accuracyP>=90){
-        return YES;
-    }
-    return NO;
+    //float accuracyP=100.0-fabs(elapsed-timerGoal)/(float)timerGoal*100.0;
+
+    float diff=fabs(timerGoal-elapsed);
+    
+    if( diff<=[self getLevelAccuracy:currentLevel] ) return YES;
+    else return NO;
+//       
+//    
+//    if([self getLevel:currentLevel]<10 && diff<=.25) return YES;
+//    else if([self getLevel:currentLevel]<30 && diff<=.5) return YES;
+//    else if (diff<=1) return YES;
+//    else return NO;
 }
 
 

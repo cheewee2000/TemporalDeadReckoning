@@ -14,6 +14,7 @@
 #import "ASCView.h"
 #import <Parse/Parse.h>
 #import "Level.h"
+#import "LevelProgressView.h"
 
 @class RBVolumeButtons;
 
@@ -22,6 +23,8 @@
 
 {
 
+    LevelProgressView *progressView;
+    
     int screenWidth,screenHeight;
     
     //float launchVolume;
@@ -64,6 +67,7 @@
     NSMutableArray *levelData;
     int maxLevel;
     int currentLevel;
+    
 
     //MPVolumeView *volumeView;
     RBVolumeButtons *_buttonStealer;
@@ -77,7 +81,8 @@
     NSArray *satellites;
     UIView * blob;
     NSArray *dots;
-
+    NSArray *hearts;
+    int life;
     //NSArray *levels;
     
     float start;
