@@ -22,6 +22,7 @@
 -(void) resetPosition;
 - (void) animateAlongPath:(CGRect) frame rotate:(float) radians speed:(float)speed;
 @property UILabel *label;
+@property float *labelValue;
 
 
 

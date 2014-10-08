@@ -13,10 +13,10 @@
 - (id)initWithFrame:(CGRect)theFrame {
     self = [super initWithFrame:theFrame];
     if (self) {
-        self.label=[[UILabel alloc] initWithFrame:CGRectMake(-10, 50, 100, 20)];
+        self.label=[[UILabel alloc] initWithFrame:CGRectMake(0, 40, 100, 20)];
         self.label.text=@"";
         self.label.textAlignment = NSTextAlignmentLeft;
-        [self.label setTransform:CGAffineTransformMakeRotation(M_PI *.33)];
+        [self.label setTransform:CGAffineTransformMakeRotation(M_PI *.25)];
         [self addSubview:self.label];
         self.label.backgroundColor = [UIColor clearColor];
         self.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:11];

@@ -35,7 +35,8 @@
     IBOutlet UILabel *counterGoalLabel;
     IBOutlet UILabel *differencelLabel;
     TextArrow* instructions;
-
+    NSMutableArray * levelArrows;
+    
     IBOutlet UILabel *nextLevelLabel;
     
     UILabel *goalPrecision;
@@ -64,7 +65,10 @@
     
     NSInteger nPointsVisible;
     
-    NSMutableArray *levelData;
+    //NSMutableArray *levelData;
+    //NSArray *trialAccuracy;
+    
+    
     int maxLevel;
     int currentLevel;
     
@@ -80,15 +84,18 @@
     Dots *mainDot;
     NSArray *satellites;
     UIView * blob;
-    NSArray *dots;
+    NSMutableArray *dots;
     NSArray *hearts;
     int life;
-    //NSArray *levels;
+    NSArray *levels;
     
     float start;
     CGPoint offset;
     
     int trialSequence;
+    
+    UIImageView * xoView;
+    
 
 }
 

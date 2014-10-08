@@ -16,8 +16,8 @@
 //-(void)addTextLabel;
 -(void)updateText:(NSString*) str animate:(BOOL) animate;
 
--(void)slideIn;
--(void)slideOut;
+-(void)slideIn:(float) delay;
+-(void)slideOut:(float) delay;
 -(void)resetFrame;
 -(void)update:(NSString*) str rightLabel:(NSString*) rStr color:(UIColor*)c animate:(BOOL) animate;
 -(void)resetFrameY;

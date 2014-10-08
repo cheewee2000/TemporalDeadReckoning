@@ -7,7 +7,7 @@
 //
 
 #import "TextArrow.h"
-#define SLIDESPEED .12
+#define SLIDESPEED .14
 @implementation TextArrow :UILabel
 
 
@@ -15,13 +15,19 @@
     self = [super initWithFrame:theFrame];
     if (self) {
         
+        self.backgroundColor = [UIColor clearColor];
+        self.textAlignment=NSTextAlignmentLeft;
+        self.font = [UIFont fontWithName:@"DIN Condensed" size:38.0];
+        self.text = @"";
+        
+        
         int h=self.frame.size.height;
             
         self.instructionText = [ [UILabel alloc ] initWithFrame:CGRectMake(h*.5, 0, self.frame.size.width, h+9) ];
         self.instructionText.textColor = [UIColor whiteColor];
         self.instructionText.backgroundColor = [UIColor clearColor];
         self.instructionText.font = [UIFont fontWithName:@"DIN Condensed" size:33.0];
-        self.instructionText.text = @"START";
+        self.instructionText.text = @"";
         self.instructionText.alpha=1.00;
         [self addSubview:self.instructionText];
         [self bringSubviewToFront:self.instructionText];
@@ -74,29 +80,31 @@
     self.frame=CGRectMake(self.frame.origin.x, saveFrame.origin.y, self.frame.size.width, self.frame.size.height);
 }
 
--(void)slideOut{
+-(void)slideOut:(float) delay{
     
     [UIView animateWithDuration:SLIDESPEED
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseIn
+                          delay:delay
+         usingSpringWithDamping:.8
+          initialSpringVelocity:1.0
+                        options:UIViewAnimationOptionCurveLinear
                      animations:^{
-                         self.frame = CGRectMake(-self.frame.size.width,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
+                         self.frame = CGRectMake(-self.frame.size.width*1.1,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
                      }
                      completion:^(BOOL finished){
                          //set arrow to right of frame
-                         self.frame = CGRectMake(saveFrame.size.width*1.25,saveFrame.origin.y,saveFrame.size.width,saveFrame.size.height);
+                         self.frame = CGRectMake(saveFrame.size.width*1.1,saveFrame.origin.y,saveFrame.size.width,saveFrame.size.height);
 
                      }];
     
     [self setNeedsDisplay];
 }
--(void)slideIn{
+-(void)slideIn:(float) delay{
     
     //set arrow to right of frame
-    self.frame = CGRectMake(saveFrame.size.width*1.25,saveFrame.origin.y,saveFrame.size.width,saveFrame.size.height);
+    self.frame = CGRectMake(saveFrame.size.width*1.1,saveFrame.origin.y,saveFrame.size.width,saveFrame.size.height);
 
     [UIView animateWithDuration:SLIDESPEED
-                           delay:0.0
+                           delay:delay
           usingSpringWithDamping:.8
            initialSpringVelocity:1.0
                          options:UIViewAnimationOptionCurveLinear
@@ -120,7 +128,7 @@
                      }
                      completion:^(BOOL finished){
                          self.instructionText.text=str;
-                         self.frame = CGRectMake(self.frame.size.width*1.25,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
+                         self.frame = CGRectMake(self.frame.size.width*1.1,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
 
                          [UIView animateWithDuration:SLIDESPEED
                                                delay:0.1
