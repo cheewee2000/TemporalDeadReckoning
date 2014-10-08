@@ -94,8 +94,8 @@
     
     int trialSequence;
     
-    UIImageView * xoView;
-    
+    UIImageView * xView;
+    UIImageView * oView;
 
 }
 
