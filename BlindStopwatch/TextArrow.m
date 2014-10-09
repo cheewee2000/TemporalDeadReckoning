@@ -82,6 +82,7 @@
 
 -(void)slideOut:(float) delay{
     
+    if(self.frame.origin.x<10 && self.frame.origin.x>=0 ){
     [UIView animateWithDuration:SLIDESPEED
                           delay:delay
          usingSpringWithDamping:.8
@@ -95,6 +96,12 @@
                          self.frame = CGRectMake(saveFrame.size.width*1.1,saveFrame.origin.y,saveFrame.size.width,saveFrame.size.height);
 
                      }];
+    }
+    else{
+        self.frame = CGRectMake(saveFrame.size.width*1.1,saveFrame.origin.y,saveFrame.size.width,saveFrame.size.height);
+    }
+    
+    
     
     [self setNeedsDisplay];
 }
@@ -112,6 +119,7 @@
                           self.frame = CGRectMake(0,saveFrame.origin.y,saveFrame.size.width,saveFrame.size.height);
                       }
                       completion:^(BOOL finished){
+                          self.frame = CGRectMake(0,saveFrame.origin.y,saveFrame.size.width,saveFrame.size.height);
                       }];
     
     [self setNeedsDisplay];
