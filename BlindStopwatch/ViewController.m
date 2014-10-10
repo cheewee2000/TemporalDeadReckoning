@@ -6,7 +6,7 @@
 #import "RBVolumeButtons.h"
 
 
-#define TRIALSINSTAGE 5
+#define TRIALSINSTAGE 3
 #define NUMHEARTS 3
 
 @interface ViewController () {
@@ -18,7 +18,7 @@
 
 
 @synthesize buttonStealer = _buttonStealer;
-@synthesize screenLabel,indexNumber;
+@synthesize screenLabel,indexNumber; 
 
 - (void)didReceiveMemoryWarning
 {
@@ -35,23 +35,26 @@
     screenHeight=self.view.frame.size.height;
     screenWidth=self.view.frame.size.width;
 
-    /* Create the Tap Gesture Recognizer */
-//    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
-//    tapGestureRecognizer.numberOfTouchesRequired = 1;
-//    tapGestureRecognizer.numberOfTapsRequired = 1;
-//    [self.view addGestureRecognizer:tapGestureRecognizer];
-    
-    
     trialSequence=0;
     
-    labelContainer=[[UIView alloc] initWithFrame:self.view.frame];
-    [self.view addSubview:labelContainer];
+
     
 
     //instructions
     instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, 137, screenWidth-8, 30.0)];
     [self.view addSubview:instructions];
     
+    
+    
+    /* Create the Tap Gesture Recognizer */
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
+    tapGestureRecognizer.numberOfTouchesRequired = 1;
+    tapGestureRecognizer.numberOfTapsRequired = 1;
+    //[self.view addGestureRecognizer:tapGestureRecognizer];
+
+    
+    labelContainer=[[UIView alloc] initWithFrame:self.view.frame];
+    [self.view addSubview:labelContainer];
     [labelContainer addSubview:counterLabel];
     [self.view addSubview:counterGoalLabel];
     [self.view addSubview:differencelLabel];
@@ -290,45 +293,131 @@
     int currentStage=floorf(currentLevel/TRIALSINSTAGE);
     int rowHeight=60;
 
-    for (int i = 0; i < [dots count];i++){
-        [[dots objectAtIndex:i ]  setFill:NO];
-        [[dots objectAtIndex:i ]  setText:@""];
-        [[dots objectAtIndex:i ] removeFromSuperview];
+    for(int i=0; i<[dots count]; i++) [self updateDot:i];
+
+    if(life==0){
+        for (int i = 0; i < [dots count];i++){
+            [[dots objectAtIndex:i ]  setFill:NO];
+            [[dots objectAtIndex:i ]  setText:@"" level:@""];
+            [[dots objectAtIndex:i ] removeFromSuperview];
+        }
+        [dots removeAllObjects];
     }
-    [dots removeAllObjects];
     
-    for (int i = 0; i < TRIALSINSTAGE+currentStage*TRIALSINSTAGE;i++){
-        float dotDia=15;
-        float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia;
-        Dots *dot = [[Dots alloc] initWithFrame:CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*currentStage,dotDia,dotDia)];
-        dot.alpha = 1;
-        dot.backgroundColor = [UIColor clearColor];
-        [dots addObject:dot];
-        [progressView addSubview:dots[i]];
+
+    [UIView animateWithDuration:.8
+                          delay:1.0
+         usingSpringWithDamping:.5
+          initialSpringVelocity:1.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
+                     }
+                     completion:^(BOOL finished){
+                         
+                 
+    
+                    for (int i = 0; i < TRIALSINSTAGE+currentStage*TRIALSINSTAGE;i++){
+                        float dotDia=15;
+                        float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia;
+
+                        
+                        if(i<[dots count]){
+                            //update dot position
+                            Dots *dot=[dots objectAtIndex:i];
+
+                            //add level label
+                            [self updateDot:i];
+                            
+                            //shift dots down
+                            [UIView animateWithDuration:.8
+                                                  delay:0.5
+                                 usingSpringWithDamping:.5
+                                  initialSpringVelocity:1.0
+                                                options:UIViewAnimationOptionCurveLinear
+                                             animations:^{
+                                                 dot.frame=CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*currentStage,dotDia,dotDia);
+                                             }
+                                             completion:^(BOOL finished){
+                                             }];
+
+                        }
+                        else{
+                            //add dot
+                            Dots *dot = [[Dots alloc] initWithFrame:CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*currentStage,dotDia,dotDia)];
+                            dot.alpha = 1;
+                            dot.backgroundColor = [UIColor clearColor];
+                            [dots addObject:dot];
+                            [progressView addSubview:dots[i]];
+                            
+                            dot.transform = CGAffineTransformScale(CGAffineTransformIdentity, .00001, .000001);
+                            //add level label
+                            [self updateDot:i];
+                        //animate dot appearance
+                        [UIView animateWithDuration:.4
+                                              delay:.5+(i-currentLevel)*.8
+                             usingSpringWithDamping:.5
+                              initialSpringVelocity:1.0
+                                            options:UIViewAnimationOptionCurveLinear
+                                         animations:^{
+                                             dot.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+                                         }
+                                         completion:^(BOOL finished){
+
+                                         }];
+                        
+                        }
+                    }
+                   
+
+                         //[self updateDots];
+
+                         //need delay here for currentLevel to get set !!!!!!
+                         [self performSelector:@selector(loadLevel) withObject:self afterDelay:3.5];
+                         [self performSelector:@selector(animateLevelReset) withObject:self afterDelay:4.0];
+
+    }];
+                         
+             
+}
+
+-(void) updateDot:(int)i{
+    //goal String
+    NSTimeInterval level=[self getLevel:i];
+    NSDate* nDate = [NSDate dateWithTimeIntervalSince1970: level];
+    NSDateFormatter* ngf = [[NSDateFormatter alloc] init];
+    if(level<60)[ngf setDateFormat:@"ss.SSS"];
+    else [ngf setDateFormat:@"mm:ss.SSS"];
+    NSString* nGoalString = [ngf stringFromDate:nDate];
+    
+    [[dots objectAtIndex:i] setText:@"" level:nGoalString];
+    
+    if(i<currentLevel){
+        
+        [[dots objectAtIndex:i ] setFill:YES];
+        
+        //update text
+        //float diff=[[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"accuracy"] floatValue];
+        //NSString* diffString = [self getTimeDiffString:diff];
+        
+        
     }
-    [self updateDots];
+    else {
+        [[dots objectAtIndex:i ]  setFill:NO];
+        //[[dots objectAtIndex:i ]  setText:@"" level:@""];
+    }
+    
 }
 
 -(void) updateDots{
 
     for (int i=0; i<[dots count]; i++){
-        if(i<currentLevel){
-            [[dots objectAtIndex:i ] setFill:YES];
-            
-            //update text
-            float diff=[[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"accuracy"] floatValue];
-            
-            if(diff>=0)[[dots objectAtIndex:i] setText:[NSString stringWithFormat:@"+%.03fs", diff]];
-            else [[dots objectAtIndex:i] setText:[NSString stringWithFormat:@"%.03fs", diff]];
-        }
-        else {
-            [[dots objectAtIndex:i ]  setFill:NO];
-            [[dots objectAtIndex:i ]  setText:@""];
-        }
+        [self updateDot:i];
+  
     }
     
     
-    //hide xo view`	
+    //hide xo view`
     [UIView animateWithDuration:.4
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseOut
@@ -340,9 +429,10 @@
                      completion:^(BOOL finished){
    
                      }];
-    
-    
 }
+
+
+
 -(void) updateLife{
     for (int i=0;i<NUMHEARTS;i++){
         Dots* d=[hearts objectAtIndex:i];
@@ -427,9 +517,9 @@
 //                             counterGoalLabel.frame=CGRectMake(0, counterGoalLabel.frame.origin.y, counterGoalLabel.frame.size.width, counterGoalLabel.frame.size.height);
 //                             counterLabel.frame = CGRectMake(0,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
 //                             instructions.frame = CGRectMake(0,instructions.frame.origin.y,instructions.frame.size.width,instructions.frame.size.height);
-                            if(progressView.frame.origin.y<screenHeight/2.0) progressView.frame=self.view.frame;
+                            if(progressView.frame.origin.y<screenHeight/2.0) progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
                             else {
-                                progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight);
+                                progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
                                 [self.view sendSubviewToBack:progressView];
 
                             }
@@ -702,12 +792,12 @@
 
 -(float)getLevel:(int)level{
     float l;
-    if(level<TRIALSINSTAGE)l=.5+level*.1;
-    else if(level<TRIALSINSTAGE*2)l=level*.25;
-    else if(level<TRIALSINSTAGE*3)l=level*.5;
-    else if(level<TRIALSINSTAGE*4)l=level*1.0;
-    else if(level<TRIALSINSTAGE*5)l=level*2.0;
-    else l=level*5.0;
+    if(level<TRIALSINSTAGE)l=.5+level*0.1;
+    else if(level<TRIALSINSTAGE*2)l=level*0.2;
+    else if(level<TRIALSINSTAGE*3)l=level*0.3;
+    else if(level<TRIALSINSTAGE*4)l=level*0.5;
+    else if(level<TRIALSINSTAGE*5)l=level*1.0;
+    else l=level*2.0;
     return l;
 }
 
@@ -751,19 +841,20 @@
                          
                          if(life==0) currentLevel=0;
                          
-                         
-                         
                          //check for stage up to add dots
-                         if (currentLevel%TRIALSINSTAGE==0) [self setupDots];
+                         if ( (currentLevel%TRIALSINSTAGE==0 && [self isAccurate]) || life==0){
+                          [self setupDots];
+                         }
                          
                          
                          //[self saveLevelProgress];
                          //[self loadLevel];
                          
-                         //need delay here for currentLevel to get set !!!!!!
-                         [self performSelector:@selector(loadLevel) withObject:self afterDelay:0.5];
-                         [self performSelector:@selector(animateLevelReset) withObject:self afterDelay:1.0];
-                         
+                         else{
+                             //need delay here for currentLevel to get set !!!!!!
+                             [self performSelector:@selector(loadLevel) withObject:self afterDelay:0.5];
+                             [self performSelector:@selector(animateLevelReset) withObject:self afterDelay:1.0];
+                         }
 
 
                      }];
@@ -835,9 +926,13 @@
     
     NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: fabs(time)];
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
-    if(time>0) [df setDateFormat:@"+mm:ss.SSS"];
-    else [df setDateFormat:@"-mm:ss.SSS"];
-    
+    if(time<60){
+        if(time>=0) [df setDateFormat:@"+ss.SSS"];
+        else [df setDateFormat:@"-ss.SSS"];
+    }else{
+        if(time>=0) [df setDateFormat:@"+mm.ss.SSS"];
+        else [df setDateFormat:@"-mm.ss.SSS"];
+    }
     NSString* counterString = [df stringFromDate:aDate];
     return counterString;
     
@@ -1227,7 +1322,7 @@
                 initialSpringVelocity:1.0
                               options:UIViewAnimationOptionCurveLinear
                            animations:^{
-                               progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight);
+                               progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight*2.0);
                                //[self resetMainDot];
 
                            }
@@ -1279,7 +1374,7 @@
 //                             counterGoalLabel.alpha=0.0;
 //                             instructions.alpha=0.0;
 
-                             progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight);
+                             progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight*2.0);
 
                              if(life==0){
                                  //reset Dots
@@ -1575,17 +1670,24 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    
-//HelloScene* hello = [[HelloScene alloc] initWithSize:CGSizeMake(768,1024)];
-//SKView *spriteView = (SKView *) self.view;
-//[spriteView presentScene: hello];
-    
+    progressView.frame=CGRectMake(0, screenHeight, progressView.frame.size.width, progressView.frame.size.height);
     [super viewWillAppear:animated];
-
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    
+    [UIView animateWithDuration:0.4
+                          delay:0.4
+         usingSpringWithDamping:.6
+          initialSpringVelocity:1.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         progressView.frame=CGRectMake(0, screenHeight-44, progressView.frame.size.width, progressView.frame.size.height);
+                     }
+                     completion:^(BOOL finished){
+                     }];
+
    [super viewDidAppear:animated];
 }
 

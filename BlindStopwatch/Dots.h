@@ -11,17 +11,18 @@
 @interface Dots:UIView
 {
     bool fill;
-    //UILabel *label;
     int startX;
     int startY;
     CGRect startFrame;
 }
 
 -(void) setFill:(bool) b;
--(void) setText:(NSString *) s;
+-(void) setText:(NSString *) s level:(NSString *)l;
 -(void) resetPosition;
 - (void) animateAlongPath:(CGRect) frame rotate:(float) radians speed:(float)speed;
 @property UILabel *label;
+@property UILabel *level;
+
 @property float *labelValue;
 
 

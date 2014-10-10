@@ -13,6 +13,9 @@
 - (id)initWithFrame:(CGRect)theFrame {
     self = [super initWithFrame:theFrame];
     if (self) {
+        startFrame=self.frame;
+
+        
         self.label=[[UILabel alloc] initWithFrame:CGRectMake(0, 40, 100, 20)];
         self.label.text=@"";
         self.label.textAlignment = NSTextAlignmentLeft;
@@ -20,9 +23,15 @@
         [self addSubview:self.label];
         self.label.backgroundColor = [UIColor clearColor];
         self.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:11];
-        startFrame=self.frame;
         
-        
+        self.level=[[UILabel alloc] initWithFrame:CGRectMake(0, 40, 100, 20)];
+        self.level.text=@"";
+        self.level.textAlignment = NSTextAlignmentLeft;
+        [self.level setTransform:CGAffineTransformMakeRotation(M_PI *.25)];
+        [self addSubview:self.level];
+        self.level.backgroundColor = [UIColor clearColor];
+        self.level.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:11];
+
     }
     return self;
 }
@@ -85,18 +94,25 @@
     [self setNeedsDisplay];
 }
 
--(void) setText:(NSString *) s
+-(void) setText:(NSString *) s level:(NSString *)l
 {
     self.label.text=s;
     self.label.alpha=0.0;
-    [UIView animateWithDuration:0.4
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         self.label.alpha=1.0;
-                     }
-                     completion:^(BOOL finished){
-                     }];
+    
+    self.level.text=l;
+    self.level.alpha=0.0;
+
+//    [UIView animateWithDuration:0.4
+//                          delay:0.0
+//                        options:UIViewAnimationOptionCurveLinear
+//                     animations:^{
+//                         self.label.alpha=1.0;
+//                         self.level.alpha=1.0;
+//                     }
+//                     completion:^(BOOL finished){
+//                     }];
+    self.label.alpha=1.0;
+    self.level.alpha=1.0;
     [self setNeedsDisplay];
 }
 

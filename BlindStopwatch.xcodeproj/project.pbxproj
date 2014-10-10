@@ -386,7 +386,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: cw wang (XZCX966PV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: cw wang (XZCX966PV5)";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -408,7 +408,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "6D115A24-6CA5-445C-981F-0534ADD95C14";
+				PROVISIONING_PROFILE = "c07965df-3bac-41e1-ad97-bc5ed83adb81";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -424,8 +424,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: cw wang (XZCX966PV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: cw wang (XZCX966PV5)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: CW&T Studio LLC (L6DVQR8JB9)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: CW&T Studio LLC (L6DVQR8JB9)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -439,7 +439,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "6D115A24-6CA5-445C-981F-0534ADD95C14";
+				PROVISIONING_PROFILE = "16875d88-f263-4ddf-9abe-7c96d54ce911";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -452,7 +452,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: cw wang (XZCX966PV5)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -466,7 +466,7 @@
 					"$(PROJECT_DIR)/BlindStopwatch/TestFlightSDK3.0.2",
 				);
 				PRODUCT_NAME = BlindStopwatch;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "c07965df-3bac-41e1-ad97-bc5ed83adb81";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -478,8 +478,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: CW&T Studio LLC (L6DVQR8JB9)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: CW&T Studio LLC (L6DVQR8JB9)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -493,7 +493,7 @@
 					"$(PROJECT_DIR)/BlindStopwatch/TestFlightSDK3.0.2",
 				);
 				PRODUCT_NAME = BlindStopwatch;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "16875d88-f263-4ddf-9abe-7c96d54ce911";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
