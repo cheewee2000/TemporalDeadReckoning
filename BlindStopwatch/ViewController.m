@@ -60,7 +60,7 @@
     
     levelArrows=[[NSMutableArray alloc] init];
     for (int i=0; i<3; i++) {
-        TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, screenHeight-250+i*40, screenWidth-8, 30.0)];
+        TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, 285+i*40, screenWidth-8, 30.0)];
         [levelArrows addObject:arrow];
         [self.view addSubview:arrow];
         [self.view sendSubviewToBack:arrow];
@@ -68,8 +68,8 @@
     }
 
     
-    goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(screenWidth*.5, counterGoalLabel.frame.size.height-30, screenWidth*.5-8, 40)];
-    goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:38.0];
+    goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(screenWidth*.5-5, counterGoalLabel.frame.size.height-30, screenWidth*.5-8, 40)];
+    goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:33.0];
     goalPrecision.textAlignment=NSTextAlignmentRight;
     goalPrecision.textColor = [UIColor whiteColor];
     goalPrecision.text = @"";
@@ -317,6 +317,7 @@
             
             //update text
             float diff=[[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"accuracy"] floatValue];
+            
             if(diff>=0)[[dots objectAtIndex:i] setText:[NSString stringWithFormat:@"+%.03fs", diff]];
             else [[dots objectAtIndex:i] setText:[NSString stringWithFormat:@"%.03fs", diff]];
         }
@@ -514,7 +515,7 @@
     NSString * stop;
     NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: [self getLevelAccuracy:currentLevel]];
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:@"±m:ss.SSS"];
+    [df setDateFormat:@"±mm:ss.SSS"];
     stop = [df stringFromDate:aDate];
     goalPrecision.text=stop;
 }
@@ -830,6 +831,19 @@
 
 
 
+-(NSString *)getTimeDiffString:(NSTimeInterval)time{
+    
+    NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: fabs(time)];
+    NSDateFormatter* df = [[NSDateFormatter alloc] init];
+    if(time>0) [df setDateFormat:@"+mm:ss.SSS"];
+    else [df setDateFormat:@"-mm:ss.SSS"];
+    
+    NSString* counterString = [df stringFromDate:aDate];
+    return counterString;
+    
+}
+
+
 
 -(void)timerDiffDisplay:(NSTimeInterval)time{
     
@@ -937,8 +951,10 @@
              //update text
              float diff=elapsed-timerGoal;
              NSString *diffString;
-             if(diff>=0)diffString=[NSString stringWithFormat:@"OFF BY +%.03f", diff];
-             else diffString=[NSString stringWithFormat:@"OFF BY %.03f", diff];
+             //if(diff>=0)diffString=[NSString stringWithFormat:@"OFF BY +%.03f", diff];
+             //else diffString=[NSString stringWithFormat:@"OFF BY %.03f", diff];
+             diffString=[NSString stringWithFormat:@"OFF BY %@",[self getTimeDiffString:diff]];
+                          
              
              [t update:@"" rightLabel:diffString color:[self inverseColor:[self getBackgroundColor]] animate:NO];
              [t slideIn:.3+d];

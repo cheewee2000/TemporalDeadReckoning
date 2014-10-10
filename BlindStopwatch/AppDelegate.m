@@ -2,6 +2,7 @@
 
 #import "AppDelegate.h"
 #import "ContainerViewController.h"
+#import "TestFlight.h"
 
 @implementation AppDelegate
 
@@ -29,6 +30,8 @@
                   clientKey:@"W2M0sLsEPTKlioA8cYKIPKUkJITzV03mvXgVYEya"];
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
+    [TestFlight takeOff:@"3adc91eb-4d85-4881-9c0e-b99098188a50"];
+
     return YES;
 }
 
