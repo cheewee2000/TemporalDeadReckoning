@@ -1,11 +1,11 @@
 //todo
-/* 
+/*
+ add stage label to progressview
+
  add game over animation
  progressview pull up, then hide levelarrow backgrounds, then hide levelarrows
  life heart animations
  add levearrow for prefect stage point bonus, accuracy bonus, etc
- add stage label to progressview
- levelarrow for cleared, remove trailing zeros
  show levelarrow for stage change with new accuracy
  try two color graphics. no white
  dots with stars
@@ -772,7 +772,6 @@
 
 -(void)setLevel:(int)level{
     
-    //[self updateDots];
     
      NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
      [defaults setInteger:currentLevel forKey:@"currentLevel"];
@@ -790,7 +789,7 @@
 
     
      //change background color
-     [UIView animateWithDuration:0.4
+     [UIView animateWithDuration:0.6
                            delay:0.0
                          options:UIViewAnimationOptionCurveLinear
                       animations:^{
@@ -804,7 +803,7 @@
                       completion:^(BOOL finished){
 
                          [UIView animateWithDuration:0.6
-                                               delay:3.0
+                                               delay:2.0
                               usingSpringWithDamping:.6
                                initialSpringVelocity:1.0
                                              options:UIViewAnimationOptionCurveLinear
@@ -822,10 +821,10 @@
 -(float)getLevel:(int)level{
     float l;
     if(level<TRIALSINSTAGE)l=.5+level*0.1;
-    else if(level<TRIALSINSTAGE*2)l=level*0.2;
-    else if(level<TRIALSINSTAGE*3)l=level*0.3;
-    else if(level<TRIALSINSTAGE*4)l=level*0.5;
-    else if(level<TRIALSINSTAGE*5)l=level*1.0;
+    else if(level<TRIALSINSTAGE*2)l=1.0+level%TRIALSINSTAGE*0.2;
+    else if(level<TRIALSINSTAGE*3)l=3.0+level%TRIALSINSTAGE*0.3;
+    else if(level<TRIALSINSTAGE*4)l=5.0+level%TRIALSINSTAGE*0.5;
+    else if(level<TRIALSINSTAGE*5)l=10.0+level%TRIALSINSTAGE*1.0;
     else l=level*2.0;
     return l;
 }
@@ -1090,7 +1089,7 @@
              
              NSString * stageProgressString;
              if([self isAccurate]){
-                 stageProgressString=[NSString stringWithFormat:@"LEVEL %.03f CLEARED",[self getLevel:currentLevel]];
+                 stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED",[self getLevel:currentLevel]];
              }
              else if(life>2) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life-1];
              else if(life>1) stageProgressString=@"ONE TRY LEFT";
