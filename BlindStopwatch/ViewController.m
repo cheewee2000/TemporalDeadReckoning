@@ -402,7 +402,7 @@
 
                          //need delay here for currentLevel to get set !!!!!!
                          [self performSelector:@selector(loadLevel) withObject:self afterDelay:3.5];
-                         [self performSelector:@selector(animateLevelReset) withObject:self afterDelay:4.0];
+                         //[self performSelector:@selector(animateLevelReset) withObject:self afterDelay:4.0];
 
     }];
                          
@@ -783,35 +783,16 @@
                         }
                       completion:^(BOOL finished){
 
-                         //move timergoal label back in
                          [UIView animateWithDuration:0.6
-                                               delay:0.0
+                                               delay:3.0
                               usingSpringWithDamping:.6
                                initialSpringVelocity:1.0
                                              options:UIViewAnimationOptionCurveLinear
                                           animations:^{
-                                              
-                                              [instructions updateText:@"START" animate:NO];
                                               [self setTimerGoalMarginDisplay];
- 
-                                              
-                                              //timergoal in
-                                              //counterGoalLabel.frame=CGRectMake(0, counterGoalLabel.frame.origin.y, counterGoalLabel.frame.size.width, counterGoalLabel.frame.size.height);
-                                              //counterLabel.frame = CGRectMake(0,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
-                                              //instructions.frame = CGRectMake(0,instructions.frame.origin.y,instructions.frame.size.width,instructions.frame.size.height);
-                                              
-                                              
-                                              //counterLabel
-                                              //instructions.frame = CGRectMake(0,instructions.frame.origin.y,instructions.frame.size.width,instructions.frame.size.height);
-
                                           }
                                           completion:^(BOOL finished){
-                                              trialSequence=0;
-                                              //[self addBlob];
-                                              
-                                              //slide out level Arrows
-                                              //for(int i=0; i<3; i++)[[levelArrows objectAtIndex:i] slideOut:2+(float)i*.33];
-                                              
+                                              [self animateLevelReset];
                                           }];
      
           }];
@@ -881,7 +862,6 @@
                          else{
                              //need delay here for currentLevel to get set !!!!!!
                              [self performSelector:@selector(loadLevel) withObject:self afterDelay:0.5];
-                             [self performSelector:@selector(animateLevelReset) withObject:self afterDelay:1.0];
                          }
 
 
@@ -900,6 +880,7 @@
     [self updateDots];
     [self updateLife];
     [self setLevel:currentLevel];
+    
     [self loadData];
     [self.myGraph reloadGraph];
 }
@@ -1051,7 +1032,8 @@
 
 
 
-# pragma mark Animate Level
+# pragma mark 
+
 
 
 -(void)animateLevelDotScore{
@@ -1291,46 +1273,21 @@
 }
 
 -(void)animateLevelReset{
+    
     [instructions slideOut:0];
-
+    
     if([self isAccurate]){
 
         [self updateTimeDisplay:0];
-        //[self setTimerGoalMarginDisplay];
 
-
-        //reset and scale tiny dot
-        //[self resetMainDot];
-        //mainDot.frame=CGRectMake(mainDot.center.x, mainDot.center.y, 1, 1);
-//        counterLabel.alpha=1.0;
-//        counterGoalLabel.alpha=1.0;
-//        [self slideInCounterLabel];
-        
-        //fade out diff label
-//        [UIView animateWithDuration:0.4
-//                              delay:0
-//                            options:UIViewAnimationOptionCurveLinear
-//                         animations:^{
-//                             differencelLabel.alpha=0;
-//                             //counterGoalLabel.frame=CGRectMake(0,55,screenWidth,108);
-//                             //counterLabel.frame=CGRectMake(0,169,screenWidth,108);
-//                             counterLabel.frame = CGRectMake(0,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
-//                             counterGoalLabel.frame = CGRectMake(0,counterGoalLabel.frame.origin.y,counterGoalLabel.frame.size.width,counterGoalLabel.frame.size.height);
-//
-//                             
-//                         }
-//                         completion:^(BOOL finished){
-//                         }];
-        
-        
           [UIView animateWithDuration:.4
                                 delay:0
                usingSpringWithDamping:.5
                 initialSpringVelocity:1.0
                               options:UIViewAnimationOptionCurveLinear
                            animations:^{
+                               //slide progressview back down
                                progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight*2.0);
-                               //[self resetMainDot];
 
                            }
                            completion:^(BOOL finished){
@@ -1345,30 +1302,20 @@
                                                     instructions.alpha=1.0;
                                                     differencelLabel.alpha=0;
                                                     
-  
-
                                                 }
                                                 completion:^(BOOL finished){
                                                     
                                                     UIColor * inverse=[self inverseColor:self.view.backgroundColor];
                                                     [instructions update:@"START" rightLabel:@"" color:inverse animate:NO];
                                                     [instructions slideIn:0.0];
-                                                    trialSequence=0;
+                                                    //trialSequence=0;
+                                                    [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.8];
 
-                                                    differencelLabel.text=@"00:00.000";
-                                                    
                                                 }];
                                
                                
                            }];
-          
-          
-
-          
         
-         
- 
-                   
     }
     
     else{
@@ -1377,72 +1324,31 @@
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^{
-//                             counterLabel.alpha=0.0;
-//                             counterGoalLabel.alpha=0.0;
-//                             instructions.alpha=0.0;
 
                              progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight*2.0);
 
-                             if(life==0){
-                                 //reset Dots
-                                 for (int i=0; i<dots.count; i++){
-                                     Dots* d=[dots objectAtIndex:i];
-                      
-                                          d.alpha=0.0;
-                                          [d resetPosition];
-      
-                                          //fade in new dots
-                                          [UIView animateWithDuration:0.8
-                                                                delay:0.4
-                                                              options:UIViewAnimationOptionCurveEaseIn
-                                                           animations:^{
-                                                               d.alpha=1.0;
-                                                           }
-                                                           completion:^(BOOL finished){
-                                                               
-                                                           }];
-        
-                                 }
-                             }
                          }
                          completion:^(BOOL finished){
-                             [UIView animateWithDuration:0.8
-                                                   delay:0.0
-                                                 options:UIViewAnimationOptionCurveLinear
-                                              animations:^{
 
-                                                  differencelLabel.alpha=0;
+                              [self updateTimeDisplay:0];
+                              //fade in new counters
+                              [UIView animateWithDuration:0.8
+                                                    delay:.5
+                                                  options:UIViewAnimationOptionCurveLinear
+                                               animations:^{
+                                                   counterLabel.alpha=1.0;
+                                                   instructions.alpha=1.0;
+                                                   counterGoalLabel.alpha=1.0;
+                                               }
+                                               completion:^(BOOL finished){
+                                                   [instructions resetFrame];
+                                                   UIColor * inverse=[self inverseColor:self.view.backgroundColor];
+                                                   [instructions update:@"START" rightLabel:@"" color:inverse animate:NO];
+                                                   [instructions slideIn:0];
+                                                   [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.8];
 
-                                              }
-                                              completion:^(BOOL finished){
-                                                  [self updateTimeDisplay:0];
-                                                  //[self setTimerGoalMarginDisplay];
-     
-                                                  
-
-                                                  //fade in new counters
-                                                  [UIView animateWithDuration:0.8
-                                                                        delay:.5
-                                                                      options:UIViewAnimationOptionCurveLinear
-                                                                   animations:^{
-                                                                       counterLabel.alpha=1.0;
-                                                                       instructions.alpha=1.0;
-                                                                       counterGoalLabel.alpha=1.0;
-                                                                   }
-                                                                   completion:^(BOOL finished){
-                                                                       //[self addBlob];
-                                                                       
-                                                                       [instructions resetFrame];
-                                                                       UIColor * inverse=[self inverseColor:self.view.backgroundColor];
-                                                                       [instructions update:@"START" rightLabel:@"" color:inverse animate:NO];
-                                                                       [instructions slideIn:0];
-                                                                       trialSequence=0;
-
-                                                                       differencelLabel.text=@"00:00.000";
-
-                                                                   }];
-                                                  
-                                              }];
+                                               }];
+                              
                              
                          }];
     }
@@ -1450,6 +1356,11 @@
     
 }
 
+
+-(void)resetTrialSequence{
+    trialSequence=0;
+    
+}
 
 -(void)slideOutCounterLabel{
     //move counter with arrow
