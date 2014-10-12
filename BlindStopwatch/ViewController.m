@@ -1,5 +1,7 @@
 //todo
 /*
+
+ 
  add game over animation
  don't let start until after start instruction
  progressview pull up, then hide levelarrow backgrounds, then hide levelarrows
@@ -7,7 +9,6 @@
  add levearrow for prefect stage point bonus, accuracy bonus, etc
  add stage label to progressview
  levelarrow for cleared, remove trailing zeros
- change colors after stages
  show levelarrow for stage change with new accuracy
  levelarrow without point
  try two color graphics. no white
@@ -382,7 +383,7 @@
                             [self updateDot:i];
                         //animate dot appearance
                         [UIView animateWithDuration:.4
-                                              delay:.5+(i-currentLevel)*.8
+                                              delay:.4+(i-currentLevel)*.4
                              usingSpringWithDamping:.5
                               initialSpringVelocity:1.0
                                             options:UIViewAnimationOptionCurveLinear
@@ -1530,8 +1531,8 @@
                                   [UIColor colorWithRed:186/255.0 green:1/255.0 blue:255/255.0 alpha:1],
                                   
                                   nil];
-    
-    int cl=currentLevel%[backgroundColors count];
+    int currentStage=floorf(currentLevel/TRIALSINSTAGE);
+    int cl=currentStage%[backgroundColors count];
     
     return backgroundColors[cl];
 }
