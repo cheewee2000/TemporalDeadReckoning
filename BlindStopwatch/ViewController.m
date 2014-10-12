@@ -1,8 +1,5 @@
 //todo
-/*
-
- high score at top left
-
+/* 
  add game over animation
  progressview pull up, then hide levelarrow backgrounds, then hide levelarrows
  life heart animations
@@ -10,7 +7,6 @@
  add stage label to progressview
  levelarrow for cleared, remove trailing zeros
  show levelarrow for stage change with new accuracy
- levelarrow without point
  try two color graphics. no white
  dots with stars
  juicy feedback for 99% 95% 100%
@@ -91,6 +87,8 @@
     levelArrows=[[NSMutableArray alloc] init];
     for (int i=0; i<3; i++) {
         TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, 285+i*40, screenWidth-8, 30.0)];
+        arrow.drawArrow=false;
+
         [levelArrows addObject:arrow];
         [self.view addSubview:arrow];
         [self.view sendSubviewToBack:arrow];
@@ -1628,6 +1626,8 @@
                      completion:^(BOOL finished){
                      }];
 
+//    if(trialSequence==0)[instructions updateText:@"START" animate:YES];
+    
    [super viewDidAppear:animated];
 }
 

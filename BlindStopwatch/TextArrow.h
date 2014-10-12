@@ -10,7 +10,8 @@
 
 @interface TextArrow :UILabel{
     CGRect saveFrame;
-    
+ 
+
     
 }
 //-(void)addTextLabel;
@@ -25,5 +26,5 @@
 @property UIColor *color;
 @property UILabel *rightLabel;
 @property UILabel *instructionText;
-
+@property bool drawArrow;
 @end
