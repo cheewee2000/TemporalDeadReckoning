@@ -1,3 +1,25 @@
+//todo
+/*
+ add game over animation
+ don't let start until after start instruction
+ progressview pull up, then hide levelarrow backgrounds, then hide levelarrows
+ life heart animations
+ add levearrow for prefect stage point bonus, accuracy bonus, etc
+ add stage label to progressview
+ levelarrow for cleared, remove trailing zeros
+ change colors after stages
+ show levelarrow for stage change with new accuracy
+ levelarrow without point
+ try two color graphics. no white
+ high score at top left
+ dots with stars
+ juicy feedback for 99% 95% 100%
+ autolayout with visual in code
+ prevent runaway timers
+ 
+*/
+
+
 #import "ViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 //#import <AVFoundation/AVFoundation.h>
@@ -50,8 +72,13 @@
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
     tapGestureRecognizer.numberOfTouchesRequired = 1;
     tapGestureRecognizer.numberOfTapsRequired = 1;
-    //[self.view addGestureRecognizer:tapGestureRecognizer];
-
+    [instructions addGestureRecognizer:tapGestureRecognizer];
+    instructions.userInteractionEnabled = YES;
+    [counterLabel addGestureRecognizer:tapGestureRecognizer];
+    counterLabel.userInteractionEnabled = YES;
+    [counterGoalLabel addGestureRecognizer:tapGestureRecognizer];
+    counterGoalLabel.userInteractionEnabled = YES;
+    
     
     labelContainer=[[UIView alloc] initWithFrame:self.view.frame];
     [self.view addSubview:labelContainer];
@@ -1042,12 +1069,10 @@
              
              TextArrow *t= [levelArrows objectAtIndex:0];
              
-             float d=1.0;
+             float d=.2;
              //update text
              float diff=elapsed-timerGoal;
              NSString *diffString;
-             //if(diff>=0)diffString=[NSString stringWithFormat:@"OFF BY +%.03f", diff];
-             //else diffString=[NSString stringWithFormat:@"OFF BY %.03f", diff];
              diffString=[NSString stringWithFormat:@"OFF BY %@",[self getTimeDiffString:diff]];
                           
              
@@ -1075,28 +1100,9 @@
              [t slideIn:.9+d];
              
              
+             //[self morphOrDropDots];
              
-             [UIView animateWithDuration:1.0
-                                   delay:0.0
-                                 options:UIViewAnimationOptionCurveEaseInOut
-                              animations:^{
-                                  //differencelLabel.alpha=1;
-                            }
-                              completion:^(BOOL finished){
-                                  //differencelLabel.text=@"00:00.000";
-                                  //resetCounter=fabs(elapsed-timerGoal)*.15;
-                                  //count difference
-                                  //[self performSelector:@selector(countdownTimerLabel) withObject:self afterDelay:0.2];
-
-                                  //show success label
-                                  //[self performSelector:@selector(showTrialInstruction) withObject:self afterDelay:1.8];
-                                  //drop dots or morph to levedots
-                                  [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:2.5];
-                                  //for(int i=0; i<3; i++)[[levelArrows objectAtIndex:i] slideOut:10+(float)i*.2];
-
-                                  
-                              }];
-             
+             [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:1.7];
              
              
              
