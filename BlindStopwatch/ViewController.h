@@ -47,7 +47,7 @@
 
     
     
-    UIVisualEffectView *blobBlur;
+    //UIVisualEffectView *blobBlur;
 
     IBOutlet UIView *stats;
     UILabel *lastResults;
@@ -69,6 +69,7 @@
     //NSArray *trialAccuracy;
     
     
+    
     int maxLevel;
     int currentLevel;
     
@@ -83,7 +84,11 @@
     
     Dots *mainDot;
     NSArray *satellites;
-    UIView * blob;
+    
+    Dots * highScoreDot;
+    UILabel *highScoreLabel;
+
+    //UIView * blob;
     NSMutableArray *dots;
     NSArray *hearts;
     int life;

@@ -1,9 +1,9 @@
 //todo
 /*
 
- 
+ high score at top left
+
  add game over animation
- don't let start until after start instruction
  progressview pull up, then hide levelarrow backgrounds, then hide levelarrows
  life heart animations
  add levearrow for prefect stage point bonus, accuracy bonus, etc
@@ -12,7 +12,6 @@
  show levelarrow for stage change with new accuracy
  levelarrow without point
  try two color graphics. no white
- high score at top left
  dots with stars
  juicy feedback for 99% 95% 100%
  autolayout with visual in code
@@ -85,7 +84,7 @@
     [self.view addSubview:labelContainer];
     [labelContainer addSubview:counterLabel];
     [self.view addSubview:counterGoalLabel];
-    [self.view addSubview:differencelLabel];
+    //[self.view addSubview:differencelLabel];
 
     [self.view bringSubviewToFront:instructions];
     
@@ -220,7 +219,7 @@
     
     
     
-    blob=[[UIView alloc] init];
+    //blob=[[UIView alloc] init];
     //[self.view addSubview:blob];
     //set blob frame
     [self resetMainDot];
@@ -255,6 +254,7 @@
     
 
     //big dot
+    /*
     mainDot = [[Dots alloc] init];
     mainDot.alpha = 1;
     mainDot.backgroundColor = [UIColor clearColor];
@@ -275,9 +275,10 @@
         [blob addSubview:satellites[i]];
     }
     [self setupSatellites];
-
-    differencelLabel.alpha=0;
-    [self.view bringSubviewToFront:differencelLabel];
+*/
+    
+//    differencelLabel.alpha=0;
+//    [self.view bringSubviewToFront:differencelLabel];
     
     
 
@@ -293,8 +294,7 @@
 //    blobBlur.frame = self.view.bounds;
 //    blobBlur.alpha=0.0;
 //    [blob addSubview:blobBlur];
-    
-    [self.view sendSubviewToBack:blob];
+//    [self.view sendSubviewToBack:blob];
     
     
     xView=[[UIImageView alloc] init];
@@ -310,13 +310,35 @@
     oView.alpha=0;
     [self xoViewOffScreen];
 
+    
     [self.view sendSubviewToBack:progressView];
+
+    
+    highScoreDot=[[Dots alloc] initWithFrame:CGRectMake(10, 10, 20, 20)];
+    highScoreDot.backgroundColor=[UIColor clearColor];
+    [highScoreDot setFill:NO];
+    highScoreDot.alpha=0;
+    [self.view addSubview:highScoreDot];
+    [self.view sendSubviewToBack:highScoreDot];
+    
+    highScoreLabel=[[UILabel alloc] initWithFrame:CGRectMake(32,10,screenWidth,26)];
+    highScoreLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
+    [self updateHighscore];
+    [self.view addSubview:highScoreLabel];
+    [self.view sendSubviewToBack:highScoreLabel];
     
     [self setLevel:currentLevel];
 
     
 }
 
+-(void)updateHighscore{
+    if(maxLevel>0){
+        highScoreDot.alpha=1;
+        [highScoreDot setFill:YES];
+        highScoreLabel.text=[NSString stringWithFormat:@"%.01f",[self getLevel:maxLevel]];
+    }
+}
 -(void)setupDots{
     int currentStage=floorf(currentLevel/TRIALSINSTAGE);
     int rowHeight=60;
@@ -492,7 +514,7 @@
     int d=180;
     mainDot.frame=CGRectMake(self.view.frame.size.width/2.0-d/2.0,self.view.frame.size.width/2.0+d-44,d,d);
     //blob.frame=CGRectMake(0,self.view.frame.size.height*.5,self.view.frame.size.width,self.view.frame.size.height*.5);
-    blob.frame=self.view.frame;
+    //blob.frame=self.view.frame;
 
 }
 
@@ -758,9 +780,9 @@
      [defaults setInteger:currentLevel forKey:@"currentLevel"];
     
     if(level>=maxLevel){
-        maxLevel=level;
+        maxLevel=level-1;
         [defaults setInteger:maxLevel forKey:@"maxLevel"];
-
+        [self updateHighscore];
     }
      [defaults synchronize];
     
@@ -1015,19 +1037,19 @@
     //reposition maindot below screen
     [self resetMainDot];
 
-    blob.transform = CGAffineTransformScale(CGAffineTransformIdentity, .00001, .000001);
-
-    [UIView animateWithDuration:0.8
-                          delay:0.4
-         usingSpringWithDamping:.5
-          initialSpringVelocity:1.0
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         blob.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-                     }
-                     completion:^(BOOL finished){
-
-                     }];
+//    blob.transform = CGAffineTransformScale(CGAffineTransformIdentity, .00001, .000001);
+//
+//    [UIView animateWithDuration:0.8
+//                          delay:0.4
+//         usingSpringWithDamping:.5
+//          initialSpringVelocity:1.0
+//                        options:UIViewAnimationOptionCurveEaseIn
+//                     animations:^{
+//                         blob.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+//                     }
+//                     completion:^(BOOL finished){
+//
+//                     }];
 }
 
 
