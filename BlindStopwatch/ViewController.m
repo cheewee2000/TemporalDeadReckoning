@@ -1,25 +1,43 @@
 //todo
 /*
- 
- 
 
  
+ show levelarrow for stage change with new accuracy
+
+ 
+ 
+ add levearrow for prefect stage point bonus, accuracy bonus, etc
+ 
+ 
+ 
+ 
+ highscore, use real level and bonus calculations
+
+
  
  dots with stars
 
  add game over animation
- progressview pull up, then hide levelarrow backgrounds, then hide levelarrows
+ 
  life heart animations
- add levearrow for prefect stage point bonus, accuracy bonus, etc
-   show levelarrow for stage change with new accuracy
- try two color graphics. no white
- juicy feedback for 99% 95% 100%
- autolayout with visual in code
+ 
+
+ 
+ 
+ 
+ 
  prevent runaway timers
-  highscore, use real level and bonus calculations
+
  
  startup sequence animation
  
+ juicy feedback for 99% 95% 100%
+
+ try two color graphics. no white
+
+ autolayout with visual in code
+
+
 */
 
 
@@ -33,6 +51,7 @@
 
 #define TRIALSINSTAGE 5
 #define NUMHEARTS 3
+#define NUMLEVELARROWS 5
 
 @interface ViewController () {
     
@@ -74,11 +93,7 @@
     tapGestureRecognizer.numberOfTapsRequired = 1;
     [instructions addGestureRecognizer:tapGestureRecognizer];
     instructions.userInteractionEnabled = YES;
-    [counterLabel addGestureRecognizer:tapGestureRecognizer];
-    counterLabel.userInteractionEnabled = YES;
-    [counterGoalLabel addGestureRecognizer:tapGestureRecognizer];
-    counterGoalLabel.userInteractionEnabled = YES;
-    
+
     
     labelContainer=[[UIView alloc] initWithFrame:self.view.frame];
     [self.view addSubview:labelContainer];
@@ -89,7 +104,7 @@
     [self.view bringSubviewToFront:instructions];
     
     levelArrows=[[NSMutableArray alloc] init];
-    for (int i=0; i<3; i++) {
+    for (int i=0; i<NUMLEVELARROWS; i++) {
         TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, 285+i*40, screenWidth-8, 30.0)];
         arrow.drawArrow=false;
 
@@ -106,7 +121,7 @@
     goalPrecision.textColor = [UIColor whiteColor];
     goalPrecision.text = @"";
     [counterGoalLabel addSubview:goalPrecision];
-    
+
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if([defaults objectForKey:@"currentLevel"] == nil) currentLevel=0;
     else currentLevel = (int)[defaults integerForKey:@"currentLevel"];
@@ -117,23 +132,20 @@
     [self loadData];
 
     //[self loadData:currentLevel];
-
     //[self loadLevelProgress];
     
+    //buttonstealer
     id progressDelegate = self;
-
     self.buttonStealer = [[RBVolumeButtons alloc] init];
     self.buttonStealer.upBlock = ^{
         [progressDelegate buttonPressed];
     };
     self.buttonStealer.downBlock = ^{
         [progressDelegate buttonPressed];
-
     };
-    
     [self.buttonStealer startStealingVolumeButtonEvents];
 
-    
+    /*
     nPointsVisible=20;
     self.myGraph.colorTop =[UIColor clearColor];
     self.myGraph.colorBottom =[UIColor clearColor];
@@ -161,7 +173,7 @@
 //    UIPinchGestureRecognizer *pinch =[[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(scalePiece:)];
 //    [pinch setDelegate:self];
 //    [self.myGraph addGestureRecognizer:pinch];
-    
+    */
     
     //stats
     /*
@@ -382,7 +394,7 @@
                      completion:^(BOOL finished){
                          
                          //remove levelArrows
-                         for(int i=0; i<3; i++)[[levelArrows objectAtIndex:i] slideOut:0.0];
+                         for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideOut:0.0];
 
                          
                          
@@ -706,7 +718,7 @@
                                  if(arrow.frame.origin.x==0){
                                      //slide out level Arrows if they're still showing
                                      float randomDelay=arc4random_uniform(20)/20.0;
-                                     for(int i=0; i<3; i++)[[levelArrows objectAtIndex:i] slideOut:(float)i*.2+randomDelay];
+                                     for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideOut:(float)i*.2+randomDelay];
                                  }
                              }];
 
@@ -1147,45 +1159,36 @@
          completion:^(BOOL finished){
              
              [self showXO];
-             
-             TextArrow *t= [levelArrows objectAtIndex:0];
-             
+
+             //arrow delay
              float d=.2;
-             //update text
+             
+             //ARROW1
+             TextArrow *t= [levelArrows objectAtIndex:0];
              float diff=elapsed-timerGoal;
              NSString *diffString;
              diffString=[NSString stringWithFormat:@"OFF BY %@",[self getTimeDiffString:diff]];
-                          
-             
              [t update:@"" rightLabel:diffString color:[self inverseColor:[self getBackgroundColor]] animate:NO];
              [t slideIn:.3+d];
              
+             //ARROW2
              float accuracyP=100.0-fabs(diff/(float)timerGoal)*100.0;
              NSString* percentAccuracyString = [NSString stringWithFormat:@"ACCURACY %02i%%", (int)accuracyP];
              t= [levelArrows objectAtIndex:1];
              [t update:@"" rightLabel:percentAccuracyString color:[self inverseColor:[self getBackgroundColor]] animate:NO];
              [t slideIn:.6+d];
              
+             //ARROW3
              NSString * stageProgressString;
-             if([self isAccurate]){
-                 stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED",[self getLevel:currentLevel]];
-             }
+             if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED",[self getLevel:currentLevel]];
              else if(life>2) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life-1];
              else if(life>1) stageProgressString=@"ONE TRY LEFT";
-             else{
-                 stageProgressString=@"GAME OVER";
-             }
-             
+             else stageProgressString=@"GAME OVER";
              t= [levelArrows objectAtIndex:2];
              [t update:@"" rightLabel:stageProgressString color:[self inverseColor:[self getBackgroundColor]] animate:NO];
              [t slideIn:.9+d];
              
-             
              [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:1.7];
-             
-             
-             
-
              
          }];
 
@@ -1247,8 +1250,11 @@
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
                          float w=210;
-                         if([self isAccurate])oView.frame=CGRectMake(screenWidth/2.0-w/2.0, screenHeight-44-w-22, w, w);
-                         else xView.frame=CGRectMake(screenWidth/2.0-w/2.0, screenHeight-44-w-22, w, w);
+                         float y=screenHeight-44-w-30;
+                         float x=screenWidth/2.0-w/2.0;
+                         
+                         if([self isAccurate])oView.frame=CGRectMake( x, y, w, w);
+                         else xView.frame=CGRectMake(x, y, w, w);
                      }
                      completion:^(BOOL finished){
  
@@ -1286,40 +1292,38 @@
 -(void)animateLevelReset{
     
     [instructions slideOut:0];
+    [self updateTimeDisplay:0];
+
     
-
-        [self updateTimeDisplay:0];
-
-        
-        [UIView animateWithDuration:0.5
-                              delay:0
-             usingSpringWithDamping:.5
-              initialSpringVelocity:1.0
-                            options:UIViewAnimationOptionCurveLinear
-                         animations:^{
-                             //slide progressview down
-                             progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight*2.0);
-                         }
-                         completion:^(BOOL finished){
-                             [self.view sendSubviewToBack:progressView];
-                              //fade in new counters
-                              [UIView animateWithDuration:0.4
-                                                    delay:.5
-                                                  options:UIViewAnimationOptionCurveLinear
-                                               animations:^{
-                                                   counterLabel.alpha=1.0;
-                                                   instructions.alpha=1.0;
-                                                   counterGoalLabel.alpha=1.0;
-                                               }
-                                               completion:^(BOOL finished){
-                                                   [instructions resetFrame];
-                                                   [instructions update:@"START" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:NO];
-                                                   [instructions slideIn:0];
-                                                   [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.7];
-                                               }];
-                              
-                             
-                         }];
+    [UIView animateWithDuration:0.8
+                          delay:0
+         usingSpringWithDamping:.5
+          initialSpringVelocity:1.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         //slide progressview down
+                         progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight*2.0);
+                     }
+                     completion:^(BOOL finished){
+                         [self.view sendSubviewToBack:progressView];
+                          //fade in new counters
+                          [UIView animateWithDuration:0.4
+                                                delay:0.4
+                                              options:UIViewAnimationOptionCurveLinear
+                                           animations:^{
+                                               counterLabel.alpha=1.0;
+                                               instructions.alpha=1.0;
+                                               counterGoalLabel.alpha=1.0;
+                                           }
+                                           completion:^(BOOL finished){
+                                               [instructions resetFrame];
+                                               [instructions update:@"START" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:NO];
+                                               [instructions slideIn:0];
+                                               [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.7];
+                                           }];
+                          
+                         
+                     }];
  
     
 }
