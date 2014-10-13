@@ -27,21 +27,18 @@
     
     int screenWidth,screenHeight;
     
-    //float launchVolume;
     
     UIView *labelContainer;
-    
     IBOutlet UILabel *counterLabel;
     IBOutlet UILabel *counterGoalLabel;
     IBOutlet UILabel *differencelLabel;
+    
     TextArrow* instructions;
     NSMutableArray * levelArrows;
     
     IBOutlet UILabel *nextLevelLabel;
     
     UILabel *goalPrecision;
-
-    
     
     UIVisualEffectView *labelContainerBlur;
 
@@ -101,6 +98,8 @@
     
     UIImageView * xView;
     UIImageView * oView;
+    
+    NSMutableArray * stageLabels;
 
 }
 

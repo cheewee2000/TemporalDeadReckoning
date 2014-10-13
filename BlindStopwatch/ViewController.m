@@ -6,7 +6,7 @@
  progressview pull up, then hide levelarrow backgrounds, then hide levelarrows
  life heart animations
  add levearrow for prefect stage point bonus, accuracy bonus, etc
- show levelarrow for stage change with new accuracy
+   show levelarrow for stage change with new accuracy
  try two color graphics. no white
  dots with stars
  juicy feedback for 99% 95% 100%
@@ -24,7 +24,7 @@
 #import "RBVolumeButtons.h"
 
 
-#define TRIALSINSTAGE 3
+#define TRIALSINSTAGE 2
 #define NUMHEARTS 3
 
 @interface ViewController () {
@@ -223,16 +223,19 @@
     [self resetMainDot];
     
     //dot array for level progress
-    progressView=[[LevelProgressView alloc] initWithFrame:self.view.frame];
-    progressView.frame=CGRectOffset(progressView.frame, 0, screenHeight-44);
+    progressView=[[LevelProgressView alloc] init];
+    progressView.clipsToBounds=YES;
     [self.view addSubview:progressView];
     
     //Dots
     dots=[NSMutableArray array];
+    stageLabels=[NSMutableArray array];
 
     [self setupDots];
     [self updateDots];
     [self updateTimeDisplay:0];
+    
+    
     
     //life hearsts
     if([defaults objectForKey:@"life"] == nil) life=NUMHEARTS;
@@ -348,11 +351,22 @@
             [[dots objectAtIndex:i ]  setFill:NO];
             [[dots objectAtIndex:i ]  setText:@"" level:@""];
             [[dots objectAtIndex:i ] removeFromSuperview];
+            
+            if(i%TRIALSINSTAGE==0){
+                int stage=floorf(i/TRIALSINSTAGE);
+                TextArrow *sLabel=[stageLabels objectAtIndex:stage];
+                sLabel.alpha=0;
+                
+            }
+            
         }
         [dots removeAllObjects];
+        [stageLabels removeAllObjects];
     }
     
 
+    [self.view bringSubviewToFront:progressView];
+    
     [UIView animateWithDuration:.8
                           delay:1.0
          usingSpringWithDamping:.5
@@ -362,21 +376,20 @@
                          progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
                      }
                      completion:^(BOOL finished){
-                         
-                 
     
                     for (int i = 0; i < TRIALSINSTAGE+currentStage*TRIALSINSTAGE;i++){
                         float dotDia=15;
-                        float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia;
-
+                        float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
+                        float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*currentStage;
+                        
                         
                         if(i<[dots count]){
-                            //update dot position
+                            
                             Dots *dot=[dots objectAtIndex:i];
 
                             //add level label
                             [self updateDot:i];
-                            
+
                             //shift dots down
                             [UIView animateWithDuration:.8
                                                   delay:0.5
@@ -384,15 +397,67 @@
                                   initialSpringVelocity:1.0
                                                 options:UIViewAnimationOptionCurveLinear
                                              animations:^{
-                                                 dot.frame=CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*currentStage,dotDia,dotDia);
+                                                 dot.frame=CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia);
+
                                              }
                                              completion:^(BOOL finished){
                                              }];
+                            
+                            
+                            //update stage label
+                            if(i%TRIALSINSTAGE==0){
+                                int stage=floorf(i/TRIALSINSTAGE);
+                                TextArrow *sLabel=[stageLabels objectAtIndex:stage];
+                                sLabel.alpha=1;
+                                [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor] animate:NO];
+
+                                [UIView animateWithDuration:.8
+                                                      delay:0.5
+                                     usingSpringWithDamping:.5
+                                      initialSpringVelocity:1.0
+                                                    options:UIViewAnimationOptionCurveLinear
+                                                 animations:^{
+                                                     sLabel.frame=CGRectMake(0, y, 70, 15);
+                                                 }
+                                                 completion:^(BOOL finished){
+                                                 }];
+                            }
+
 
                         }
                         else{
+
+                            if(i%TRIALSINSTAGE==0){
+                                //add stage label
+                                TextArrow *sLabel = [[TextArrow alloc] initWithFrame:CGRectMake(0, y-100, 70, 15)];
+                                sLabel.instructionText.font = [UIFont fontWithName:@"DIN Condensed" size:17.0];
+                                sLabel.instructionText.textColor = [UIColor blackColor];
+                                sLabel.instructionText.frame=CGRectOffset(sLabel.instructionText.frame, 0, -2);
+                                sLabel.drawArrowRight=true;
+                                sLabel.alpha=1;
+
+                                [stageLabels addObject:sLabel];
+                                [progressView addSubview:sLabel];
+                                
+                                
+                                int stage=floorf(i/TRIALSINSTAGE);
+                                [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor] animate:NO];
+                                
+                                [UIView animateWithDuration:.8
+                                                      delay:0.5
+                                     usingSpringWithDamping:.5
+                                      initialSpringVelocity:1.0
+                                                    options:UIViewAnimationOptionCurveLinear
+                                                 animations:^{
+                                                     sLabel.frame=CGRectMake(0, y, 70, 15);
+                                                 }
+                                                 completion:^(BOOL finished){
+                                                 }];
+                                
+                            }
+                            
                             //add dot
-                            Dots *dot = [[Dots alloc] initWithFrame:CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*currentStage,dotDia,dotDia)];
+                            Dots *dot = [[Dots alloc] initWithFrame:CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia)];
                             dot.alpha = 1;
                             dot.backgroundColor = [UIColor clearColor];
                             [dots addObject:dot];
@@ -434,8 +499,8 @@
     NSTimeInterval level=[self getLevel:i];
     NSDate* nDate = [NSDate dateWithTimeIntervalSince1970: level];
     NSDateFormatter* ngf = [[NSDateFormatter alloc] init];
-    if(level<60)[ngf setDateFormat:@"ss.SSS"];
-    else [ngf setDateFormat:@"mm:ss.SSS"];
+    if(level<60)[ngf setDateFormat:@"s.S"];
+    else [ngf setDateFormat:@"mm:ss.S"];
     NSString* nGoalString = [ngf stringFromDate:nDate];
     
     [[dots objectAtIndex:i] setText:@"" level:nGoalString];
@@ -463,7 +528,6 @@
         [self updateDot:i];
   
     }
-    
     
     //hide xo view`
     [UIView animateWithDuration:.4
@@ -565,7 +629,10 @@
 //                             counterGoalLabel.frame=CGRectMake(0, counterGoalLabel.frame.origin.y, counterGoalLabel.frame.size.width, counterGoalLabel.frame.size.height);
 //                             counterLabel.frame = CGRectMake(0,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
 //                             instructions.frame = CGRectMake(0,instructions.frame.origin.y,instructions.frame.size.width,instructions.frame.size.height);
-                            if(progressView.frame.origin.y<screenHeight/2.0) progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
+                             if(progressView.frame.origin.y<screenHeight/2.0) {
+                                progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
+                                 [self.view bringSubviewToFront:progressView];
+                             }
                             else {
                                 progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
                                 [self.view sendSubviewToBack:progressView];
@@ -803,7 +870,7 @@
                       completion:^(BOOL finished){
 
                          [UIView animateWithDuration:0.6
-                                               delay:2.0
+                                               delay:1.0
                               usingSpringWithDamping:.6
                                initialSpringVelocity:1.0
                                              options:UIViewAnimationOptionCurveLinear
@@ -1192,10 +1259,7 @@
 -(void)morphOrDropDots{
     
     if([self isAccurate]){
-
-        [self.view bringSubviewToFront:progressView];
-        
-        [UIView animateWithDuration:0.5
+        [UIView animateWithDuration:0.4
                               delay:0.0
                             options:UIViewAnimationOptionCurveLinear
                          animations:^{
@@ -1225,7 +1289,6 @@
                              //counterGoalLabel.frame=CGRectMake(screenWidth, counterGoalLabel.frame.origin.y, counterGoalLabel.frame.size.width, counterGoalLabel.frame.size.height);
                              //counterLabel.frame = CGRectMake(screenWidth,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
                              //instructions.frame = CGRectMake(screenWidth,instructions.frame.origin.y,instructions.frame.size.width,instructions.frame.size.height);
-                             [self.view sendSubviewToBack:progressView];
                              
 
 //                             instructions.frame=CGRectOffset(instructions.frame, 0, -screenHeight*2);
@@ -1252,38 +1315,8 @@
 
                          }
                          completion:^(BOOL finished){
-                             
-                [UIView animateWithDuration:.4
-                                      delay:.5
-                                    options:UIViewAnimationOptionCurveEaseIn
-                                 animations:^{
-
-                                     if(life==0){
-                                         //drop dots
-                                         for (int i=0; i<dots.count; i++){
-                                             Dots* d=[dots objectAtIndex:i];
-                                             
-                                             [UIView animateWithDuration:0.4
-                                                                   delay:(arc4random()%10)*.1
-                                                                 options:UIViewAnimationOptionCurveEaseIn
-                                                              animations:^{
-                                                                  d.frame=CGRectMake(d.frame.origin.x, self.view.frame.size.height,d.frame.size.width,d.frame.size.height);
-                                                                  
-                                                              }
-                                                              completion:^(BOOL finished){
-                                                                  
-                                                                  
-                                                              }];
-                                             
-                                         }
-                                     }
-                                 }
-                                 completion:^(BOOL finished){
-
-                                     [self saveTrialData];
-                                     [self checkLevelUp];
-
-                                 }];
+                             [self saveTrialData];
+                             [self checkLevelUp];
                  }];
         
     }
@@ -1310,7 +1343,8 @@
 
                            }
                            completion:^(BOOL finished){
-                               
+                               [self.view sendSubviewToBack:progressView];
+
                                //fade in counters
                                [UIView animateWithDuration:0.4
                                                      delay:.5
@@ -1344,10 +1378,12 @@
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^{
 
+                             //slide progressview down
                              progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight*2.0);
 
                          }
                          completion:^(BOOL finished){
+                             [self.view sendSubviewToBack:progressView];
 
                               [self updateTimeDisplay:0];
                               //fade in new counters
@@ -1607,6 +1643,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    //set view offscreen for bounce in
     progressView.frame=CGRectMake(0, screenHeight, progressView.frame.size.width, progressView.frame.size.height);
     [super viewWillAppear:animated];
 }
@@ -1623,6 +1660,7 @@
                          progressView.frame=CGRectMake(0, screenHeight-44, progressView.frame.size.width, progressView.frame.size.height);
                      }
                      completion:^(BOOL finished){
+                         [self.view sendSubviewToBack:progressView];
                      }];
 
 //    if(trialSequence==0)[instructions updateText:@"START" animate:YES];

@@ -9,5 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface LevelProgressView : UIView
+{
+    NSMutableArray * stageLabels;
+   
+}
 
 @end

@@ -45,7 +45,8 @@
         self.color=[UIColor colorWithRed:1 green:1 blue:0 alpha:1];
         saveFrame=theFrame;
         self.drawArrow=true;
-        
+        self.drawArrowRight=false;
+
         
     }
     return self;
@@ -57,7 +58,14 @@
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextBeginPath(ctx);
-    if(self.drawArrow){
+    if(self.drawArrowRight){
+        CGContextMoveToPoint (ctx, CGRectGetMaxX(rect), CGRectGetMidY(rect));  // mid left
+        CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect)-CGRectGetMaxY(rect)/2, CGRectGetMaxY(rect));  // bottom left
+        CGContextAddLineToPoint(ctx, CGRectGetMinX(rect), CGRectGetMaxY(rect));  // bottom left
+        CGContextAddLineToPoint(ctx, CGRectGetMinX(rect), CGRectGetMinY(rect));  // top left
+        CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect)-CGRectGetMaxY(rect)/2, CGRectGetMinY(rect));  // mid right
+    }
+    else if(self.drawArrow){
         CGContextMoveToPoint (ctx, CGRectGetMinX(rect), CGRectGetMidY(rect));  // mid left
         CGContextAddLineToPoint(ctx, CGRectGetMinX(rect)+CGRectGetMaxY(rect)/2, CGRectGetMaxY(rect));  // bottom left
         CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMaxY(rect));  // bottom left
@@ -69,6 +77,9 @@
         CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMaxY(rect));
         CGContextAddLineToPoint(ctx, CGRectGetMinX(rect), CGRectGetMaxY(rect));
     }
+    
+    
+    
     CGContextClosePath(ctx);
 
     

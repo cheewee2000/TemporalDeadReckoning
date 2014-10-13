@@ -27,4 +27,6 @@
 @property UILabel *rightLabel;
 @property UILabel *instructionText;
 @property bool drawArrow;
+@property bool drawArrowRight;
+
 @end
