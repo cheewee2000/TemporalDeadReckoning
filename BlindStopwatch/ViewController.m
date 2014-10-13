@@ -1,7 +1,7 @@
 //todo
 /*
  
- slide out levelarrow after level up and game over
+ 
 
  
  
@@ -18,6 +18,7 @@
  prevent runaway timers
   highscore, use real level and bonus calculations
  
+ startup sequence animation
  
 */
 
@@ -379,6 +380,12 @@
                          progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
                      }
                      completion:^(BOOL finished){
+                         
+                         //remove levelArrows
+                         for(int i=0; i<3; i++)[[levelArrows objectAtIndex:i] slideOut:0.0];
+
+                         
+                         
     
                     for (int i = 0; i < TRIALSINSTAGE+currentStage*TRIALSINSTAGE;i++){
                         float dotDia=15;
@@ -692,13 +699,15 @@
                                 options:UIViewAnimationOptionCurveLinear
                              animations:^{
                                  labelContainerBlur.alpha=1;
-                                 //blobBlur.alpha=0.0;
-                                 //[self.view bringSubviewToFront:blob];
-                                 
                              }
                              completion:^(BOOL finished){
-                                 //slide out level Arrows
-                                 for(int i=0; i<3; i++)[[levelArrows objectAtIndex:i] slideOut:(float)i*.2];
+                                 TextArrow *arrow=[levelArrows objectAtIndex:0];
+                                 
+                                 if(arrow.frame.origin.x==0){
+                                     //slide out level Arrows if they're still showing
+                                     float randomDelay=arc4random_uniform(20)/20.0;
+                                     for(int i=0; i<3; i++)[[levelArrows objectAtIndex:i] slideOut:(float)i*.2+randomDelay];
+                                 }
                              }];
 
             
@@ -1278,48 +1287,9 @@
     
     [instructions slideOut:0];
     
-    //if([self isAccurate]){
 
         [self updateTimeDisplay:0];
 
-//          [UIView animateWithDuration:.5
-//                                delay:0
-//               usingSpringWithDamping:.5
-//                initialSpringVelocity:1.0
-//                              options:UIViewAnimationOptionCurveLinear
-//                           animations:^{
-//                               //slide progressview back down
-//                               progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight*2.0);
-//
-//                           }
-//                           completion:^(BOOL finished){
-//                               [self.view sendSubviewToBack:progressView];
-//
-//                               //fade in counters
-//                               [UIView animateWithDuration:0.4
-//                                                     delay:.5
-//                                                   options:UIViewAnimationOptionCurveLinear
-//                                                animations:^{
-//                                                    counterLabel.alpha=1.0;
-//                                                    counterGoalLabel.alpha=1.0;
-//                                                    instructions.alpha=1.0;
-//                                                }
-//                                                completion:^(BOOL finished){
-//                                                    
-//                                                    UIColor * inverse=[self inverseColor:self.view.backgroundColor];
-//                                                    [instructions update:@"START" rightLabel:@"" color:inverse animate:NO];
-//                                                    [instructions slideIn:0.0];
-//                                                    //trialSequence=0;
-//                                                    [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.8];
-//
-//                                                }];
-//                               
-//                               
-//                           }];
-//        
-//    }
-//    
-//    else{
         
         [UIView animateWithDuration:0.5
                               delay:0
@@ -1332,8 +1302,6 @@
                          }
                          completion:^(BOOL finished){
                              [self.view sendSubviewToBack:progressView];
-
-                              [self updateTimeDisplay:0];
                               //fade in new counters
                               [UIView animateWithDuration:0.4
                                                     delay:.5
@@ -1345,16 +1313,13 @@
                                                }
                                                completion:^(BOOL finished){
                                                    [instructions resetFrame];
-                                                   UIColor * inverse=[self inverseColor:self.view.backgroundColor];
-                                                   [instructions update:@"START" rightLabel:@"" color:inverse animate:NO];
+                                                   [instructions update:@"START" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:NO];
                                                    [instructions slideIn:0];
-                                                   [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.8];
-
+                                                   [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.7];
                                                }];
                               
                              
                          }];
-    //}
  
     
 }
@@ -1362,7 +1327,6 @@
 
 -(void)resetTrialSequence{
     trialSequence=0;
-    
 }
 
 -(void)slideOutCounterLabel{
