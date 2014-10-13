@@ -1,11 +1,5 @@
 //todo
 /*
-
- 
- show levelarrow for stage change with new accuracy
-
- 
- 
  add levearrow for prefect stage point bonus, accuracy bonus, etc
  
  
@@ -37,6 +31,7 @@
 
  autolayout with visual in code
 
+ 
 
 */
 
@@ -49,7 +44,7 @@
 #import "RBVolumeButtons.h"
 
 
-#define TRIALSINSTAGE 5
+#define TRIALSINSTAGE 3
 #define NUMHEARTS 3
 #define NUMLEVELARROWS 5
 
@@ -79,7 +74,7 @@
     screenHeight=self.view.frame.size.height;
     screenWidth=self.view.frame.size.width;
 
-    trialSequence=0;
+    trialSequence=-1;
 
     //instructions
     instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(screenWidth, 137, screenWidth-8, 30.0)];
@@ -356,8 +351,12 @@
         highScoreLabel.text=[NSString stringWithFormat:@"%.01f",[self getLevel:maxLevel]];
     }
 }
+
+-(int)getCurrentStage{
+    return floorf(currentLevel/TRIALSINSTAGE);
+}
+
 -(void)setupDots{
-    int currentStage=floorf(currentLevel/TRIALSINSTAGE);
     int rowHeight=60;
 
     for(int i=0; i<[dots count]; i++) [self updateDot:i];
@@ -399,10 +398,10 @@
                          
                          
     
-                    for (int i = 0; i < TRIALSINSTAGE+currentStage*TRIALSINSTAGE;i++){
+                    for (int i = 0; i < TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE;i++){
                         float dotDia=15;
                         float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
-                        float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*currentStage;
+                        float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*[self getCurrentStage];
                         
                         
                         if(i<[dots count]){
@@ -1187,6 +1186,16 @@
              t= [levelArrows objectAtIndex:2];
              [t update:@"" rightLabel:stageProgressString color:[self inverseColor:[self getBackgroundColor]] animate:NO];
              [t slideIn:.9+d];
+             
+             //ARROW4
+             if([self isAccurate] && currentLevel%TRIALSINSTAGE==TRIALSINSTAGE-1) {
+                 NSString * stageClearedString;
+                 stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED",[self getCurrentStage]+1];
+                 t= [levelArrows objectAtIndex:3];
+                 [t update:@"" rightLabel:stageClearedString color:[self inverseColor:[self getBackgroundColor]] animate:NO];
+                 [t slideIn:1.2+d];
+             }
+             
              
              [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:1.7];
              
