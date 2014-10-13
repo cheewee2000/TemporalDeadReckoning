@@ -1,6 +1,11 @@
 //todo
 /*
- add stage label to progressview
+ 
+ slide out levelarrow after level up and game over
+
+ 
+ 
+ dots with stars
 
  add game over animation
  progressview pull up, then hide levelarrow backgrounds, then hide levelarrows
@@ -8,10 +13,11 @@
  add levearrow for prefect stage point bonus, accuracy bonus, etc
    show levelarrow for stage change with new accuracy
  try two color graphics. no white
- dots with stars
  juicy feedback for 99% 95% 100%
  autolayout with visual in code
  prevent runaway timers
+  highscore, use real level and bonus calculations
+ 
  
 */
 
@@ -24,7 +30,7 @@
 #import "RBVolumeButtons.h"
 
 
-#define TRIALSINSTAGE 2
+#define TRIALSINSTAGE 5
 #define NUMHEARTS 3
 
 @interface ViewController () {
@@ -54,12 +60,9 @@
     screenWidth=self.view.frame.size.width;
 
     trialSequence=0;
-    
-
-    
 
     //instructions
-    instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, 137, screenWidth-8, 30.0)];
+    instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(screenWidth, 137, screenWidth-8, 30.0)];
     [self.view addSubview:instructions];
     
     
@@ -328,7 +331,7 @@
     [self.view addSubview:highScoreLabel];
     [self.view sendSubviewToBack:highScoreLabel];
     
-    [self setLevel:currentLevel];
+    //[self setLevel:currentLevel];
 
     
 }
@@ -392,7 +395,7 @@
 
                             //shift dots down
                             [UIView animateWithDuration:.8
-                                                  delay:0.5
+                                                  delay:0.4
                                  usingSpringWithDamping:.5
                                   initialSpringVelocity:1.0
                                                 options:UIViewAnimationOptionCurveLinear
@@ -412,7 +415,7 @@
                                 [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor] animate:NO];
 
                                 [UIView animateWithDuration:.8
-                                                      delay:0.5
+                                                      delay:0.4
                                      usingSpringWithDamping:.5
                                       initialSpringVelocity:1.0
                                                     options:UIViewAnimationOptionCurveLinear
@@ -444,7 +447,7 @@
                                 [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor] animate:NO];
                                 
                                 [UIView animateWithDuration:.8
-                                                      delay:0.5
+                                                      delay:0.4
                                      usingSpringWithDamping:.5
                                       initialSpringVelocity:1.0
                                                     options:UIViewAnimationOptionCurveLinear
@@ -468,7 +471,7 @@
                             [self updateDot:i];
                         //animate dot appearance
                         [UIView animateWithDuration:.4
-                                              delay:.4+(i-currentLevel)*.4
+                                              delay:.8+(i-currentLevel)*.3
                              usingSpringWithDamping:.5
                               initialSpringVelocity:1.0
                                             options:UIViewAnimationOptionCurveLinear
@@ -1169,8 +1172,6 @@
              [t slideIn:.9+d];
              
              
-             //[self morphOrDropDots];
-             
              [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:1.7];
              
              
@@ -1257,137 +1258,84 @@
 
 }
 -(void)morphOrDropDots{
-    
-    if([self isAccurate]){
-        [UIView animateWithDuration:0.4
-                              delay:0.0
-                            options:UIViewAnimationOptionCurveLinear
-                         animations:^{
-//                             
-//                             counterGoalLabel.frame=CGRectMake(-screenWidth, counterGoalLabel.frame.origin.y, counterGoalLabel.frame.size.width, counterGoalLabel.frame.size.height);
-//                             counterLabel.frame = CGRectMake(-screenWidth,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
-//                             instructions.frame = CGRectMake(-screenWidth,instructions.frame.origin.y,instructions.frame.size.width,instructions.frame.size.height);
-                             
-//                             counterGoalLabel.frame=CGRectOffset(counterGoalLabel.frame, -screenWidth, 0);
-//                             counterLabel.frame=CGRectOffset(counterLabel.frame, -screenWidth, 0);
-//                             instructions.frame=CGRectOffset(instructions.frame, -screenWidth, 0);
+    [UIView animateWithDuration:0.4
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         counterLabel.alpha=0.0;
+                         if([self isAccurate])counterGoalLabel.alpha=0.0;
+                         instructions.alpha=0;
+                         labelContainerBlur.alpha=0.0;
+                     }
+                     completion:^(BOOL finished){
 
-                             //counterLabel.frame=CGRectOffset(counterLabel.frame, 0, screenHeight);
-                             //instructions.frame=CGRectOffset(instructions.frame, 0, screenHeight);
-                             
-                             counterLabel.alpha=0.0;
-                             counterGoalLabel.alpha=0.0;
-                             instructions.alpha=0;
-
-                             //progressView.frame=self.view.frame;
-
-                             //blobBlur.alpha=0;
-                             labelContainerBlur.alpha=0.0;
-                         }
-                         completion:^(BOOL finished){
-                             
-                             //counterGoalLabel.frame=CGRectMake(screenWidth, counterGoalLabel.frame.origin.y, counterGoalLabel.frame.size.width, counterGoalLabel.frame.size.height);
-                             //counterLabel.frame = CGRectMake(screenWidth,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
-                             //instructions.frame = CGRectMake(screenWidth,instructions.frame.origin.y,instructions.frame.size.width,instructions.frame.size.height);
-                             
-
-//                             instructions.frame=CGRectOffset(instructions.frame, 0, -screenHeight*2);
-//                             counterGoalLabel.frame=CGRectMake(0,-180,screenWidth,108);
-//                             counterLabel.frame=CGRectMake(0,-108,screenWidth,108);
-                             //counterGoalLabel.frame=CGRectOffset(counterGoalLabel.frame, 2.0*screenWidth, 0);
-                             //counterLabel.frame=CGRectOffset(counterLabel.frame, 2.0*screenWidth, 0);
-                             
-                             
-                             [self saveTrialData];
-                             [self checkLevelUp];
-                        }];
-    }
-    else{
-        [UIView animateWithDuration:0.8
-                              delay:0.0
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{
-                             //blobBlur.alpha=0;
-                             labelContainerBlur.alpha=0.0;
-                             counterLabel.alpha=0.0;
-                             //counterGoalLabel.alpha=0.0;
-                             instructions.alpha=0;
-
-                         }
-                         completion:^(BOOL finished){
-                             [self saveTrialData];
-                             [self checkLevelUp];
-                 }];
-        
-    }
-    
-
+                         [self saveTrialData];
+                         [self checkLevelUp];
+                    }];
 }
 
 -(void)animateLevelReset{
     
     [instructions slideOut:0];
     
-    if([self isAccurate]){
+    //if([self isAccurate]){
 
         [self updateTimeDisplay:0];
 
-          [UIView animateWithDuration:.4
-                                delay:0
-               usingSpringWithDamping:.5
-                initialSpringVelocity:1.0
-                              options:UIViewAnimationOptionCurveLinear
-                           animations:^{
-                               //slide progressview back down
-                               progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight*2.0);
-
-                           }
-                           completion:^(BOOL finished){
-                               [self.view sendSubviewToBack:progressView];
-
-                               //fade in counters
-                               [UIView animateWithDuration:0.4
-                                                     delay:.5
-                                                   options:UIViewAnimationOptionCurveLinear
-                                                animations:^{
-                                                    counterLabel.alpha=1.0;
-                                                    counterGoalLabel.alpha=1.0;
-                                                    instructions.alpha=1.0;
-                                                    differencelLabel.alpha=0;
-                                                    
-                                                }
-                                                completion:^(BOOL finished){
-                                                    
-                                                    UIColor * inverse=[self inverseColor:self.view.backgroundColor];
-                                                    [instructions update:@"START" rightLabel:@"" color:inverse animate:NO];
-                                                    [instructions slideIn:0.0];
-                                                    //trialSequence=0;
-                                                    [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.8];
-
-                                                }];
-                               
-                               
-                           }];
+//          [UIView animateWithDuration:.5
+//                                delay:0
+//               usingSpringWithDamping:.5
+//                initialSpringVelocity:1.0
+//                              options:UIViewAnimationOptionCurveLinear
+//                           animations:^{
+//                               //slide progressview back down
+//                               progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight*2.0);
+//
+//                           }
+//                           completion:^(BOOL finished){
+//                               [self.view sendSubviewToBack:progressView];
+//
+//                               //fade in counters
+//                               [UIView animateWithDuration:0.4
+//                                                     delay:.5
+//                                                   options:UIViewAnimationOptionCurveLinear
+//                                                animations:^{
+//                                                    counterLabel.alpha=1.0;
+//                                                    counterGoalLabel.alpha=1.0;
+//                                                    instructions.alpha=1.0;
+//                                                }
+//                                                completion:^(BOOL finished){
+//                                                    
+//                                                    UIColor * inverse=[self inverseColor:self.view.backgroundColor];
+//                                                    [instructions update:@"START" rightLabel:@"" color:inverse animate:NO];
+//                                                    [instructions slideIn:0.0];
+//                                                    //trialSequence=0;
+//                                                    [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.8];
+//
+//                                                }];
+//                               
+//                               
+//                           }];
+//        
+//    }
+//    
+//    else{
         
-    }
-    
-    else{
-        
-        [UIView animateWithDuration:0.4
-                              delay:0.0
-                            options:UIViewAnimationOptionCurveEaseIn
+        [UIView animateWithDuration:0.5
+                              delay:0
+             usingSpringWithDamping:.5
+              initialSpringVelocity:1.0
+                            options:UIViewAnimationOptionCurveLinear
                          animations:^{
-
                              //slide progressview down
                              progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight*2.0);
-
                          }
                          completion:^(BOOL finished){
                              [self.view sendSubviewToBack:progressView];
 
                               [self updateTimeDisplay:0];
                               //fade in new counters
-                              [UIView animateWithDuration:0.8
+                              [UIView animateWithDuration:0.4
                                                     delay:.5
                                                   options:UIViewAnimationOptionCurveLinear
                                                animations:^{
@@ -1406,7 +1354,7 @@
                               
                              
                          }];
-    }
+    //}
  
     
 }
