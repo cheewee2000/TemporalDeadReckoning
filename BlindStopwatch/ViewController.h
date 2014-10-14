@@ -11,7 +11,6 @@
 #import "BEMSimpleLineGraphView.h"
 #import "Dots.h"
 #import "TextArrow.h"
-#import "ASCView.h"
 #import <Parse/Parse.h>
 #import "Level.h"
 #import "LevelProgressView.h"
@@ -75,7 +74,6 @@
     RBVolumeButtons *_buttonStealer;
 
     
-    ASCView * ascView;
     float resetCounter;
     
     

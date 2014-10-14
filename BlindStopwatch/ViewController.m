@@ -259,7 +259,7 @@
 //        
         
         UIImageView * heart=[[UIImageView alloc] init];
-        [heart setImage:[UIImage imageNamed: @"heart-filled"]];
+        [heart setImage:[UIImage imageNamed: @"heart"]];
         heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15);
         hearts = [hearts arrayByAddingObject:heart];
 
@@ -530,18 +530,10 @@
     [[dots objectAtIndex:i] setText:@"" level:nGoalString];
     
     if(i<currentLevel){
-        
         [[dots objectAtIndex:i ] setFill:YES];
-        
-        //update text
-        //float diff=[[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"accuracy"] floatValue];
-        //NSString* diffString = [self getTimeDiffString:diff];
-        
-        
     }
     else {
         [[dots objectAtIndex:i ]  setFill:NO];
-        //[[dots objectAtIndex:i ]  setText:@"" level:@""];
     }
     
 }
@@ -600,7 +592,7 @@
             [self.view sendSubviewToBack:d];
             [UIView animateWithDuration:.4
                                   delay:0.0
-                                options:UIViewAnimationOptionCurveLinear
+                                options:UIViewAnimationOptionCurveEaseIn
                              animations:^{
                                  d.frame=CGRectOffset(d.frame, 0, 100);
                              }
@@ -967,9 +959,9 @@
 -(void)checkLevelUp{
 
 
-    [UIView animateWithDuration:.4
+    [UIView animateWithDuration:.6
                           delay:0.0
-                        options:UIViewAnimationOptionCurveEaseOut
+                        options:UIViewAnimationOptionCurveEaseIn
                      animations:^{
                          if([self isAccurate]){
                              Dots *dot=[dots objectAtIndex:currentLevel];
