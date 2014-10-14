@@ -1,7 +1,6 @@
 //todo
 /*
  
- game center
 
  
  highscore, use real level and bonus calculations
@@ -46,7 +45,7 @@
 #import "RBVolumeButtons.h"
 
 
-#define TRIALSINSTAGE 3
+#define TRIALSINSTAGE 5
 #define NUMHEARTS 3
 #define NUMLEVELARROWS 5
 
@@ -239,6 +238,20 @@
     progressView.clipsToBounds=YES;
     [self.view addSubview:progressView];
     
+    
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setBackgroundImage:[UIImage imageNamed:@"trophy"] forState:UIControlStateNormal];
+    
+    [button setFrame:CGRectMake(0,0,45,45)];
+    button.center=CGPointMake(screenWidth/2.0, screenHeight-60);
+
+    [button addTarget:self action:@selector(showLeaderboardAndAchievements:) forControlEvents:UIControlEventTouchUpInside];
+    [progressView addSubview:button];
+    
+    
+    
+    
     //Dots
     dots=[NSMutableArray array];
     stageLabels=[NSMutableArray array];
@@ -354,6 +367,7 @@
         highScoreDot.alpha=1;
         [highScoreDot setFill:YES];
         highScoreLabel.text=[NSString stringWithFormat:@"%.01f",bestScore];
+        
     }
 }
 
@@ -868,6 +882,36 @@
     [self.ArrayOfValues writeToFile:timeValuesFile atomically:YES];
 }
 
+-(void)reportScore{
+    GKScore *score = [[GKScore alloc] initWithLeaderboardIdentifier:_leaderboardIdentifier];
+    score.value = bestScore;
+    
+    [GKScore reportScores:@[score] withCompletionHandler:^(NSError *error) {
+        if (error != nil) {
+            NSLog(@"%@", [error localizedDescription]);
+        }
+    }];
+}
+
+-(void)showLeaderboardAndAchievements:(BOOL)shouldShowLeaderboard{
+    GKGameCenterViewController *gcViewController = [[GKGameCenterViewController alloc] init];
+    
+    gcViewController.gameCenterDelegate = self;
+    
+    if (shouldShowLeaderboard) {
+        gcViewController.viewState = GKGameCenterViewControllerStateLeaderboards;
+        gcViewController.leaderboardIdentifier = _leaderboardIdentifier;
+    }
+    else{
+        gcViewController.viewState = GKGameCenterViewControllerStateAchievements;
+    }
+    
+    [self presentViewController:gcViewController animated:YES completion:nil];
+}
+-(void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
+{
+    [gameCenterViewController dismissViewControllerAnimated:YES completion:nil];
+}
 
 #pragma mark LEVELS
 //-(void)loadLevelProgress{
@@ -1017,7 +1061,11 @@
                              life--;
                          }
                          
-                         if(life==0) currentLevel=0;
+                         if(life==0){
+                              currentLevel=0;
+                             [self reportScore];
+
+                         }
                          
                          //check for stage up to add dots
                          if ( (currentLevel%TRIALSINSTAGE==0 && [self isAccurate]) || life==0){

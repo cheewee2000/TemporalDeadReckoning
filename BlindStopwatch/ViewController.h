@@ -18,7 +18,7 @@
 
 @class RBVolumeButtons;
 
-@interface ViewController : UIViewController <BEMSimpleLineGraphDataSource, BEMSimpleLineGraphDelegate>
+@interface ViewController : UIViewController <GKGameCenterControllerDelegate>  //<BEMSimpleLineGraphDataSource, BEMSimpleLineGraphDelegate>
 //@interface ViewController : UIViewController <JBLineChartViewDelegate, JBLineChartViewDataSource>
 
 {
@@ -130,5 +130,6 @@ void drawLine(CGContextRef context, CGPoint startPoint, CGPoint endPoint, CGColo
 @property BOOL gameCenterEnabled;
 @property NSString *leaderboardIdentifier;
 
+-(void)showLeaderboardAndAchievements:(BOOL)shouldShowLeaderboard;
 
 @end
