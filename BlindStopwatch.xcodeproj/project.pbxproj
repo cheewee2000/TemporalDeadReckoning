@@ -15,8 +15,9 @@
 		443CA72D19C0B171003BACD8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443CA72C19C0B171003BACD8 /* AVFoundation.framework */; };
 		443CA73119C0BFDB003BACD8 /* RBVolumeButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */; };
 		443CA73219C0C013003BACD8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB5F1475F07400751AE8 /* AudioToolbox.framework */; };
-		4470939219ED940100F6D53C /* Tempura-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4470939119ED940100F6D53C /* Tempura-Info.plist */; };
+		4470939219ED940100F6D53C /* BlindStopwatch-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4470939119ED940100F6D53C /* BlindStopwatch-Info.plist */; };
 		4470939419EDA48100F6D53C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4470939319EDA48100F6D53C /* Images.xcassets */; };
+		4470939619EDC41E00F6D53C /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4470939519EDC41E00F6D53C /* GameKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		44866B4819B78B500084652A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44866B4719B78B500084652A /* QuartzCore.framework */; };
 		448E78B319B936C100BF902A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 448E789D19B936C000BF902A /* InfoPlist.strings */; };
 		448E78B519B936C100BF902A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78A219B936C000BF902A /* AppDelegate.m */; };
@@ -60,8 +61,9 @@
 		443CA72C19C0B171003BACD8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		443CA72F19C0BFDB003BACD8 /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
 		443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
-		4470939119ED940100F6D53C /* Tempura-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Tempura-Info.plist"; sourceTree = "<group>"; };
+		4470939119ED940100F6D53C /* BlindStopwatch-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "BlindStopwatch-Info.plist"; sourceTree = "<group>"; };
 		4470939319EDA48100F6D53C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		4470939519EDC41E00F6D53C /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		44866B4719B78B500084652A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		448E789E19B936C000BF902A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		448E78A219B936C000BF902A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = BlindStopwatch/AppDelegate.m; sourceTree = SOURCE_ROOT; };
@@ -80,7 +82,7 @@
 		44C2C9F919C9E330005ACEB7 /* Level.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Level.m; sourceTree = "<group>"; };
 		44C2E02C19BE52D3009CFF88 /* Dots.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dots.h; sourceTree = "<group>"; };
 		44C2E02D19BE52D3009CFF88 /* Dots.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Dots.m; sourceTree = "<group>"; };
-		44F77D3A19ECCC3B005DB2C8 /* Tempura-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tempura-Prefix.pch"; sourceTree = "<group>"; };
+		44F77D3A19ECCC3B005DB2C8 /* BlindStopwatch-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BlindStopwatch-Prefix.pch"; sourceTree = "<group>"; };
 		44F972C819BE9E310094FCF4 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		44F972C919BE9E310094FCF4 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		44F972CE19BE9F5E0094FCF4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
@@ -93,7 +95,7 @@
 		44FD6DA519C49AB3006C7099 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		44FD6DA719C49BB7006C7099 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		44FD6DA919C49C3E006C7099 /* ParseFacebookUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtils.framework; sourceTree = "<group>"; };
-		70C2EB3C1475EF4F00751AE8 /* Tempura.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tempura.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		70C2EB3C1475EF4F00751AE8 /* BlindStopwatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlindStopwatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70C2EB401475EF4F00751AE8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		70C2EB421475EF4F00751AE8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		70C2EB441475EF4F00751AE8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -107,6 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4470939619EDC41E00F6D53C /* GameKit.framework in Frameworks */,
 				44FD6DA619C49AB3006C7099 /* SystemConfiguration.framework in Frameworks */,
 				44FD6DAA19C49C3E006C7099 /* ParseFacebookUtils.framework in Frameworks */,
 				44FD6DA219C49AA7006C7099 /* Security.framework in Frameworks */,
@@ -188,7 +191,7 @@
 		70C2EB3D1475EF4F00751AE8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				70C2EB3C1475EF4F00751AE8 /* Tempura.app */,
+				70C2EB3C1475EF4F00751AE8 /* BlindStopwatch.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -196,6 +199,7 @@
 		70C2EB3F1475EF4F00751AE8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4470939519EDC41E00F6D53C /* GameKit.framework */,
 				44FD6DA919C49C3E006C7099 /* ParseFacebookUtils.framework */,
 				44FD6DA719C49BB7006C7099 /* Bolts.framework */,
 				44FD6DA519C49AB3006C7099 /* SystemConfiguration.framework */,
@@ -234,8 +238,8 @@
 				448E78B019B936C100BF902A /* main.m */,
 				448E78AF19B936C100BF902A /* AppDelegate.h */,
 				448E78A219B936C000BF902A /* AppDelegate.m */,
-				4470939119ED940100F6D53C /* Tempura-Info.plist */,
-				44F77D3A19ECCC3B005DB2C8 /* Tempura-Prefix.pch */,
+				4470939119ED940100F6D53C /* BlindStopwatch-Info.plist */,
+				44F77D3A19ECCC3B005DB2C8 /* BlindStopwatch-Prefix.pch */,
 				4470939319EDA48100F6D53C /* Images.xcassets */,
 				448E789C19B936C000BF902A /* en.lproj */,
 				448E78A719B936C000BF902A /* BEM */,
@@ -250,9 +254,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		70C2EB3B1475EF4F00751AE8 /* Tempura */ = {
+		70C2EB3B1475EF4F00751AE8 /* Tempra */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 70C2EB5A1475EF4F00751AE8 /* Build configuration list for PBXNativeTarget "Tempura" */;
+			buildConfigurationList = 70C2EB5A1475EF4F00751AE8 /* Build configuration list for PBXNativeTarget "Tempra" */;
 			buildPhases = (
 				70C2EB381475EF4F00751AE8 /* Sources */,
 				70C2EB391475EF4F00751AE8 /* Frameworks */,
@@ -262,9 +266,9 @@
 			);
 			dependencies = (
 			);
-			name = Tempura;
+			name = Tempra;
 			productName = VolumeSnap;
-			productReference = 70C2EB3C1475EF4F00751AE8 /* Tempura.app */;
+			productReference = 70C2EB3C1475EF4F00751AE8 /* BlindStopwatch.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -279,7 +283,7 @@
 						DevelopmentTeam = L6DVQR8JB9;
 						SystemCapabilities = {
 							com.apple.GameCenter = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.InAppPurchase = {
 								enabled = 0;
@@ -288,7 +292,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 70C2EB361475EF4F00751AE8 /* Build configuration list for PBXProject "Tempura" */;
+			buildConfigurationList = 70C2EB361475EF4F00751AE8 /* Build configuration list for PBXProject "BlindStopwatch" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -300,7 +304,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				70C2EB3B1475EF4F00751AE8 /* Tempura */,
+				70C2EB3B1475EF4F00751AE8 /* Tempra */,
 			);
 		};
 /* End PBXProject section */
@@ -313,7 +317,7 @@
 				448E78B919B936C100BF902A /* Default.png in Resources */,
 				44F972CF19BE9F5E0094FCF4 /* MainStoryboard.storyboard in Resources */,
 				4470939419EDA48100F6D53C /* Images.xcassets in Resources */,
-				4470939219ED940100F6D53C /* Tempura-Info.plist in Resources */,
+				4470939219ED940100F6D53C /* BlindStopwatch-Info.plist in Resources */,
 				448E78B719B936C100BF902A /* Default-568h@2x.png in Resources */,
 				448E78B819B936C100BF902A /* Default@2x.png in Resources */,
 				448E78B319B936C100BF902A /* InfoPlist.strings in Resources */,
@@ -448,14 +452,14 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BlindStopwatch/Tempura-Prefix.pch";
-				INFOPLIST_FILE = "BlindStopwatch/Tempura-Info.plist";
+				GCC_PREFIX_HEADER = "BlindStopwatch/BlindStopwatch-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/BlindStopwatch/BlindStopwatch-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BlindStopwatch/TestFlightSDK3.0.2",
 				);
-				PRODUCT_NAME = Tempura;
+				PRODUCT_NAME = BlindStopwatch;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -475,14 +479,14 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BlindStopwatch/Tempura-Prefix.pch";
-				INFOPLIST_FILE = "BlindStopwatch/Tempura-Info.plist";
+				GCC_PREFIX_HEADER = "BlindStopwatch/BlindStopwatch-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/BlindStopwatch/BlindStopwatch-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BlindStopwatch/TestFlightSDK3.0.2",
 				);
-				PRODUCT_NAME = Tempura;
+				PRODUCT_NAME = BlindStopwatch;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -492,7 +496,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		70C2EB361475EF4F00751AE8 /* Build configuration list for PBXProject "Tempura" */ = {
+		70C2EB361475EF4F00751AE8 /* Build configuration list for PBXProject "BlindStopwatch" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				70C2EB581475EF4F00751AE8 /* Debug */,
@@ -501,7 +505,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		70C2EB5A1475EF4F00751AE8 /* Build configuration list for PBXNativeTarget "Tempura" */ = {
+		70C2EB5A1475EF4F00751AE8 /* Build configuration list for PBXNativeTarget "Tempra" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				70C2EB5B1475EF4F00751AE8 /* Debug */,

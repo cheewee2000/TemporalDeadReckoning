@@ -14,6 +14,7 @@
 #import <Parse/Parse.h>
 #import "Level.h"
 #import "LevelProgressView.h"
+#import <GameKit/GameKit.h>
 
 @class RBVolumeButtons;
 
@@ -21,7 +22,7 @@
 //@interface ViewController : UIViewController <JBLineChartViewDelegate, JBLineChartViewDataSource>
 
 {
-
+    
     LevelProgressView *progressView;
     
     int screenWidth,screenHeight;
@@ -126,7 +127,8 @@ void drawLine(CGContextRef context, CGPoint startPoint, CGPoint endPoint, CGColo
 
 //- (IBAction)displayStatistics:(id)sender;
 
-
+@property BOOL gameCenterEnabled;
+@property NSString *leaderboardIdentifier;
 
 
 @end
