@@ -15,7 +15,8 @@
     if (self) {
         startFrame=self.frame;
 
-        
+        self.clipsToBounds=NO;
+
         self.label=[[UILabel alloc] initWithFrame:CGRectMake(0, 40, 100, 20)];
         self.label.text=@"";
         self.label.textAlignment = NSTextAlignmentLeft;
@@ -23,7 +24,7 @@
         [self addSubview:self.label];
         self.label.backgroundColor = [UIColor clearColor];
         self.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:11];
-        
+
         self.level=[[UILabel alloc] initWithFrame:CGRectMake(0, 40, 100, 20)];
         self.level.text=@"";
         self.level.textAlignment = NSTextAlignmentLeft;
@@ -32,6 +33,34 @@
         self.level.backgroundColor = [UIColor clearColor];
         self.level.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:11];
 
+    
+        int starSize=30;
+        stars=[NSArray array];
+        UIImageView* starLeft=[[UIImageView alloc] init];
+        [starLeft setImage:[UIImage imageNamed: @"starLeft"]];
+        starLeft.frame=CGRectMake(0,0,starSize,starSize);
+        starLeft.center=CGPointMake(self.frame.size.width/2.0, self.frame.size.height/2.0);
+        [self addSubview:starLeft];
+        starLeft.alpha=0;
+        stars = [stars arrayByAddingObject:starLeft];
+        
+        UIImageView* starMiddle=[[UIImageView alloc] init];
+        [starMiddle setImage:[UIImage imageNamed: @"starMiddle"]];
+        starMiddle.frame=CGRectMake(0,0,starSize,starSize);
+        starMiddle.center=CGPointMake(self.frame.size.width/2.0, self.frame.size.height/2.0);
+        [self addSubview:starMiddle];
+        starMiddle.alpha=0;
+        stars = [stars arrayByAddingObject:starMiddle];
+        
+        UIImageView* starRight=[[UIImageView alloc] init];
+        [starRight setImage:[UIImage imageNamed: @"starRight"]];
+        starRight.frame=CGRectMake(0,0,starSize,starSize);
+        starRight.center=CGPointMake(self.frame.size.width/2.0, self.frame.size.height/2.0);
+        [self addSubview:starRight];
+        starRight.alpha=0;
+        stars = [stars arrayByAddingObject:starRight];
+
+        
     }
     return self;
 }
@@ -102,18 +131,32 @@
     self.level.text=l;
     self.level.alpha=0.0;
 
-//    [UIView animateWithDuration:0.4
-//                          delay:0.0
-//                        options:UIViewAnimationOptionCurveLinear
-//                     animations:^{
-//                         self.label.alpha=1.0;
-//                         self.level.alpha=1.0;
-//                     }
-//                     completion:^(BOOL finished){
-//                     }];
+
     self.label.alpha=1.0;
     self.level.alpha=1.0;
     [self setNeedsDisplay];
+}
+
+-(void) setStars:(int)s{    
+    for(int i=0; i<s; i++){
+        UIImageView *star=[stars objectAtIndex:i];
+
+        if(star.alpha<1){
+            star.alpha=1;
+            star.transform = CGAffineTransformScale(CGAffineTransformIdentity, .00001, .000001);
+        [UIView animateWithDuration:0.4
+                              delay:0.2*i
+             usingSpringWithDamping:.5
+              initialSpringVelocity:1.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             star.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+                         }
+                         completion:^(BOOL finished){
+                        }];
+      }
+        [self setNeedsDisplay];
+    }
 }
 
 @end

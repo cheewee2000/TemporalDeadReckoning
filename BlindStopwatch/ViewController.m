@@ -3,12 +3,21 @@
  
  highscore, use real level and bonus calculations
  
+
+
+ autolayout with visual in code
+
+ sound effects
+ 
+ game center
+ 
+ 
+ 
+ 
  add up bonus with animation at game over
  add game over animation
  play again instruction after game over
  
- 
- dots with stars
  
  randomize levels in stage
 
@@ -24,13 +33,7 @@
 
  try two color graphics. no white
 
- autolayout with visual in code
 
- sound effects
- 
- game center
- 
- 
 
 */
 
@@ -78,7 +81,6 @@
     //instructions
     instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(screenWidth, 137, screenWidth-8, 30.0)];
     [self.view addSubview:instructions];
-    
     
     
     /* Create the Tap Gesture Recognizer */
@@ -402,11 +404,12 @@
                          
     
                     for (int i = 0; i < TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE;i++){
-                        float dotDia=15;
+                        float dotDia=12;
                         float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
                         float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*[self getCurrentStage];
                         
                         
+                        //update existing dots
                         if(i<[dots count]){
                             
                             Dots *dot=[dots objectAtIndex:i];
@@ -449,6 +452,7 @@
 
 
                         }
+                        //add new dots
                         else{
 
                             if(i%TRIALSINSTAGE==0){
@@ -519,6 +523,9 @@
 }
 
 -(void) updateDot:(int)i{
+    Dots *dot=[dots objectAtIndex:i];
+
+    
     //goal String
     NSTimeInterval level=[self getLevel:i];
     NSDate* nDate = [NSDate dateWithTimeIntervalSince1970: level];
@@ -527,14 +534,26 @@
     else [ngf setDateFormat:@"mm:ss.S"];
     NSString* nGoalString = [ngf stringFromDate:nDate];
     
-    [[dots objectAtIndex:i] setText:@"" level:nGoalString];
+    [dot setText:@"" level:nGoalString];
     
     if(i<currentLevel){
-        [[dots objectAtIndex:i ] setFill:YES];
+        [dot setFill:YES];
+        
+        float trialAccuracy=fabs([[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"accuracy"] floatValue]);
+        float trialGoal=fabs([[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"goal"] floatValue]);
+
+        float accuracyPercent=100.0-trialAccuracy/trialGoal*100.0;
+
+        if(accuracyPercent>=98)[dot setStars:3];
+        else if(accuracyPercent>=95)[dot setStars:2];
+        else if(accuracyPercent>=90)[dot setStars:1];
     }
     else {
-        [[dots objectAtIndex:i ]  setFill:NO];
+        [dot setFill:NO];
     }
+    
+
+    
     
 }
 
@@ -781,6 +800,7 @@
     //save to disk
     NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
     [myDictionary setObject:[NSNumber numberWithFloat:(elapsed-timerGoal)] forKey:@"accuracy"];
+    [myDictionary setObject:[NSNumber numberWithFloat:timerGoal] forKey:@"goal"];
     [myDictionary setObject:[NSDate date] forKey:@"date"];
     [self.ArrayOfValues insertObject:myDictionary atIndex:currentLevel];
     
@@ -836,6 +856,7 @@
         for (int i = 0; i < 10; i++) {
             NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
             [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"accuracy"];
+            [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"goal"];
             [myDictionary setObject:[NSDate date] forKey:@"date"];
             [self.ArrayOfValues addObject:myDictionary];
         }
@@ -969,8 +990,8 @@
 
                          }
                          else{
-                             Dots *dot=[hearts objectAtIndex:life-1];
-                             xView.frame = CGRectMake( dot.frame.origin.x,dot.frame.origin.y,dot.frame.size.width,dot.frame.size.height);
+                             Dots *heart=[hearts objectAtIndex:life-1];
+                             xView.frame = CGRectMake( heart.frame.origin.x,heart.frame.origin.y,heart.frame.size.width,heart.frame.size.height);
                              
                          }
                      }
@@ -979,6 +1000,8 @@
                          [self xoViewOffScreen];
                          
                          if([self isAccurate]){
+
+                             
                              life=NUMHEARTS;
                              currentLevel++;
                          }
@@ -1016,7 +1039,6 @@
         life=NUMHEARTS;
     }
     [self updateDots];
-//    [self updateLife];
     [self setLevel:currentLevel];
     
     [self loadData];
@@ -1200,7 +1222,9 @@
              [t slideIn:.3+d];
              
              //ARROW2
-             float accuracyP=100.0-fabs(diff/(float)timerGoal)*100.0;
+             //float accuracyP=100.0-fabs(diff/(float)timerGoal)*100.0;
+             float accuracyP=[self getAccuracyPercentage];
+
              NSString* percentAccuracyString = [NSString stringWithFormat:@"ACCURACY %02i%%", (int)accuracyP];
              t= [levelArrows objectAtIndex:1];
              [t update:@"" rightLabel:percentAccuracyString color:[self inverseColor:[self getBackgroundColor]] animate:NO];
@@ -1481,6 +1505,14 @@
 //    else return NO;
 }
 
+-(int)getAccuracyPercentage{
+    float accuracyPercent;
+    accuracyPercent=100.0-fabs(elapsed-timerGoal)/(float)timerGoal*100.0;
+
+    if(accuracyPercent<0)accuracyPercent=0;
+    
+    return ceilf(accuracyPercent);
+}
 
 
 #pragma mark - SimpleLineGraph Data Source

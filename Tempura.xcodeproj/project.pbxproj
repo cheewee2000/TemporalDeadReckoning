@@ -15,6 +15,8 @@
 		443CA72D19C0B171003BACD8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443CA72C19C0B171003BACD8 /* AVFoundation.framework */; };
 		443CA73119C0BFDB003BACD8 /* RBVolumeButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */; };
 		443CA73219C0C013003BACD8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2EB5F1475F07400751AE8 /* AudioToolbox.framework */; };
+		4470939219ED940100F6D53C /* Tempura-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4470939119ED940100F6D53C /* Tempura-Info.plist */; };
+		4470939419EDA48100F6D53C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4470939319EDA48100F6D53C /* Images.xcassets */; };
 		44866B4819B78B500084652A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44866B4719B78B500084652A /* QuartzCore.framework */; };
 		448E78B319B936C100BF902A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 448E789D19B936C000BF902A /* InfoPlist.strings */; };
 		448E78B519B936C100BF902A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78A219B936C000BF902A /* AppDelegate.m */; };
@@ -25,7 +27,6 @@
 		448E78BB19B936C100BF902A /* BEMLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78AB19B936C000BF902A /* BEMLine.m */; };
 		448E78BC19B936C100BF902A /* BEMSimpleLineGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78AD19B936C100BF902A /* BEMSimpleLineGraphView.m */; };
 		448E78BD19B936C100BF902A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78B019B936C100BF902A /* main.m */; };
-		449761A619B9E2B90026E70D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 449761A519B9E2B90026E70D /* Images.xcassets */; };
 		44C2C9FA19C9E330005ACEB7 /* Level.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C2C9F919C9E330005ACEB7 /* Level.m */; };
 		44C2E02E19BE52D3009CFF88 /* Dots.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C2E02D19BE52D3009CFF88 /* Dots.m */; };
 		44F972CA19BE9E310094FCF4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F972C919BE9E310094FCF4 /* ViewController.m */; };
@@ -50,7 +51,6 @@
 		44024E3819C0D7C8000AC66E /* TextArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextArrow.m; sourceTree = "<group>"; };
 		440E489B19E064CE00EA7D0C /* LevelProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelProgressView.h; sourceTree = "<group>"; };
 		440E489C19E064CE00EA7D0C /* LevelProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LevelProgressView.m; sourceTree = "<group>"; };
-		4425477F19D111290058FCA8 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
 		4436041419E822CE00184D13 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		4436041519E822CE00184D13 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4436041619E822CE00184D13 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = release_notes.md; sourceTree = "<group>"; };
@@ -60,11 +60,11 @@
 		443CA72C19C0B171003BACD8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		443CA72F19C0BFDB003BACD8 /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
 		443CA73019C0BFDB003BACD8 /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
-		4458F2AD19C21E43000B619B /* SceneKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SceneKit.framework; path = System/Library/Frameworks/SceneKit.framework; sourceTree = SDKROOT; };
+		4470939119ED940100F6D53C /* Tempura-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Tempura-Info.plist"; sourceTree = "<group>"; };
+		4470939319EDA48100F6D53C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		44866B4719B78B500084652A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		448E789E19B936C000BF902A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		448E78A219B936C000BF902A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = BlindStopwatch/AppDelegate.m; sourceTree = SOURCE_ROOT; };
-		448E78A319B936C000BF902A /* Ephemernol-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Ephemernol-Info.plist"; sourceTree = "<group>"; };
 		448E78A419B936C000BF902A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "BlindStopwatch/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
 		448E78A519B936C000BF902A /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "BlindStopwatch/Default@2x.png"; sourceTree = SOURCE_ROOT; };
 		448E78A619B936C000BF902A /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = BlindStopwatch/Default.png; sourceTree = SOURCE_ROOT; };
@@ -74,14 +74,13 @@
 		448E78AB19B936C000BF902A /* BEMLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEMLine.m; sourceTree = "<group>"; };
 		448E78AC19B936C000BF902A /* BEMSimpleLineGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BEMSimpleLineGraphView.h; sourceTree = "<group>"; };
 		448E78AD19B936C100BF902A /* BEMSimpleLineGraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEMSimpleLineGraphView.m; sourceTree = "<group>"; };
-		448E78AE19B936C100BF902A /* Ephemernol-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Ephemernol-Prefix.pch"; sourceTree = "<group>"; };
 		448E78AF19B936C100BF902A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = BlindStopwatch/AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		448E78B019B936C100BF902A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = BlindStopwatch/main.m; sourceTree = SOURCE_ROOT; };
-		449761A519B9E2B90026E70D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		44C2C9F819C9E330005ACEB7 /* Level.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Level.h; sourceTree = "<group>"; };
 		44C2C9F919C9E330005ACEB7 /* Level.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Level.m; sourceTree = "<group>"; };
 		44C2E02C19BE52D3009CFF88 /* Dots.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dots.h; sourceTree = "<group>"; };
 		44C2E02D19BE52D3009CFF88 /* Dots.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Dots.m; sourceTree = "<group>"; };
+		44F77D3A19ECCC3B005DB2C8 /* Tempura-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tempura-Prefix.pch"; sourceTree = "<group>"; };
 		44F972C819BE9E310094FCF4 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		44F972C919BE9E310094FCF4 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		44F972CE19BE9F5E0094FCF4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
@@ -94,7 +93,7 @@
 		44FD6DA519C49AB3006C7099 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		44FD6DA719C49BB7006C7099 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		44FD6DA919C49C3E006C7099 /* ParseFacebookUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtils.framework; sourceTree = "<group>"; };
-		70C2EB3C1475EF4F00751AE8 /* Ephemernol.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ephemernol.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		70C2EB3C1475EF4F00751AE8 /* Tempura.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tempura.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70C2EB401475EF4F00751AE8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		70C2EB421475EF4F00751AE8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		70C2EB441475EF4F00751AE8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -189,7 +188,7 @@
 		70C2EB3D1475EF4F00751AE8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				70C2EB3C1475EF4F00751AE8 /* Ephemernol.app */,
+				70C2EB3C1475EF4F00751AE8 /* Tempura.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -197,7 +196,6 @@
 		70C2EB3F1475EF4F00751AE8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4425477F19D111290058FCA8 /* SpriteKit.framework */,
 				44FD6DA919C49C3E006C7099 /* ParseFacebookUtils.framework */,
 				44FD6DA719C49BB7006C7099 /* Bolts.framework */,
 				44FD6DA519C49AB3006C7099 /* SystemConfiguration.framework */,
@@ -207,7 +205,6 @@
 				44FD6D9B19C49A8B006C7099 /* CoreLocation.framework */,
 				44FD6D9919C49A86006C7099 /* CFNetwork.framework */,
 				44FD6D9719C49A6D006C7099 /* Parse.framework */,
-				4458F2AD19C21E43000B619B /* SceneKit.framework */,
 				443CA72C19C0B171003BACD8 /* AVFoundation.framework */,
 				44866B4719B78B500084652A /* QuartzCore.framework */,
 				70C2EB611475FE4900751AE8 /* MediaPlayer.framework */,
@@ -237,11 +234,11 @@
 				448E78B019B936C100BF902A /* main.m */,
 				448E78AF19B936C100BF902A /* AppDelegate.h */,
 				448E78A219B936C000BF902A /* AppDelegate.m */,
-				448E78A319B936C000BF902A /* Ephemernol-Info.plist */,
-				448E78AE19B936C100BF902A /* Ephemernol-Prefix.pch */,
+				4470939119ED940100F6D53C /* Tempura-Info.plist */,
+				44F77D3A19ECCC3B005DB2C8 /* Tempura-Prefix.pch */,
+				4470939319EDA48100F6D53C /* Images.xcassets */,
 				448E789C19B936C000BF902A /* en.lproj */,
 				448E78A719B936C000BF902A /* BEM */,
-				449761A519B9E2B90026E70D /* Images.xcassets */,
 				448E78A419B936C000BF902A /* Default-568h@2x.png */,
 				448E78A519B936C000BF902A /* Default@2x.png */,
 				448E78A619B936C000BF902A /* Default.png */,
@@ -253,9 +250,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		70C2EB3B1475EF4F00751AE8 /* Ephemernol */ = {
+		70C2EB3B1475EF4F00751AE8 /* Tempura */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 70C2EB5A1475EF4F00751AE8 /* Build configuration list for PBXNativeTarget "Ephemernol" */;
+			buildConfigurationList = 70C2EB5A1475EF4F00751AE8 /* Build configuration list for PBXNativeTarget "Tempura" */;
 			buildPhases = (
 				70C2EB381475EF4F00751AE8 /* Sources */,
 				70C2EB391475EF4F00751AE8 /* Frameworks */,
@@ -265,9 +262,9 @@
 			);
 			dependencies = (
 			);
-			name = Ephemernol;
+			name = Tempura;
 			productName = VolumeSnap;
-			productReference = 70C2EB3C1475EF4F00751AE8 /* Ephemernol.app */;
+			productReference = 70C2EB3C1475EF4F00751AE8 /* Tempura.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -291,7 +288,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 70C2EB361475EF4F00751AE8 /* Build configuration list for PBXProject "Ephemernol" */;
+			buildConfigurationList = 70C2EB361475EF4F00751AE8 /* Build configuration list for PBXProject "Tempura" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -303,7 +300,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				70C2EB3B1475EF4F00751AE8 /* Ephemernol */,
+				70C2EB3B1475EF4F00751AE8 /* Tempura */,
 			);
 		};
 /* End PBXProject section */
@@ -314,8 +311,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				448E78B919B936C100BF902A /* Default.png in Resources */,
-				449761A619B9E2B90026E70D /* Images.xcassets in Resources */,
 				44F972CF19BE9F5E0094FCF4 /* MainStoryboard.storyboard in Resources */,
+				4470939419EDA48100F6D53C /* Images.xcassets in Resources */,
+				4470939219ED940100F6D53C /* Tempura-Info.plist in Resources */,
 				448E78B719B936C100BF902A /* Default-568h@2x.png in Resources */,
 				448E78B819B936C100BF902A /* Default@2x.png in Resources */,
 				448E78B319B936C100BF902A /* InfoPlist.strings in Resources */,
@@ -444,21 +442,21 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: cw wang (XZCX966PV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BlindStopwatch/Ephemernol-Prefix.pch";
-				INFOPLIST_FILE = "BlindStopwatch/Ephemernol-Info.plist";
+				GCC_PREFIX_HEADER = "BlindStopwatch/Tempura-Prefix.pch";
+				INFOPLIST_FILE = "BlindStopwatch/Tempura-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BlindStopwatch/TestFlightSDK3.0.2",
 				);
-				PRODUCT_NAME = Ephemernol;
-				PROVISIONING_PROFILE = "c07965df-3bac-41e1-ad97-bc5ed83adb81";
+				PRODUCT_NAME = Tempura;
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -470,22 +468,22 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: CW&T Studio LLC (L6DVQR8JB9)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: CW&T Studio LLC (L6DVQR8JB9)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BlindStopwatch/Ephemernol-Prefix.pch";
-				INFOPLIST_FILE = "BlindStopwatch/Ephemernol-Info.plist";
+				GCC_PREFIX_HEADER = "BlindStopwatch/Tempura-Prefix.pch";
+				INFOPLIST_FILE = "BlindStopwatch/Tempura-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BlindStopwatch/TestFlightSDK3.0.2",
 				);
-				PRODUCT_NAME = Ephemernol;
-				PROVISIONING_PROFILE = "16875d88-f263-4ddf-9abe-7c96d54ce911";
+				PRODUCT_NAME = Tempura;
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -494,7 +492,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		70C2EB361475EF4F00751AE8 /* Build configuration list for PBXProject "Ephemernol" */ = {
+		70C2EB361475EF4F00751AE8 /* Build configuration list for PBXProject "Tempura" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				70C2EB581475EF4F00751AE8 /* Debug */,
@@ -503,7 +501,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		70C2EB5A1475EF4F00751AE8 /* Build configuration list for PBXNativeTarget "Ephemernol" */ = {
+		70C2EB5A1475EF4F00751AE8 /* Build configuration list for PBXNativeTarget "Tempura" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				70C2EB5B1475EF4F00751AE8 /* Debug */,
