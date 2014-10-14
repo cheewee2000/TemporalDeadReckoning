@@ -1,27 +1,22 @@
 //todo
 /*
- add levearrow for prefect stage point bonus, accuracy bonus, etc
- 
- 
- 
  
  highscore, use real level and bonus calculations
-
-
+ 
+ add up bonus with animation at game over
+ add game over animation
+ play again instruction after game over
+ 
  
  dots with stars
+ 
+ randomize levels in stage
 
- add game over animation
+ top left dot in circle best
  
- life heart animations
- 
-
- 
- 
- 
+ progressview dot in circle best
  
  prevent runaway timers
-
  
  startup sequence animation
  
@@ -31,6 +26,10 @@
 
  autolayout with visual in code
 
+ sound effects
+ 
+ game center
+ 
  
 
 */
@@ -253,18 +252,22 @@
     else life = (int)[defaults integerForKey:@"life"];
     hearts=[NSArray array];
     for (int i=0; i<NUMHEARTS; i++){
-        Dots *heart = [[Dots alloc] initWithFrame:CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15)];
-        heart.alpha = 1;
-        heart.backgroundColor = [UIColor clearColor];
-        [heart setFill:NO];
+//        Dots *heart = [[Dots alloc] initWithFrame:CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15)];
+//        heart.alpha = 1;
+//        heart.backgroundColor = [UIColor clearColor];
+//        [heart setFill:NO];
+//        
+        
+        UIImageView * heart=[[UIImageView alloc] init];
+        [heart setImage:[UIImage imageNamed: @"heart-filled"]];
+        heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15);
         hearts = [hearts arrayByAddingObject:heart];
+
         [self.view addSubview:hearts[i]];
         [self.view sendSubviewToBack:hearts[i]];
     }
 
     [self updateLife];
-    
-
     //big dot
     /*
     mainDot = [[Dots alloc] init];
@@ -568,9 +571,43 @@
 
 -(void) updateLife{
     for (int i=0;i<NUMHEARTS;i++){
-        Dots* d=[hearts objectAtIndex:i];
-        if(i<life) [d setFill:YES];
-        else [d setFill:NO];
+        //Dots* d=[hearts objectAtIndex:i];
+        UIImageView* d=[hearts objectAtIndex:i];
+
+        if(i<life) {
+                if(d.frame.origin.y>screenHeight){
+                    d.alpha=1.0;
+                    d.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15);
+
+                    
+                    d.transform = CGAffineTransformScale(CGAffineTransformIdentity, .01, .01);
+                    //spring in  heart
+                [UIView animateWithDuration:.4
+                                      delay:0.4 * i
+                     usingSpringWithDamping:0.5
+                      initialSpringVelocity:1.0
+                                    options:UIViewAnimationOptionCurveLinear
+                                         animations:^{
+                                             d.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+                                         }
+                                         completion:^(BOOL finished){
+                                             
+                                         }];
+            }
+        }
+        else{
+            
+            [self.view sendSubviewToBack:d];
+            [UIView animateWithDuration:.4
+                                  delay:0.0
+                                options:UIViewAnimationOptionCurveLinear
+                             animations:^{
+                                 d.frame=CGRectOffset(d.frame, 0, 100);
+                             }
+                             completion:^(BOOL finished){
+                                 
+                             }];
+        }
     }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setInteger:life forKey:@"life"];
@@ -987,7 +1024,7 @@
         life=NUMHEARTS;
     }
     [self updateDots];
-    [self updateLife];
+//    [self updateLife];
     [self setLevel:currentLevel];
     
     [self loadData];
@@ -1315,6 +1352,7 @@
                      }
                      completion:^(BOOL finished){
                          [self.view sendSubviewToBack:progressView];
+                         [self updateLife];
                           //fade in new counters
                           [UIView animateWithDuration:0.4
                                                 delay:0.4
