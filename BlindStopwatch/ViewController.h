@@ -66,7 +66,7 @@
     
     
     
-    int maxLevel;
+    float bestScore;
     int currentLevel;
     
 

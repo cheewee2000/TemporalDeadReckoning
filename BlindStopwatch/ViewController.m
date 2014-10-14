@@ -1,15 +1,15 @@
 //todo
 /*
  
+ game center
+
+ 
  highscore, use real level and bonus calculations
  
-
-
  autolayout with visual in code
 
  sound effects
  
- game center
  
  
  
@@ -122,8 +122,8 @@
     if([defaults objectForKey:@"currentLevel"] == nil) currentLevel=0;
     else currentLevel = (int)[defaults integerForKey:@"currentLevel"];
     
-    if([defaults objectForKey:@"maxLevel"] == nil) maxLevel=0;
-    else maxLevel = (int)[defaults integerForKey:@"maxLevel"];
+    if([defaults objectForKey:@"bestScore"] == nil) bestScore=0;
+    else bestScore = (int)[defaults integerForKey:@"bestScore"];
 
     [self loadData];
 
@@ -350,10 +350,10 @@
 }
 
 -(void)updateHighscore{
-    if(maxLevel>0){
+    if(bestScore>0){
         highScoreDot.alpha=1;
         [highScoreDot setFill:YES];
-        highScoreLabel.text=[NSString stringWithFormat:@"%.01f",[self getLevel:maxLevel]];
+        highScoreLabel.text=[NSString stringWithFormat:@"%.01f",bestScore];
     }
 }
 
@@ -916,10 +916,14 @@
      NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
      [defaults setInteger:currentLevel forKey:@"currentLevel"];
     
-    if(level>=maxLevel){
-        maxLevel=level-1;
-        [defaults setInteger:maxLevel forKey:@"maxLevel"];
-        [self updateHighscore];
+    if(level>0){
+        float lastSuccessfulGoal=fabs([[[self.ArrayOfValues objectAtIndex:level-1] objectForKey:@"goal"] floatValue]);
+
+        if(lastSuccessfulGoal>=bestScore){
+            bestScore=lastSuccessfulGoal;
+            [defaults setInteger:bestScore forKey:@"bestScore"];
+            [self updateHighscore];
+        }
     }
      [defaults synchronize];
     
@@ -961,19 +965,23 @@
 -(float)getLevel:(int)level{
     float l;
     if(level<TRIALSINSTAGE)l=.5+level*0.1;
-    else if(level<TRIALSINSTAGE*2)l=1.0+level%TRIALSINSTAGE*0.2;
-    else if(level<TRIALSINSTAGE*3)l=3.0+level%TRIALSINSTAGE*0.3;
-    else if(level<TRIALSINSTAGE*4)l=5.0+level%TRIALSINSTAGE*0.5;
-    else if(level<TRIALSINSTAGE*5)l=10.0+level%TRIALSINSTAGE*1.0;
+    else if(level<TRIALSINSTAGE*2)l=1.0+level%TRIALSINSTAGE*0.1;
+    else if(level<TRIALSINSTAGE*3)l=3.0+level%TRIALSINSTAGE*0.2;
+    else if(level<TRIALSINSTAGE*4)l=5.0+level%TRIALSINSTAGE*0.2;
+    else if(level<TRIALSINSTAGE*5)l=10.0+level%TRIALSINSTAGE*0.5;
     else l=level*2.0;
+    
+    
+    
     return l;
 }
 
 -(float)getLevelAccuracy:(int)level{
-    if([self getLevel:level]<=5) return .1;
-    if([self getLevel:level]<=10) return .25;
-    else if([self getLevel:level]<=20) return .5;
-    else  return 1.0;
+//    if([self getLevel:level]<=5) return .1;
+//    if([self getLevel:level]<=10) return .15;
+//    else if([self getLevel:level]<=20) return .2;
+//    else  return 1.0;
+    return .1;
 }
 
 
