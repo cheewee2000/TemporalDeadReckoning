@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "70C2EB3B1475EF4F00751AE8"
                BuildableName = "BlindStopwatch.app"
-               BlueprintName = "BlindStopwatch"
-               ReferencedContainer = "container:BlindStopwatch.xcodeproj">
+               BlueprintName = "Ephemernol"
+               ReferencedContainer = "container:Ephemernol.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -34,8 +34,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "70C2EB3B1475EF4F00751AE8"
             BuildableName = "BlindStopwatch.app"
-            BlueprintName = "BlindStopwatch"
-            ReferencedContainer = "container:BlindStopwatch.xcodeproj">
+            BlueprintName = "Ephemernol"
+            ReferencedContainer = "container:Ephemernol.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -53,8 +53,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "70C2EB3B1475EF4F00751AE8"
             BuildableName = "BlindStopwatch.app"
-            BlueprintName = "BlindStopwatch"
-            ReferencedContainer = "container:BlindStopwatch.xcodeproj">
+            BlueprintName = "Ephemernol"
+            ReferencedContainer = "container:Ephemernol.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -71,8 +71,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "70C2EB3B1475EF4F00751AE8"
             BuildableName = "BlindStopwatch.app"
-            BlueprintName = "BlindStopwatch"
-            ReferencedContainer = "container:BlindStopwatch.xcodeproj">
+            BlueprintName = "Ephemernol"
+            ReferencedContainer = "container:Ephemernol.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

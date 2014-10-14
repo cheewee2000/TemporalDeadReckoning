@@ -64,7 +64,7 @@
 		44866B4719B78B500084652A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		448E789E19B936C000BF902A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		448E78A219B936C000BF902A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = BlindStopwatch/AppDelegate.m; sourceTree = SOURCE_ROOT; };
-		448E78A319B936C000BF902A /* BlindStopwatch-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BlindStopwatch-Info.plist"; path = "BlindStopwatch/BlindStopwatch-Info.plist"; sourceTree = SOURCE_ROOT; };
+		448E78A319B936C000BF902A /* Ephemernol-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Ephemernol-Info.plist"; sourceTree = "<group>"; };
 		448E78A419B936C000BF902A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "BlindStopwatch/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
 		448E78A519B936C000BF902A /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "BlindStopwatch/Default@2x.png"; sourceTree = SOURCE_ROOT; };
 		448E78A619B936C000BF902A /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = BlindStopwatch/Default.png; sourceTree = SOURCE_ROOT; };
@@ -74,7 +74,7 @@
 		448E78AB19B936C000BF902A /* BEMLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEMLine.m; sourceTree = "<group>"; };
 		448E78AC19B936C000BF902A /* BEMSimpleLineGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BEMSimpleLineGraphView.h; sourceTree = "<group>"; };
 		448E78AD19B936C100BF902A /* BEMSimpleLineGraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEMSimpleLineGraphView.m; sourceTree = "<group>"; };
-		448E78AE19B936C100BF902A /* BlindStopwatch-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "BlindStopwatch-Prefix.pch"; path = "BlindStopwatch/BlindStopwatch-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		448E78AE19B936C100BF902A /* Ephemernol-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Ephemernol-Prefix.pch"; sourceTree = "<group>"; };
 		448E78AF19B936C100BF902A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = BlindStopwatch/AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		448E78B019B936C100BF902A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = BlindStopwatch/main.m; sourceTree = SOURCE_ROOT; };
 		449761A519B9E2B90026E70D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -94,7 +94,7 @@
 		44FD6DA519C49AB3006C7099 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		44FD6DA719C49BB7006C7099 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		44FD6DA919C49C3E006C7099 /* ParseFacebookUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtils.framework; sourceTree = "<group>"; };
-		70C2EB3C1475EF4F00751AE8 /* BlindStopwatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlindStopwatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		70C2EB3C1475EF4F00751AE8 /* Ephemernol.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ephemernol.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70C2EB401475EF4F00751AE8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		70C2EB421475EF4F00751AE8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		70C2EB441475EF4F00751AE8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -189,7 +189,7 @@
 		70C2EB3D1475EF4F00751AE8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				70C2EB3C1475EF4F00751AE8 /* BlindStopwatch.app */,
+				70C2EB3C1475EF4F00751AE8 /* Ephemernol.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -237,8 +237,8 @@
 				448E78B019B936C100BF902A /* main.m */,
 				448E78AF19B936C100BF902A /* AppDelegate.h */,
 				448E78A219B936C000BF902A /* AppDelegate.m */,
-				448E78A319B936C000BF902A /* BlindStopwatch-Info.plist */,
-				448E78AE19B936C100BF902A /* BlindStopwatch-Prefix.pch */,
+				448E78A319B936C000BF902A /* Ephemernol-Info.plist */,
+				448E78AE19B936C100BF902A /* Ephemernol-Prefix.pch */,
 				448E789C19B936C000BF902A /* en.lproj */,
 				448E78A719B936C000BF902A /* BEM */,
 				449761A519B9E2B90026E70D /* Images.xcassets */,
@@ -253,9 +253,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		70C2EB3B1475EF4F00751AE8 /* BlindStopwatch */ = {
+		70C2EB3B1475EF4F00751AE8 /* Ephemernol */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 70C2EB5A1475EF4F00751AE8 /* Build configuration list for PBXNativeTarget "BlindStopwatch" */;
+			buildConfigurationList = 70C2EB5A1475EF4F00751AE8 /* Build configuration list for PBXNativeTarget "Ephemernol" */;
 			buildPhases = (
 				70C2EB381475EF4F00751AE8 /* Sources */,
 				70C2EB391475EF4F00751AE8 /* Frameworks */,
@@ -265,9 +265,9 @@
 			);
 			dependencies = (
 			);
-			name = BlindStopwatch;
+			name = Ephemernol;
 			productName = VolumeSnap;
-			productReference = 70C2EB3C1475EF4F00751AE8 /* BlindStopwatch.app */;
+			productReference = 70C2EB3C1475EF4F00751AE8 /* Ephemernol.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -291,7 +291,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 70C2EB361475EF4F00751AE8 /* Build configuration list for PBXProject "BlindStopwatch" */;
+			buildConfigurationList = 70C2EB361475EF4F00751AE8 /* Build configuration list for PBXProject "Ephemernol" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -303,7 +303,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				70C2EB3B1475EF4F00751AE8 /* BlindStopwatch */,
+				70C2EB3B1475EF4F00751AE8 /* Ephemernol */,
 			);
 		};
 /* End PBXProject section */
@@ -450,14 +450,14 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BlindStopwatch/BlindStopwatch-Prefix.pch";
-				INFOPLIST_FILE = "BlindStopwatch/BlindStopwatch-Info.plist";
+				GCC_PREFIX_HEADER = "BlindStopwatch/Ephemernol-Prefix.pch";
+				INFOPLIST_FILE = "BlindStopwatch/Ephemernol-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BlindStopwatch/TestFlightSDK3.0.2",
 				);
-				PRODUCT_NAME = BlindStopwatch;
+				PRODUCT_NAME = Ephemernol;
 				PROVISIONING_PROFILE = "c07965df-3bac-41e1-ad97-bc5ed83adb81";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -477,14 +477,14 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "BlindStopwatch/BlindStopwatch-Prefix.pch";
-				INFOPLIST_FILE = "BlindStopwatch/BlindStopwatch-Info.plist";
+				GCC_PREFIX_HEADER = "BlindStopwatch/Ephemernol-Prefix.pch";
+				INFOPLIST_FILE = "BlindStopwatch/Ephemernol-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BlindStopwatch/TestFlightSDK3.0.2",
 				);
-				PRODUCT_NAME = BlindStopwatch;
+				PRODUCT_NAME = Ephemernol;
 				PROVISIONING_PROFILE = "16875d88-f263-4ddf-9abe-7c96d54ce911";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -494,7 +494,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		70C2EB361475EF4F00751AE8 /* Build configuration list for PBXProject "BlindStopwatch" */ = {
+		70C2EB361475EF4F00751AE8 /* Build configuration list for PBXProject "Ephemernol" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				70C2EB581475EF4F00751AE8 /* Debug */,
@@ -503,7 +503,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		70C2EB5A1475EF4F00751AE8 /* Build configuration list for PBXNativeTarget "BlindStopwatch" */ = {
+		70C2EB5A1475EF4F00751AE8 /* Build configuration list for PBXNativeTarget "Ephemernol" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				70C2EB5B1475EF4F00751AE8 /* Debug */,
