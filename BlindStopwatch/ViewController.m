@@ -1,6 +1,8 @@
 //todo
 /*
   
+ triplestar = bonus heart
+
  add up bonus with animation at game over
  add game over animation
  play again instruction after game over
@@ -11,7 +13,7 @@
  
  achievements
  
- 
+ restart from stage
 
  
  
@@ -143,7 +145,7 @@
     
     if([defaults objectForKey:@"bestScore"] == nil) bestScore=0;
     else bestScore = (int)[defaults integerForKey:@"bestScore"];
-
+    
     [self loadData];
 
     //[self loadData:currentLevel];
@@ -288,21 +290,11 @@
     //life hearsts
     if([defaults objectForKey:@"life"] == nil) life=NUMHEARTS;
     else life = (int)[defaults integerForKey:@"life"];
-    hearts=[NSArray array];
-    for (int i=0; i<NUMHEARTS; i++){
-//        Dots *heart = [[Dots alloc] initWithFrame:CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15)];
-//        heart.alpha = 1;
-//        heart.backgroundColor = [UIColor clearColor];
-//        [heart setFill:NO];
-//        
-        
-        UIImageView * heart=[[UIImageView alloc] init];
-        [heart setImage:[UIImage imageNamed: @"heart"]];
-        heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15);
-        hearts = [hearts arrayByAddingObject:heart];
-
-        [self.view addSubview:hearts[i]];
-        [self.view sendSubviewToBack:hearts[i]];
+    hearts=[[NSMutableArray alloc]init];
+    
+    
+    for (int i=0; i<life; i++){
+        [self addHeart:i];
     }
 
     [self updateLife];
@@ -390,6 +382,16 @@
     //[self authenticateLocalPlayer];
 }
 
+-(void)addHeart:(int)i{
+    UIImageView * heart=[[UIImageView alloc] init];
+    [heart setImage:[UIImage imageNamed: @"heart"]];
+    heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15);
+    [hearts addObject:heart];
+    
+    //hearts = [hearts arrayByAddingObject:heart];
+    [self.view addSubview:hearts[i]];
+    [self.view sendSubviewToBack:hearts[i]];
+}
 -(void)updateHighscore{
     if(bestScore>0){
 //        highScoreDot.alpha=1;
@@ -585,8 +587,12 @@
         //float trialGoal=fabs([[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"goal"] floatValue]);
         //float accuracyPercent=100.0-trialAccuracy/trialGoal*100.0;
        
-        if(trialAccuracy<=[self getLevelAccuracy:i]/5.0)[dot setStars:3];
-        else if(trialAccuracy<=[self getLevelAccuracy:i]*4.0/5.0)[dot setStars:2];
+        if(trialAccuracy<=[self getLevelAccuracy:i]/5.0){
+            [dot setStars:3];
+        }
+        else if(trialAccuracy<=[self getLevelAccuracy:i]*4.0/5.0){
+            [dot setStars:2];
+        }
         else if(trialAccuracy<=[self getLevelAccuracy:i]*3.0/5.0)[dot setStars:1];
     }
     else {
@@ -622,8 +628,8 @@
 
 
 -(void) updateLife{
-    for (int i=0;i<NUMHEARTS;i++){
-        //Dots* d=[hearts objectAtIndex:i];
+    for (int i=0;i<[hearts count];i++){
+
         UIImageView* d=[hearts objectAtIndex:i];
 
         if(i<life) {
@@ -1080,9 +1086,15 @@
                          [self xoViewOffScreen];
                          
                          if([self isAccurate]){
+                             if(life<NUMHEARTS) life=NUMHEARTS;
 
-                             
-                             life=NUMHEARTS;
+                            //add heart for triplestar level
+                             float trialAccuracy=fabs(elapsed-timerGoal);
+                             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0){
+                                 life++;
+                                 [self addHeart:life-1];
+                             }
+
                              currentLevel++;
                          }
                          else{

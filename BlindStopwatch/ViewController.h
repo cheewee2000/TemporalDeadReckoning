@@ -88,7 +88,7 @@
 
     //UIView * blob;
     NSMutableArray *dots;
-    NSArray *hearts;
+    NSMutableArray *hearts;
     int life;
     NSArray *levels;
     
@@ -101,6 +101,8 @@
     UIImageView * oView;
     
     NSMutableArray * stageLabels;
+    
+    
 
 }
 
