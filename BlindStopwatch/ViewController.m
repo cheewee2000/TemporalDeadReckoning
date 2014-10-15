@@ -115,9 +115,18 @@
     counterGoalLabel.clipsToBounds=NO;
     [self.view addSubview:counterGoalLabel];
     
+
+    
+    goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, counterGoalLabel.frame.size.height-30, counterGoalLabel.frame.size.width*.5-13, 40)];
+    goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:33.0];
+    goalPrecision.textAlignment=NSTextAlignmentRight;
+    goalPrecision.textColor = [UIColor whiteColor];
+    goalPrecision.text = @"";
+    [counterGoalLabel addSubview:goalPrecision];
+
     levelArrows=[[NSMutableArray alloc] init];
     for (int i=0; i<NUMLEVELARROWS; i++) {
-        TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, 285+i*40, screenWidth-8, 30.0)];
+        TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, counterGoalLabel.frame.origin.y+counterGoalLabel.frame.size.height+5+i*40, screenWidth-8, 30.0)];
         arrow.drawArrow=false;
         [levelArrows addObject:arrow];
         [self.view addSubview:arrow];
@@ -126,13 +135,8 @@
     }
 
     
-    goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, counterGoalLabel.frame.size.height-30, counterGoalLabel.frame.size.width*.5-8, 40)];
-    goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:33.0];
-    goalPrecision.textAlignment=NSTextAlignmentRight;
-    goalPrecision.textColor = [UIColor whiteColor];
-    goalPrecision.text = @"";
-    [counterGoalLabel addSubview:goalPrecision];
-
+    
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if([defaults objectForKey:@"currentLevel"] == nil) currentLevel=0;
     else currentLevel = (int)[defaults integerForKey:@"currentLevel"];
@@ -1057,7 +1061,7 @@
 -(void)checkLevelUp{
 
 
-    [UIView animateWithDuration:.6
+    [UIView animateWithDuration:0.4
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseIn
                      animations:^{
@@ -1069,7 +1073,6 @@
                          else{
                              Dots *heart=[hearts objectAtIndex:life-1];
                              xView.frame = CGRectMake( heart.frame.origin.x,heart.frame.origin.y,heart.frame.size.width,heart.frame.size.height);
-                             
                          }
                      }
                      completion:^(BOOL finished){
@@ -1177,8 +1180,8 @@
     NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: fabs(time)];
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
     if(time<60){
-        if(time>=0) [df setDateFormat:@"+ss.SSS"];
-        else [df setDateFormat:@"-ss.SSS"];
+        if(time>=0) [df setDateFormat:@"+mm:ss.SSS"];
+        else [df setDateFormat:@"-mm:ss.SSS"];
     }else{
         if(time>=0) [df setDateFormat:@"+mm.ss.SSS"];
         else [df setDateFormat:@"-mm.ss.SSS"];
