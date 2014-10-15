@@ -1,16 +1,24 @@
 //todo
 /*
  
+ bonus stars based on getlevelaccuracy/3
+ 
+ move best to below trophy
+ 
+ autolayout with visual in code
 
+ shadow on trophy for button
+ scale trohpy down
+ 
  
  highscore, use real level and bonus calculations
  
- autolayout with visual in code
+ highlight previous highest level
 
  sound effects
  
  
- 
+ achievements
  
  
  add up bonus with animation at game over
@@ -32,7 +40,8 @@
 
  try two color graphics. no white
 
-
+ tempura achievements
+ 
 
 */
 
@@ -554,13 +563,12 @@
         [dot setFill:YES];
         
         float trialAccuracy=fabs([[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"accuracy"] floatValue]);
-        float trialGoal=fabs([[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"goal"] floatValue]);
-
-        float accuracyPercent=100.0-trialAccuracy/trialGoal*100.0;
-
-        if(accuracyPercent>=98)[dot setStars:3];
-        else if(accuracyPercent>=95)[dot setStars:2];
-        else if(accuracyPercent>=90)[dot setStars:1];
+        //float trialGoal=fabs([[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"goal"] floatValue]);
+        //float accuracyPercent=100.0-trialAccuracy/trialGoal*100.0;
+       
+        if(trialAccuracy<=[self getLevelAccuracy:i]/5.0)[dot setStars:3];
+        else if(trialAccuracy<=[self getLevelAccuracy:i]*4.0/5.0)[dot setStars:2];
+        else if(trialAccuracy<=[self getLevelAccuracy:i]*3.0/5.0)[dot setStars:1];
     }
     else {
         [dot setFill:NO];
@@ -883,14 +891,16 @@
 }
 
 -(void)reportScore{
-    GKScore *score = [[GKScore alloc] initWithLeaderboardIdentifier:_leaderboardIdentifier];
-    score.value = bestScore;
-    
-    [GKScore reportScores:@[score] withCompletionHandler:^(NSError *error) {
-        if (error != nil) {
-            NSLog(@"%@", [error localizedDescription]);
-        }
-    }];
+    if(_leaderboardIdentifier){
+        GKScore *score = [[GKScore alloc] initWithLeaderboardIdentifier:_leaderboardIdentifier];
+        score.value = bestScore;
+        
+        [GKScore reportScores:@[score] withCompletionHandler:^(NSError *error) {
+            if (error != nil) {
+                NSLog(@"%@", [error localizedDescription]);
+            }
+        }];
+    }
 }
 
 -(void)showLeaderboardAndAchievements:(BOOL)shouldShowLeaderboard{
