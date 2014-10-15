@@ -43,9 +43,10 @@
 #import "RBVolumeButtons.h"
 
 
-#define TRIALSINSTAGE 2
-#define NUMHEARTS 1
 #define NUMLEVELARROWS 5
+
+#define TRIALSINSTAGE 5
+#define NUMHEARTS 3
 
 @interface ViewController () {
     
@@ -1106,7 +1107,7 @@
                       completion:^(BOOL finished){
 
                          [UIView animateWithDuration:0.6
-                                               delay:1.0
+                                               delay:0.5
                               usingSpringWithDamping:.6
                                initialSpringVelocity:1.0
                                              options:UIViewAnimationOptionCurveLinear
@@ -1219,7 +1220,7 @@
     playButton.alpha=1.0;
     //restartButton.center=CGPointMake(screenWidth*.5, screenHeight*.5);
     
-    [UIView animateWithDuration:0.4
+    [UIView animateWithDuration:0.8
                           delay:0.0
          usingSpringWithDamping:.5
           initialSpringVelocity:1.0
@@ -1254,8 +1255,8 @@
                              completion:^(BOOL finished){
                                  progressView.subMessage.text=@"GAME OVER";
 
-                                 [UIView animateWithDuration:0.4
-                                                       delay:0.0
+                                 [UIView animateWithDuration:0.8
+                                                       delay:0.8
                                                      options:UIViewAnimationOptionCurveLinear
                                                   animations:^{
                                                     progressView.subMessage.alpha=1.0;
