@@ -1,9 +1,7 @@
 //todo
 /*
  
- bonus stars based on getlevelaccuracy/3
- 
- move best to below trophy
+  move best to below trophy
  
  autolayout with visual in code
 
@@ -248,17 +246,20 @@
     [self.view addSubview:progressView];
     
     
-    
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setBackgroundImage:[UIImage imageNamed:@"trophy"] forState:UIControlStateNormal];
+//    button.layer.shadowColor = [UIColor blackColor].CGColor;
+//    button.layer.shadowOffset = CGSizeMake(0, 1);
+//    button.layer.shadowOpacity = 1;
+//    button.layer.shadowRadius = 3.0;
+    UIImage * trophy=[UIImage imageNamed:@"trophy"];
+    [button setBackgroundImage:trophy forState:UIControlStateNormal];
+    [button adjustsImageWhenHighlighted];
     
-    [button setFrame:CGRectMake(0,0,45,45)];
-    button.center=CGPointMake(screenWidth/2.0, screenHeight-60);
-
+    [button setFrame:CGRectMake(0,0,44,44)];
+    button.center=CGPointMake(screenWidth/2.0, screenHeight-80);
     [button addTarget:self action:@selector(showLeaderboardAndAchievements:) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:button];
-    
-    
+
     
     
     //Dots
@@ -361,10 +362,13 @@
     [self.view sendSubviewToBack:highScoreDot];
     
     highScoreLabel=[[UILabel alloc] initWithFrame:CGRectMake(32,10,screenWidth,26)];
+    highScoreLabel.center=CGPointMake(screenWidth*.5, screenHeight-44);
+    highScoreLabel.textAlignment=NSTextAlignmentCenter;
+    
     highScoreLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
     [self updateHighscore];
-    [self.view addSubview:highScoreLabel];
-    [self.view sendSubviewToBack:highScoreLabel];
+    [progressView addSubview:highScoreLabel];
+    //[self.view sendSubviewToBack:highScoreLabel];
     
     //[self setLevel:currentLevel];
 
@@ -373,9 +377,9 @@
 
 -(void)updateHighscore{
     if(bestScore>0){
-        highScoreDot.alpha=1;
-        [highScoreDot setFill:YES];
-        highScoreLabel.text=[NSString stringWithFormat:@"%.01f",bestScore];
+//        highScoreDot.alpha=1;
+//        [highScoreDot setFill:YES];
+        highScoreLabel.text=[NSString stringWithFormat:@"BEST %.01f",bestScore];
         
     }
 }
