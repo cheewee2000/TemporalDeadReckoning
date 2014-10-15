@@ -1,12 +1,9 @@
 //todo
 /*
-  
  
  add up bonus with animation at game over
- add game over animation
  
- play again instruction after game over
- restart from stage
+
  
  visual for + or - from target for last 10 tries
  
@@ -18,10 +15,8 @@
  achievements
 -flawless
  
-remove stars after reset
- 
- 
- 
+ remove stars after reset
+
  randomize levels in stage
 
  top left dot in circle best
@@ -37,8 +32,6 @@ remove stars after reset
  try two color graphics. no white
 
  tempura achievements
- 
-
 */
 
 
@@ -50,8 +43,8 @@ remove stars after reset
 #import "RBVolumeButtons.h"
 
 
-#define TRIALSINSTAGE 5
-#define NUMHEARTS 3
+#define TRIALSINSTAGE 2
+#define NUMHEARTS 1
 #define NUMLEVELARROWS 5
 
 @interface ViewController () {
@@ -82,6 +75,7 @@ remove stars after reset
 
     trialSequence=-1;
 
+    
     //instructions
     instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(screenWidth, 137, screenWidth-8, 30.0)];
     [self.view addSubview:instructions];
@@ -147,6 +141,10 @@ remove stars after reset
     
     if([defaults objectForKey:@"bestScore"] == nil) bestScore=0;
     else bestScore = (int)[defaults integerForKey:@"bestScore"];
+    
+    if([defaults objectForKey:@"practicing"] == nil) practicing=false;
+    else practicing = (int)[defaults integerForKey:@"practicing"];
+    
     
     //
 
@@ -297,6 +295,7 @@ remove stars after reset
     playButton.center=CGPointMake(screenWidth/2.0, screenHeight/2.0);
     [playButton addTarget:self action:@selector(restartFromLastStage) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:playButton];
+    [progressView bringSubviewToFront:playButton];
     playButton.alpha=0;
 
 
@@ -405,21 +404,56 @@ remove stars after reset
 }
 
 -(void) restart{
-    life=NUMHEARTS;
+    life=0;
     currentLevel=0;
     trialSequence=-1;
     progressView.centerMessage.text=@"";
-    [self updateLife];
+    progressView.subMessage.text=@"";
+    practicing=false;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setInteger:practicing forKey:@"practicing"];
+    [defaults synchronize];
+    
+    //setupDots with life=0
     [self setupDots];
+    
+    
+    life=NUMHEARTS;
+    [self updateLife];
+
 }
 
 -(void) restartFromLastStage{
-//    life=NUMHEARTS;
-//    currentLevel=[self getCurrentStage]*TRIALSINSTAGE;
-//    trialSequence=-1;
-//    progressView.centerMessage.text=@"";
-//    [self updateLife];
-//    [self setupDots];
+
+    [UIView animateWithDuration:0.8
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         progressView.centerMessage.alpha=0;
+                         progressView.subMessage.alpha=0;
+                         playButton.alpha=0.0;
+                     }
+                     completion:^(BOOL finished){
+                     }];
+    
+    
+    //reset dots
+    life=0;
+    [self setupDots];
+
+    
+    life=NUMHEARTS;
+    currentLevel=lastStage*TRIALSINSTAGE;
+    trialSequence=-1;
+    progressView.centerMessage.text=@"";
+    progressView.subMessage.text=@"";
+    practicing=true;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setInteger:practicing forKey:@"practicing"];
+    [defaults synchronize];
+    
+    [self updateLife];
+
 }
 
 -(void)addHeart:(int)i{
@@ -1040,7 +1074,7 @@ remove stars after reset
      NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
      [defaults setInteger:currentLevel forKey:@"currentLevel"];
     
-    if(level>0){
+    if(level>0 && practicing==false){
         float lastSuccessfulGoal=fabs([[[self.ArrayOfValues objectAtIndex:level-1] objectForKey:@"goal"] floatValue]);
 
         if(lastSuccessfulGoal>=bestScore){
@@ -1061,7 +1095,8 @@ remove stars after reset
                            delay:0.0
                          options:UIViewAnimationOptionCurveLinear
                       animations:^{
-                          self.view.backgroundColor=[self getBackgroundColor];
+                          if(practicing) self.view.backgroundColor=[UIColor colorWithWhite:.7 alpha:1.0];
+                          else self.view.backgroundColor=[self getBackgroundColor];
                           
                           UIColor * inverse=[self inverseColor:self.view.backgroundColor];
                           [instructions setColor:inverse];
@@ -1147,10 +1182,13 @@ remove stars after reset
                          }
                          
                          if(life==0){
-                              currentLevel=0;
-                             [self reportScore];
+                             if(practicing==false) [self reportScore];
                              [self showGameOverSequence];
                              resetCountdown=10;
+                             lastStage=[self getCurrentStage];
+                             
+                             currentLevel=0;
+
                              return;
                          }
                          
@@ -1172,9 +1210,10 @@ remove stars after reset
 }
 
 -(void)showGameOverSequence{
+    
     //show progressview
     [self.view bringSubviewToFront:progressView];
-    progressView.subMessage.text=[NSString stringWithFormat:@"PRACTICE AGAIN\nFROM STAGE %i",[self getCurrentStage]+1];
+    progressView.subMessage.text=[NSString stringWithFormat:@"PRACTICE`\nFROM STAGE %i",[self getCurrentStage]+1];
     //progressView.subMessage.text=@"PLAY AGAIN";
     progressView.subMessage.alpha=1.0;
     playButton.alpha=1.0;
@@ -1190,7 +1229,6 @@ remove stars after reset
                      }
                      completion:^(BOOL finished){
                          [self countdown];
-                         
                      }];
     
     
@@ -1198,34 +1236,36 @@ remove stars after reset
 
 
 -(void)countdown{
-    [progressView displayMessage:[NSString stringWithFormat:@"%i",resetCountdown]];
-    resetCountdown--;
-    if(resetCountdown>=0)[self performSelector:@selector(countdown) withObject:self afterDelay:1];
-    else{
-        [UIView animateWithDuration:0.4
-                              delay:0.0
-                            options:UIViewAnimationOptionCurveLinear
-                         animations:^{
-                             progressView.subMessage.alpha=0;
-                             playButton.alpha=0.0;
 
-                         }
-                         completion:^(BOOL finished){
-                             progressView.subMessage.text=@"GAME OVER";
+    
+    if(life==0){//check if countdown got interrupted by restart
+        [progressView displayMessage:[NSString stringWithFormat:@"%i",resetCountdown]];
+        resetCountdown--;
+        
+        if(resetCountdown>=0)[self performSelector:@selector(countdown) withObject:self afterDelay:1.0];
+        else{
+            [UIView animateWithDuration:0.4
+                                  delay:0.0
+                                options:UIViewAnimationOptionCurveLinear
+                             animations:^{
+                                 progressView.subMessage.alpha=0;
+                                 playButton.alpha=0.0;
+                             }
+                             completion:^(BOOL finished){
+                                 progressView.subMessage.text=@"GAME OVER";
 
-                             [UIView animateWithDuration:0.4
-                                                   delay:0.0
-                                                 options:UIViewAnimationOptionCurveLinear
-                                              animations:^{
-                                                progressView.subMessage.alpha=1.0;
-                                                  
-
-                                              }
-                                              completion:^(BOOL finished){
-                                                  [self restart];
-                                              }];
-                             
-                         }];
+                                 [UIView animateWithDuration:0.4
+                                                       delay:0.0
+                                                     options:UIViewAnimationOptionCurveLinear
+                                                  animations:^{
+                                                    progressView.subMessage.alpha=1.0;
+                                                  }
+                                                  completion:^(BOOL finished){
+                                                      [self restart];
+                                                  }];
+                                 
+                             }];
+        }
     }
 }
 

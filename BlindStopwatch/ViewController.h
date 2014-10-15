@@ -106,7 +106,10 @@
     UIButton *restartButton;
     UIButton *playButton;
 
-
+    int lastStage;
+    
+    BOOL practicing;
+    
 }
 
 

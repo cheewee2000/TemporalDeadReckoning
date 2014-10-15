@@ -21,7 +21,8 @@
         self.centerMessage.font = [UIFont fontWithName:@"DIN Condensed" size:140];
         self.centerMessage.textColor=[UIColor whiteColor];
         [self addSubview:self.centerMessage];
-        
+        [self bringSubviewToFront:self.centerMessage];
+
         
         self.subMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, self.frame.size.width, 100)];
         self.subMessage.center=CGPointMake(self.frame.size.width/2.0, self.centerMessage.center.y+160);
@@ -32,7 +33,7 @@
         self.subMessage.font = [UIFont fontWithName:@"DIN Condensed" size:40];
         self.subMessage.textColor=[UIColor whiteColor];
         [self addSubview:self.subMessage];
-        
+        [self bringSubviewToFront:self.subMessage];
         
         
     }
