@@ -1,27 +1,18 @@
 //todo
 /*
- 
-  move best to below trophy
- 
- autolayout with visual in code
-
- shadow on trophy for button
- scale trohpy down
- 
- 
- highscore, use real level and bonus calculations
+  
+ add up bonus with animation at game over
+ add game over animation
+ play again instruction after game over
  
  highlight previous highest level
 
  sound effects
  
- 
  achievements
  
  
- add up bonus with animation at game over
- add game over animation
- play again instruction after game over
+
  
  
  randomize levels in stage
@@ -85,9 +76,9 @@
     trialSequence=-1;
 
     //instructions
+    
     instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(screenWidth, 137, screenWidth-8, 30.0)];
     [self.view addSubview:instructions];
-    
     
     /* Create the Tap Gesture Recognizer */
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
@@ -99,17 +90,35 @@
     
     labelContainer=[[UIView alloc] initWithFrame:self.view.frame];
     [self.view addSubview:labelContainer];
-    [labelContainer addSubview:counterLabel];
-    [self.view addSubview:counterGoalLabel];
     //[self.view addSubview:differencelLabel];
-
     [self.view bringSubviewToFront:instructions];
+    
+    //set position relative to instruction arrow
+    counterLabel=[[UILabel alloc]init];
+    counterLabel.font = [UIFont fontWithName:@"DIN Condensed" size:screenWidth*.33];
+    counterLabel.adjustsFontSizeToFitWidth = YES;
+    counterLabel.textColor=[UIColor whiteColor];
+    counterLabel.textAlignment=NSTextAlignmentCenter;
+    counterLabel.frame=CGRectMake(0,0, screenWidth, screenWidth*.35);
+    counterLabel.center=CGPointMake(screenWidth*.5, instructions.frame.origin.y-counterLabel.frame.size.height*.30);
+    //counterLabel.backgroundColor=[UIColor greenColor];
+    counterLabel.clipsToBounds=NO;
+    [labelContainer addSubview:counterLabel];
+
+    counterGoalLabel=[[UILabel alloc]init];
+    counterGoalLabel.font = [UIFont fontWithName:@"DIN Condensed" size:screenWidth*.33];
+    counterGoalLabel.adjustsFontSizeToFitWidth = YES;
+    counterGoalLabel.textColor=[UIColor whiteColor];
+    counterGoalLabel.textAlignment=NSTextAlignmentCenter;
+    counterGoalLabel.frame=CGRectMake(0,0, screenWidth, screenWidth*.35);
+    counterGoalLabel.center=CGPointMake(screenWidth*.5, instructions.frame.origin.y+instructions.frame.size.height+counterGoalLabel.frame.size.height*.55);
+    counterGoalLabel.clipsToBounds=NO;
+    [self.view addSubview:counterGoalLabel];
     
     levelArrows=[[NSMutableArray alloc] init];
     for (int i=0; i<NUMLEVELARROWS; i++) {
         TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, 285+i*40, screenWidth-8, 30.0)];
         arrow.drawArrow=false;
-
         [levelArrows addObject:arrow];
         [self.view addSubview:arrow];
         [self.view sendSubviewToBack:arrow];
@@ -117,7 +126,7 @@
     }
 
     
-    goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(screenWidth*.5-5, counterGoalLabel.frame.size.height-30, screenWidth*.5-8, 40)];
+    goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, counterGoalLabel.frame.size.height-30, counterGoalLabel.frame.size.width*.5-8, 40)];
     goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:33.0];
     goalPrecision.textAlignment=NSTextAlignmentRight;
     goalPrecision.textColor = [UIColor whiteColor];
@@ -372,7 +381,9 @@
     
     //[self setLevel:currentLevel];
 
-    [self authenticateLocalPlayer];
+    
+    //game center
+    //[self authenticateLocalPlayer];
 }
 
 -(void)updateHighscore{

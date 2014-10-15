@@ -29,8 +29,10 @@
     
     
     UIView *labelContainer;
-    IBOutlet UILabel *counterLabel;
-    IBOutlet UILabel *counterGoalLabel;
+    //IBOutlet UILabel *counterLabel;
+    //IBOutlet UILabel *counterGoalLabel;
+     UILabel *counterLabel;
+     UILabel *counterGoalLabel;
     IBOutlet UILabel *differencelLabel;
     
     TextArrow* instructions;
