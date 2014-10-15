@@ -18,7 +18,7 @@
 
 @class RBVolumeButtons;
 
-@interface ViewController : UIViewController <GKGameCenterControllerDelegate>  //<BEMSimpleLineGraphDataSource, BEMSimpleLineGraphDelegate>
+@interface ViewController : UIViewController <GKGameCenterControllerDelegate, UIAlertViewDelegate>  //<BEMSimpleLineGraphDataSource, BEMSimpleLineGraphDelegate>
 //@interface ViewController : UIViewController <JBLineChartViewDelegate, JBLineChartViewDataSource>
 
 {
@@ -102,7 +102,10 @@
     
     NSMutableArray * stageLabels;
     
-    
+    int resetCountdown;
+    UIButton *restartButton;
+    UIButton *playButton;
+
 
 }
 

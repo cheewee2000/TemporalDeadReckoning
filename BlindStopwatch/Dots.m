@@ -137,7 +137,16 @@
     [self setNeedsDisplay];
 }
 
--(void) setStars:(int)s{    
+-(void) setStars:(int)s{
+    if(s==0){
+        for(int i=0; i<[stars count]; i++){
+            UIImageView *star=[stars objectAtIndex:i];
+            star.alpha=0;
+        }
+        [self setNeedsDisplay];
+
+    }
+    
     for(int i=0; i<s; i++){
         UIImageView *star=[stars objectAtIndex:i];
 
@@ -157,6 +166,7 @@
       }
         [self setNeedsDisplay];
     }
+    
 }
 
 @end

@@ -445,8 +445,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: cw wang (XZCX966PV5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: cw wang (XZCX966PV5)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -460,7 +460,7 @@
 					"$(PROJECT_DIR)/BlindStopwatch/TestFlightSDK3.0.2",
 				);
 				PRODUCT_NAME = BlindStopwatch;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "5566dc0b-ac94-44c6-b0bb-86baa6ad4340";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -487,7 +487,7 @@
 					"$(PROJECT_DIR)/BlindStopwatch/TestFlightSDK3.0.2",
 				);
 				PRODUCT_NAME = BlindStopwatch;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "16875d88-f263-4ddf-9abe-7c96d54ce911";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

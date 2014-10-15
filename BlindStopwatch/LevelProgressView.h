@@ -10,8 +10,12 @@
 
 @interface LevelProgressView : UIView
 {
-    NSMutableArray * stageLabels;
    
 }
+
+@property UILabel * centerMessage;
+@property UILabel * subMessage;
+
+-(void)displayMessage:(NSString*)s;
 
 @end

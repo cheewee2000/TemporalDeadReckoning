@@ -1,20 +1,25 @@
 //todo
 /*
   
- triplestar = bonus heart
-
+ 
  add up bonus with animation at game over
  add game over animation
+ 
  play again instruction after game over
+ restart from stage
+ 
+ visual for + or - from target for last 10 tries
+ 
  
  highlight previous highest level
 
  sound effects
  
  achievements
+-flawless
  
- restart from stage
-
+remove stars after reset
+ 
  
  
  randomize levels in stage
@@ -78,7 +83,6 @@
     trialSequence=-1;
 
     //instructions
-    
     instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(screenWidth, 137, screenWidth-8, 30.0)];
     [self.view addSubview:instructions];
     
@@ -92,7 +96,6 @@
     
     labelContainer=[[UIView alloc] initWithFrame:self.view.frame];
     [self.view addSubview:labelContainer];
-    //[self.view addSubview:differencelLabel];
     [self.view bringSubviewToFront:instructions];
     
     //set position relative to instruction arrow
@@ -103,7 +106,6 @@
     counterLabel.textAlignment=NSTextAlignmentCenter;
     counterLabel.frame=CGRectMake(0,0, screenWidth, screenWidth*.35);
     counterLabel.center=CGPointMake(screenWidth*.5, instructions.frame.origin.y-counterLabel.frame.size.height*.30);
-    //counterLabel.backgroundColor=[UIColor greenColor];
     counterLabel.clipsToBounds=NO;
     [labelContainer addSubview:counterLabel];
 
@@ -146,7 +148,7 @@
     if([defaults objectForKey:@"bestScore"] == nil) bestScore=0;
     else bestScore = (int)[defaults integerForKey:@"bestScore"];
     
-    [self loadData];
+    //
 
     //[self loadData:currentLevel];
     //[self loadLevelProgress];
@@ -253,37 +255,59 @@
     //blob=[[UIView alloc] init];
     //[self.view addSubview:blob];
     //set blob frame
-    [self resetMainDot];
+    //[self resetMainDot];
     
     //dot array for level progress
-    progressView=[[LevelProgressView alloc] init];
+    progressView=[[LevelProgressView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height*2.0)];
     progressView.clipsToBounds=YES;
     [self.view addSubview:progressView];
     
     
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-//    button.layer.shadowColor = [UIColor blackColor].CGColor;
-//    button.layer.shadowOffset = CGSizeMake(0, 1);
-//    button.layer.shadowOpacity = 1;
-//    button.layer.shadowRadius = 3.0;
+    UIButton *trophyButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage * trophy=[UIImage imageNamed:@"trophy"];
-    [button setBackgroundImage:trophy forState:UIControlStateNormal];
-    [button adjustsImageWhenHighlighted];
-    
-    [button setFrame:CGRectMake(0,0,44,44)];
-    button.center=CGPointMake(screenWidth/2.0, screenHeight-80);
-    [button addTarget:self action:@selector(showLeaderboardAndAchievements:) forControlEvents:UIControlEventTouchUpInside];
-    [progressView addSubview:button];
+    [trophyButton setBackgroundImage:trophy forState:UIControlStateNormal];
+    [trophyButton adjustsImageWhenHighlighted];
+    [trophyButton setFrame:CGRectMake(0,0,44,44)];
+    trophyButton.center=CGPointMake(screenWidth/2.0, screenHeight-100);
+    [trophyButton addTarget:self action:@selector(showLeaderboardAndAchievements:) forControlEvents:UIControlEventTouchUpInside];
+    [progressView addSubview:trophyButton];
 
+    highScoreLabel=[[UILabel alloc] initWithFrame:CGRectMake(32,10,screenWidth,26)];
+    highScoreLabel.center=CGPointMake(screenWidth*.5, screenHeight-64);
+    highScoreLabel.textAlignment=NSTextAlignmentCenter;
+    highScoreLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
+    [progressView addSubview:highScoreLabel];
+    [self updateHighscore];
     
+    restartButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage * restart=[UIImage imageNamed:@"restart"];
+    [restartButton setBackgroundImage:restart forState:UIControlStateNormal];
+    [restartButton adjustsImageWhenHighlighted];
+    [restartButton setFrame:CGRectMake(0,0,44,44)];
+    restartButton.center=CGPointMake(screenWidth-30, screenHeight-30);
+    [restartButton addTarget:self action:@selector(restartPressed) forControlEvents:UIControlEventTouchUpInside];
+    [progressView addSubview:restartButton];
+    
+    
+    playButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage * play=[UIImage imageNamed:@"play"];
+    [playButton setBackgroundImage:play forState:UIControlStateNormal];
+    [playButton adjustsImageWhenHighlighted];
+    [playButton setFrame:CGRectMake(0,0,44,44)];
+    playButton.center=CGPointMake(screenWidth/2.0, screenHeight/2.0);
+    [playButton addTarget:self action:@selector(restartFromLastStage) forControlEvents:UIControlEventTouchUpInside];
+    [progressView addSubview:playButton];
+    playButton.alpha=0;
+
+
     
     //Dots
     dots=[NSMutableArray array];
     stageLabels=[NSMutableArray array];
 
-    [self setupDots];
-    [self updateDots];
-    [self updateTimeDisplay:0];
+
+    //[self updateDots];
+    //[self updateTimeDisplay:0];
     
     
     
@@ -291,13 +315,12 @@
     if([defaults objectForKey:@"life"] == nil) life=NUMHEARTS;
     else life = (int)[defaults integerForKey:@"life"];
     hearts=[[NSMutableArray alloc]init];
-    
-    
-    for (int i=0; i<life; i++){
-        [self addHeart:i];
-    }
+    for (int i=0; i<life; i++)[self addHeart:i];
 
     [self updateLife];
+    [self loadData];
+    [self setupDots];
+    
     //big dot
     /*
     mainDot = [[Dots alloc] init];
@@ -359,27 +382,44 @@
     [self.view sendSubviewToBack:progressView];
 
     
-    highScoreDot=[[Dots alloc] initWithFrame:CGRectMake(10, 10, 20, 20)];
-    highScoreDot.backgroundColor=[UIColor clearColor];
-    [highScoreDot setFill:NO];
-    highScoreDot.alpha=0;
-    [self.view addSubview:highScoreDot];
-    [self.view sendSubviewToBack:highScoreDot];
-    
-    highScoreLabel=[[UILabel alloc] initWithFrame:CGRectMake(32,10,screenWidth,26)];
-    highScoreLabel.center=CGPointMake(screenWidth*.5, screenHeight-44);
-    highScoreLabel.textAlignment=NSTextAlignmentCenter;
-    
-    highScoreLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
-    [self updateHighscore];
-    [progressView addSubview:highScoreLabel];
-    //[self.view sendSubviewToBack:highScoreLabel];
-    
-    //[self setLevel:currentLevel];
 
-    
+
     //game center
     //[self authenticateLocalPlayer];
+}
+-(void)restartPressed{
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Reset game?" message:@"Do you really want to reset this game?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
+    [alert addButtonWithTitle:@"Yes"];
+    [alert show];
+    [alert setTag:1];
+
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if ([alertView tag] == 1) {//reset?
+        if (buttonIndex == 1) {//yes
+            [self restart];
+        }
+    }
+}
+
+-(void) restart{
+    life=NUMHEARTS;
+    currentLevel=0;
+    trialSequence=-1;
+    progressView.centerMessage.text=@"";
+    [self updateLife];
+    [self setupDots];
+}
+
+-(void) restartFromLastStage{
+//    life=NUMHEARTS;
+//    currentLevel=[self getCurrentStage]*TRIALSINSTAGE;
+//    trialSequence=-1;
+//    progressView.centerMessage.text=@"";
+//    [self updateLife];
+//    [self setupDots];
 }
 
 -(void)addHeart:(int)i{
@@ -387,7 +427,7 @@
     [heart setImage:[UIImage imageNamed: @"heart"]];
     heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15);
     [hearts addObject:heart];
-    
+    heart.alpha=0.0;
     //hearts = [hearts arrayByAddingObject:heart];
     [self.view addSubview:hearts[i]];
     [self.view sendSubviewToBack:hearts[i]];
@@ -412,10 +452,14 @@
 
     if(life==0){
         for (int i = 0; i < [dots count];i++){
-            [[dots objectAtIndex:i ]  setFill:NO];
-            [[dots objectAtIndex:i ]  setText:@"" level:@""];
-            [[dots objectAtIndex:i ] removeFromSuperview];
             
+            Dots *d=[dots objectAtIndex:i ];
+            [d setFill:NO];
+            [d setText:@"" level:@""];
+            [d setStars:0];
+            [d removeFromSuperview];
+            
+
             if(i%TRIALSINSTAGE==0){
                 int stage=floorf(i/TRIALSINSTAGE);
                 TextArrow *sLabel=[stageLabels objectAtIndex:stage];
@@ -633,8 +677,9 @@
         UIImageView* d=[hearts objectAtIndex:i];
 
         if(i<life) {
+            d.alpha=1.0;
+
                 if(d.frame.origin.y>screenHeight){
-                    d.alpha=1.0;
                     d.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15);
 
                     
@@ -1104,18 +1149,15 @@
                          if(life==0){
                               currentLevel=0;
                              [self reportScore];
-
+                             [self showGameOverSequence];
+                             resetCountdown=10;
+                             return;
                          }
                          
                          //check for stage up to add dots
-                         if ( (currentLevel%TRIALSINSTAGE==0 && [self isAccurate]) || life==0){
+                         if ( (currentLevel%TRIALSINSTAGE==0 && [self isAccurate])){
                           [self setupDots];
                          }
-                         
-                         
-                         //[self saveLevelProgress];
-                         //[self loadLevel];
-                         
                          else{
                              //need delay here for currentLevel to get set !!!!!!
                              [self performSelector:@selector(loadLevel) withObject:self afterDelay:0.5];
@@ -1127,6 +1169,64 @@
     
 
     
+}
+
+-(void)showGameOverSequence{
+    //show progressview
+    [self.view bringSubviewToFront:progressView];
+    progressView.subMessage.text=[NSString stringWithFormat:@"PRACTICE AGAIN\nFROM STAGE %i",[self getCurrentStage]+1];
+    //progressView.subMessage.text=@"PLAY AGAIN";
+    progressView.subMessage.alpha=1.0;
+    playButton.alpha=1.0;
+    //restartButton.center=CGPointMake(screenWidth*.5, screenHeight*.5);
+    
+    [UIView animateWithDuration:0.4
+                          delay:0.0
+         usingSpringWithDamping:.5
+          initialSpringVelocity:1.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
+                     }
+                     completion:^(BOOL finished){
+                         [self countdown];
+                         
+                     }];
+    
+    
+}
+
+
+-(void)countdown{
+    [progressView displayMessage:[NSString stringWithFormat:@"%i",resetCountdown]];
+    resetCountdown--;
+    if(resetCountdown>=0)[self performSelector:@selector(countdown) withObject:self afterDelay:1];
+    else{
+        [UIView animateWithDuration:0.4
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             progressView.subMessage.alpha=0;
+                             playButton.alpha=0.0;
+
+                         }
+                         completion:^(BOOL finished){
+                             progressView.subMessage.text=@"GAME OVER";
+
+                             [UIView animateWithDuration:0.4
+                                                   delay:0.0
+                                                 options:UIViewAnimationOptionCurveLinear
+                                              animations:^{
+                                                progressView.subMessage.alpha=1.0;
+                                                  
+
+                                              }
+                                              completion:^(BOOL finished){
+                                                  [self restart];
+                                              }];
+                             
+                         }];
+    }
 }
 
 
