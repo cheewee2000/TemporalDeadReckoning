@@ -1,7 +1,7 @@
 //todo
 /*
  
- when practice mode all black and white except for reset button
+ 
  
  make level arrows slideout if new level
  make level arrows slideout after some time
@@ -53,8 +53,8 @@ colors
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 5
-#define NUMHEARTS 3
+#define TRIALSINSTAGE 2
+#define NUMHEARTS 1
 
 @interface ViewController () {
     
@@ -280,6 +280,7 @@ colors
     
     restartButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage * restart=[UIImage imageNamed:@"restart"];
+    restart = [restart imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [restartButton setBackgroundImage:restart forState:UIControlStateNormal];
     [restartButton adjustsImageWhenHighlighted];
     [restartButton setFrame:CGRectMake(0,0,44,44)];
@@ -445,6 +446,8 @@ colors
     
     life=NUMHEARTS;
     
+    //setup new dots
+    [self setupDots];
     [self updateLife];
     
 }
@@ -478,6 +481,8 @@ colors
     [defaults setInteger:practicing forKey:@"practicing"];
     [defaults synchronize];
     
+    //setup new dots
+    [self setupDots];
     [self updateLife];
 
 }
@@ -512,8 +517,14 @@ colors
                           delay:0.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
-                        if(practicing) self.view.backgroundColor=[UIColor colorWithWhite:.7 alpha:1];
-                        else self.view.backgroundColor=[self getBackgroundColor];
+                         if(practicing) {
+                          self.view.backgroundColor=[UIColor colorWithWhite:.7 alpha:1];
+                             restartButton.tintColor=[self getBackgroundColor];
+                         }
+                         else{
+                             self.view.backgroundColor=[self getBackgroundColor];
+                             restartButton.tintColor=[UIColor blackColor];
+                         }
                      }
                      completion:^(BOOL finished){
 
@@ -529,11 +540,12 @@ colors
                                     [d removeFromSuperview];
                                     
 
+                                    //remove stagelabels
                                     if(i%TRIALSINSTAGE==0){
                                         int stage=floorf(i/TRIALSINSTAGE);
                                         TextArrow *sLabel=[stageLabels objectAtIndex:stage];
                                         sLabel.alpha=0;
-                                        
+                                        [sLabel removeFromSuperview];
                                     }
                                     
                                 }
@@ -557,9 +569,6 @@ colors
                                                  //remove levelArrows
                                                  for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideOut:0.0];
 
-                                                 
-                                                 
-                            
                                             for (int i = 0; i < TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE;i++){
                                                 float dotDia=12;
                                                 float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
@@ -582,7 +591,6 @@ colors
                                                                         options:UIViewAnimationOptionCurveLinear
                                                                      animations:^{
                                                                          dot.frame=CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia);
-
                                                                      }
                                                                      completion:^(BOOL finished){
                                                                      }];
@@ -595,6 +603,7 @@ colors
                                                         sLabel.alpha=1;
                                                         [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:self.view.backgroundColor animate:NO];
 
+                                                        //shift label down
                                                         [UIView animateWithDuration:.8
                                                                               delay:0.4
                                                              usingSpringWithDamping:.5
@@ -623,7 +632,6 @@ colors
 
                                                         [stageLabels addObject:sLabel];
                                                         [progressView addSubview:sLabel];
-                                                        
                                                         
                                                         int stage=floorf(i/TRIALSINSTAGE);
                                                         [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:self.view.backgroundColor animate:NO];
@@ -1243,7 +1251,6 @@ colors
                              lastStage=[self getCurrentStage];
                              
                              currentLevel=0;
-
                              return;
                          }
                          
@@ -1308,15 +1315,9 @@ colors
                                                      options:UIViewAnimationOptionCurveLinear
                                                   animations:^{
                                                     progressView.subMessage.alpha=1.0;
-                                                      
-                                                      
-                                                      
-                                                      
                                                   }
                                                   completion:^(BOOL finished){
                                                       [self restart];
-
-                                                      
                                                   }];
                                  
                              }];
