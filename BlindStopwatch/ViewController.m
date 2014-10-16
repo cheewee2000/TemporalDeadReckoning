@@ -1,14 +1,15 @@
 //todo
 /*
  
-
- 
- add up bonus with animation at game over
- 
  when practice mode all black and white except for reset button
  
  make level arrows slideout if new level
  make level arrows slideout after some time
+ 
+ add up bonus with animation at game over
+ 
+ 
+
  
 colors
  
@@ -315,7 +316,7 @@ colors
     else life = (int)[defaults integerForKey:@"life"];
     
     hearts=[[NSMutableArray alloc]init];
-    for (int i=0; i<life; i++)[self addHeart:i];
+    //for (int i=0; i<life; i++)[self addHeart:i];
 
     [self updateLife];
     [self loadData];
@@ -438,7 +439,7 @@ colors
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setInteger:practicing forKey:@"practicing"];
     [defaults synchronize];
-    
+
     //setupDots with life=0
     [self setupDots];
     
@@ -507,165 +508,174 @@ colors
 -(void)setupDots{
     int rowHeight=60;
 
-    for(int i=0; i<[dots count]; i++) [self updateDot:i];
-
-    if(life==0){
-        for (int i = 0; i < [dots count];i++){
-            
-            Dots *d=[dots objectAtIndex:i ];
-            [d setFill:NO];
-            [d setText:@"" level:@""];
-            [d setStars:0];
-            [d removeFromSuperview];
-            
-
-            if(i%TRIALSINSTAGE==0){
-                int stage=floorf(i/TRIALSINSTAGE);
-                TextArrow *sLabel=[stageLabels objectAtIndex:stage];
-                sLabel.alpha=0;
-                
-            }
-            
-        }
-        [dots removeAllObjects];
-        [stageLabels removeAllObjects];
-    }
-    
-
-    [self.view bringSubviewToFront:progressView];
-    
-    [UIView animateWithDuration:.8
-                          delay:1.0
-         usingSpringWithDamping:.5
-          initialSpringVelocity:1.0
+    [UIView animateWithDuration:0.4
+                          delay:0.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
-                         progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
+                        if(practicing) self.view.backgroundColor=[UIColor colorWithWhite:.7 alpha:1];
+                        else self.view.backgroundColor=[self getBackgroundColor];
                      }
                      completion:^(BOOL finished){
-                         
-                         //remove levelArrows
-                         for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideOut:0.0];
 
-                         
-                         
-    
-                    for (int i = 0; i < TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE;i++){
-                        float dotDia=12;
-                        float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
-                        float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*[self getCurrentStage];
-                        
-                        
-                        //update existing dots
-                        if(i<[dots count]){
+                            for(int i=0; i<[dots count]; i++) [self updateDot:i];
+
+                            if(life==0){
+                                for (int i = 0; i < [dots count];i++){
+                                    
+                                    Dots *d=[dots objectAtIndex:i ];
+                                    [d setFill:NO];
+                                    [d setText:@"" level:@""];
+                                    [d setStars:0];
+                                    [d removeFromSuperview];
+                                    
+
+                                    if(i%TRIALSINSTAGE==0){
+                                        int stage=floorf(i/TRIALSINSTAGE);
+                                        TextArrow *sLabel=[stageLabels objectAtIndex:stage];
+                                        sLabel.alpha=0;
+                                        
+                                    }
+                                    
+                                }
+                                [dots removeAllObjects];
+                                [stageLabels removeAllObjects];
+                            }
                             
-                            Dots *dot=[dots objectAtIndex:i];
 
-                            //add level label
-                            [self updateDot:i];
-
-                            //shift dots down
+                            [self.view bringSubviewToFront:progressView];
+                            
                             [UIView animateWithDuration:.8
-                                                  delay:0.4
+                                                  delay:1.0
                                  usingSpringWithDamping:.5
                                   initialSpringVelocity:1.0
                                                 options:UIViewAnimationOptionCurveLinear
                                              animations:^{
-                                                 dot.frame=CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia);
-
+                                                 progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
                                              }
                                              completion:^(BOOL finished){
-                                             }];
+                                                 
+                                                 //remove levelArrows
+                                                 for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideOut:0.0];
+
+                                                 
+                                                 
                             
-                            
-                            //update stage label
-                            if(i%TRIALSINSTAGE==0){
-                                int stage=floorf(i/TRIALSINSTAGE);
-                                TextArrow *sLabel=[stageLabels objectAtIndex:stage];
-                                sLabel.alpha=1;
-                                [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor] animate:NO];
+                                            for (int i = 0; i < TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE;i++){
+                                                float dotDia=12;
+                                                float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
+                                                float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*[self getCurrentStage];
+                                                
+                                                
+                                                //update existing dots
+                                                if(i<[dots count]){
+                                                    
+                                                    Dots *dot=[dots objectAtIndex:i];
 
-                                [UIView animateWithDuration:.8
-                                                      delay:0.4
-                                     usingSpringWithDamping:.5
-                                      initialSpringVelocity:1.0
-                                                    options:UIViewAnimationOptionCurveLinear
-                                                 animations:^{
-                                                     sLabel.frame=CGRectMake(0, y, 70, 15);
-                                                 }
-                                                 completion:^(BOOL finished){
-                                                 }];
-                            }
+                                                    //add level label
+                                                    [self updateDot:i];
+
+                                                    //shift dots down
+                                                    [UIView animateWithDuration:.8
+                                                                          delay:0.4
+                                                         usingSpringWithDamping:.5
+                                                          initialSpringVelocity:1.0
+                                                                        options:UIViewAnimationOptionCurveLinear
+                                                                     animations:^{
+                                                                         dot.frame=CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia);
+
+                                                                     }
+                                                                     completion:^(BOOL finished){
+                                                                     }];
+                                                    
+                                                    
+                                                    //update stage label
+                                                    if(i%TRIALSINSTAGE==0){
+                                                        int stage=floorf(i/TRIALSINSTAGE);
+                                                        TextArrow *sLabel=[stageLabels objectAtIndex:stage];
+                                                        sLabel.alpha=1;
+                                                        [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:self.view.backgroundColor animate:NO];
+
+                                                        [UIView animateWithDuration:.8
+                                                                              delay:0.4
+                                                             usingSpringWithDamping:.5
+                                                              initialSpringVelocity:1.0
+                                                                            options:UIViewAnimationOptionCurveLinear
+                                                                         animations:^{
+                                                                             sLabel.frame=CGRectMake(0, y, 70, 15);
+                                                                         }
+                                                                         completion:^(BOOL finished){
+                                                                         }];
+                                                    }
 
 
-                        }
-                        //add new dots
-                        else{
+                                                }
+                                                //add new stagelabel
+                                                else{
 
-                            if(i%TRIALSINSTAGE==0){
-                                //add stage label
-                                TextArrow *sLabel = [[TextArrow alloc] initWithFrame:CGRectMake(0, y-100, 70, 15)];
-                                sLabel.instructionText.font = [UIFont fontWithName:@"DIN Condensed" size:17.0];
-                                sLabel.instructionText.textColor = [UIColor blackColor];
-                                sLabel.instructionText.frame=CGRectOffset(sLabel.instructionText.frame, 0, -2);
-                                sLabel.drawArrowRight=true;
-                                sLabel.alpha=1;
+                                                    if(i%TRIALSINSTAGE==0){
+                                                        //add stage label
+                                                        TextArrow *sLabel = [[TextArrow alloc] initWithFrame:CGRectMake(0, y-100, 70, 15)];
+                                                        sLabel.instructionText.font = [UIFont fontWithName:@"DIN Condensed" size:17.0];
+                                                        sLabel.instructionText.textColor = [UIColor blackColor];
+                                                        sLabel.instructionText.frame=CGRectOffset(sLabel.instructionText.frame, 0, -2);
+                                                        sLabel.drawArrowRight=true;
+                                                        sLabel.alpha=1;
 
-                                [stageLabels addObject:sLabel];
-                                [progressView addSubview:sLabel];
-                                
-                                
-                                int stage=floorf(i/TRIALSINSTAGE);
-                                [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor] animate:NO];
-                                
-                                [UIView animateWithDuration:.8
-                                                      delay:0.4
-                                     usingSpringWithDamping:.5
-                                      initialSpringVelocity:1.0
-                                                    options:UIViewAnimationOptionCurveLinear
-                                                 animations:^{
-                                                     sLabel.frame=CGRectMake(0, y, 70, 15);
-                                                 }
-                                                 completion:^(BOOL finished){
-                                                 }];
-                                
-                            }
-                            
-                            //add dot
-                            Dots *dot = [[Dots alloc] initWithFrame:CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia)];
-                            dot.alpha = 1;
-                            dot.backgroundColor = [UIColor clearColor];
-                            [dots addObject:dot];
-                            [progressView addSubview:dots[i]];
-                            
-                            dot.transform = CGAffineTransformScale(CGAffineTransformIdentity, .00001, .000001);
-                            //add level label
-                            [self updateDot:i];
-                        //animate dot appearance
-                        [UIView animateWithDuration:.4
-                                              delay:.8+(i-currentLevel)*.3
-                             usingSpringWithDamping:.5
-                              initialSpringVelocity:1.0
-                                            options:UIViewAnimationOptionCurveLinear
-                                         animations:^{
-                                             dot.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-                                         }
-                                         completion:^(BOOL finished){
+                                                        [stageLabels addObject:sLabel];
+                                                        [progressView addSubview:sLabel];
+                                                        
+                                                        
+                                                        int stage=floorf(i/TRIALSINSTAGE);
+                                                        [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:self.view.backgroundColor animate:NO];
+                                                        
+                                                        [UIView animateWithDuration:.8
+                                                                              delay:0.4
+                                                             usingSpringWithDamping:.5
+                                                              initialSpringVelocity:1.0
+                                                                            options:UIViewAnimationOptionCurveLinear
+                                                                         animations:^{
+                                                                             sLabel.frame=CGRectMake(0, y, 70, 15);
+                                                                         }
+                                                                         completion:^(BOOL finished){
+                                                                         }];
+                                                        
+                                                    }
+                                                    
+                                                    //add dot
+                                                    Dots *dot = [[Dots alloc] initWithFrame:CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia)];
+                                                    dot.alpha = 1;
+                                                    dot.backgroundColor = [UIColor clearColor];
+                                                    [dots addObject:dot];
+                                                    [progressView addSubview:dots[i]];
+                                                    
+                                                    dot.transform = CGAffineTransformScale(CGAffineTransformIdentity, .00001, .000001);
+                                                    //add level label
+                                                    [self updateDot:i];
+                                                //animate dot appearance
+                                                [UIView animateWithDuration:.4
+                                                                      delay:.8+(i-currentLevel)*.3
+                                                     usingSpringWithDamping:.5
+                                                      initialSpringVelocity:1.0
+                                                                    options:UIViewAnimationOptionCurveLinear
+                                                                 animations:^{
+                                                                     dot.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+                                                                 }
+                                                                 completion:^(BOOL finished){
 
-                                         }];
-                        
-                        }
-                    }
-                   
+                                                                 }];
+                                                
+                                                }
+                                            }
+                                           
 
-                         //[self updateDots];
+                                                 //[self updateDots];
 
-                         //need delay here for currentLevel to get set !!!!!!
-                         [self performSelector:@selector(loadLevel) withObject:self afterDelay:3.5];
-                         //[self performSelector:@selector(animateLevelReset) withObject:self afterDelay:4.0];
+                                                 //need delay here for currentLevel to get set !!!!!!
+                                                 [self performSelector:@selector(loadLevel) withObject:self afterDelay:3.5];
+                                                 //[self performSelector:@selector(animateLevelReset) withObject:self afterDelay:4.0];
 
-    }];
-                         
+                            }];
+                   }];
              
 }
 
@@ -731,8 +741,9 @@ colors
 
 
 -(void) updateLife{
+    //add hearts to be the same as life
     if([hearts count]<life){
-       [self addHeart:(int)[hearts count]];
+        for(int i=(int)[hearts count]; i<life; i++) [self addHeart:i];
     }
     
     for (int i=0;i<[hearts count];i++){
@@ -1204,7 +1215,7 @@ colors
                              float trialAccuracy=fabs(elapsed-timerGoal);
                              if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0){
                                  life++;
-                                 [self addHeart:life-1];
+                                 //[self addHeart:life-1];
                              }
 
                              currentLevel++;
@@ -1498,7 +1509,7 @@ colors
              float diff=elapsed-timerGoal;
              NSString *diffString;
              diffString=[NSString stringWithFormat:@"OFF BY %@",[self getTimeDiffString:diff]];
-             [t update:@"" rightLabel:diffString color:[self inverseColor:[self getBackgroundColor]] animate:NO];
+             [t update:@"" rightLabel:diffString color:[self inverseColor:self.view.backgroundColor] animate:NO];
              [t slideIn:.3+d];
              
              //ARROW2
@@ -1507,7 +1518,7 @@ colors
 
              NSString* percentAccuracyString = [NSString stringWithFormat:@"ACCURACY %02i%%", (int)accuracyP];
              t= [levelArrows objectAtIndex:1];
-             [t update:@"" rightLabel:percentAccuracyString color:[self inverseColor:[self getBackgroundColor]] animate:NO];
+             [t update:@"" rightLabel:percentAccuracyString color:[self inverseColor:self.view.backgroundColor] animate:NO];
              [t slideIn:.6+d];
              
              //ARROW3
@@ -1517,7 +1528,7 @@ colors
              else if(life>1) stageProgressString=@"ONE TRY LEFT";
              else stageProgressString=@"GAME OVER";
              t= [levelArrows objectAtIndex:2];
-             [t update:@"" rightLabel:stageProgressString color:[self inverseColor:[self getBackgroundColor]] animate:NO];
+             [t update:@"" rightLabel:stageProgressString color:[self inverseColor:self.view.backgroundColor] animate:NO];
              [t slideIn:.9+d];
              
              //ARROW4
@@ -1525,7 +1536,7 @@ colors
                  NSString * stageClearedString;
                  stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED",[self getCurrentStage]+1];
                  t= [levelArrows objectAtIndex:3];
-                 [t update:@"" rightLabel:stageClearedString color:[self inverseColor:[self getBackgroundColor]] animate:NO];
+                 [t update:@"" rightLabel:stageClearedString color:[self inverseColor:self.view.backgroundColor] animate:NO];
                  [t slideIn:1.2+d];
              }
              
