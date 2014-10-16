@@ -61,7 +61,7 @@
                          
                          [UIView animateWithDuration:0.8
                                                delay:0.0
-                                             options:UIViewAnimationOptionCurveLinear
+                                             options:UIViewAnimationOptionCurveEaseInOut
                                           animations:^{
                                               self.centerMessage.alpha=0;
                                           }

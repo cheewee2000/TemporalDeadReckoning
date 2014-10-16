@@ -1,9 +1,17 @@
 //todo
 /*
+ blob
+ 
+ drop dots when game over text shows
  
  add up bonus with animation at game over
  
-
+ when practice mode all black and white except for reset button
+ 
+ make level arrows slideout if new level
+ make level arrows slideout after some time
+ 
+colors
  
  visual for + or - from target for last 10 tries
  
@@ -13,15 +21,15 @@
  sound effects
  
  achievements
--flawless
+-flawless stage
+ -perfect stage
  
- remove stars after reset
+ bigger level dots
+ 
+ progresview slideup touch interaction fix
+ 
 
  randomize levels in stage
-
- top left dot in circle best
- 
- progressview dot in circle best
  
  prevent runaway timers
  
@@ -114,8 +122,6 @@
     counterGoalLabel.clipsToBounds=NO;
     [self.view addSubview:counterGoalLabel];
     
-
-    
     goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, counterGoalLabel.frame.size.height-30, counterGoalLabel.frame.size.width*.5-13, 40)];
     goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:33.0];
     goalPrecision.textAlignment=NSTextAlignmentRight;
@@ -133,9 +139,6 @@
         [arrow slideOut:0];
     }
 
-    
-    
-    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if([defaults objectForKey:@"currentLevel"] == nil) currentLevel=0;
     else currentLevel = (int)[defaults integerForKey:@"currentLevel"];
@@ -251,10 +254,7 @@
     
     
     
-    //blob=[[UIView alloc] init];
-    //[self.view addSubview:blob];
-    //set blob frame
-    //[self resetMainDot];
+
     
     //dot array for level progress
     progressView=[[LevelProgressView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height*2.0)];
@@ -314,6 +314,7 @@
     //life hearsts
     if([defaults objectForKey:@"life"] == nil) life=NUMHEARTS;
     else life = (int)[defaults integerForKey:@"life"];
+    
     hearts=[[NSMutableArray alloc]init];
     for (int i=0; i<life; i++)[self addHeart:i];
 
@@ -322,7 +323,13 @@
     [self setupDots];
     
     //big dot
-    /*
+    
+    blob=[[UIView alloc] init];
+    [self.view addSubview:blob];
+    //set blob frame
+    [self resetMainDot];
+    
+    
     mainDot = [[Dots alloc] init];
     mainDot.alpha = 1;
     mainDot.backgroundColor = [UIColor clearColor];
@@ -333,7 +340,7 @@
     
     //satellites
     satellites=[NSArray array];
-    for (int i=0;i<20;i++){
+    for (int i=0;i<10;i++){
         Dots *sat = [[Dots alloc] init];
         sat.alpha = 1;
         sat.backgroundColor = [UIColor clearColor];
@@ -343,7 +350,6 @@
         [blob addSubview:satellites[i]];
     }
     [self setupSatellites];
-*/
     
 //    differencelLabel.alpha=0;
 //    [self.view bringSubviewToFront:differencelLabel];
@@ -352,17 +358,15 @@
 
     
     UIBlurEffect *blurEffect= [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-    
     labelContainerBlur = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
     labelContainerBlur.frame = self.view.bounds;
     labelContainerBlur.alpha=0;
     [labelContainer addSubview:labelContainerBlur];
    
-//    blobBlur = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-//    blobBlur.frame = self.view.bounds;
-//    blobBlur.alpha=0.0;
-//    [blob addSubview:blobBlur];
-//    [self.view sendSubviewToBack:blob];
+    blobBlur = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    blobBlur.frame = self.view.bounds;
+    blobBlur.alpha=1.0;
+    [blob addSubview:blobBlur];
     
     
     xView=[[UIImageView alloc] init];
@@ -380,16 +384,17 @@
 
     
     [self.view sendSubviewToBack:progressView];
+    [self.view sendSubviewToBack:blob];
 
     
 
 
     //game center
-    //[self authenticateLocalPlayer];
+    [self authenticateLocalPlayer];
 }
 -(void)restartPressed{
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Reset game?" message:@"Do you really want to reset this game?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"RESET" message:@"Reset this game?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
     [alert addButtonWithTitle:@"Yes"];
     [alert show];
     [alert setTag:1];
@@ -420,6 +425,7 @@
     
     
     life=NUMHEARTS;
+    
     [self updateLife];
 
 }
@@ -707,18 +713,20 @@
 
 
 -(void) updateLife{
+    if([hearts count]<life){
+       [self addHeart:(int)[hearts count]];
+    }
+    
     for (int i=0;i<[hearts count];i++){
 
-        UIImageView* d=[hearts objectAtIndex:i];
+        UIImageView* heart=[hearts objectAtIndex:i];
 
         if(i<life) {
-            d.alpha=1.0;
+            heart.alpha=1.0;
 
-                if(d.frame.origin.y>screenHeight){
-                    d.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15);
-
-                    
-                    d.transform = CGAffineTransformScale(CGAffineTransformIdentity, .01, .01);
+                if(heart.frame.origin.y>screenHeight){
+                    heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15);
+                    heart.transform = CGAffineTransformScale(CGAffineTransformIdentity, .01, .01);
                     //spring in  heart
                 [UIView animateWithDuration:.4
                                       delay:0.4 * i
@@ -726,7 +734,7 @@
                       initialSpringVelocity:1.0
                                     options:UIViewAnimationOptionCurveLinear
                                          animations:^{
-                                             d.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+                                             heart.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
                                          }
                                          completion:^(BOOL finished){
                                              
@@ -735,12 +743,13 @@
         }
         else{
             
-            [self.view sendSubviewToBack:d];
+            [self.view sendSubviewToBack:heart];
+            [self.view sendSubviewToBack:blob];
             [UIView animateWithDuration:.4
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveEaseIn
                              animations:^{
-                                 d.frame=CGRectOffset(d.frame, 0, 100);
+                                 heart.frame=CGRectOffset(heart.frame, 0, 100);
                              }
                              completion:^(BOOL finished){
                                  
@@ -756,7 +765,7 @@
 
 -(void)setupSatellites{
     for (int i=0;i<[satellites count];i++){
-        float satD=30+arc4random()%100;
+        float satD=100+arc4random()%100;
         Dots *sat= [satellites objectAtIndex:i];
         sat.frame=CGRectMake(16+(self.view.frame.size.width-16)/10.0*i,260,satD,satD);
         int dir=(arc4random() % 2 ? 1 : -1);
@@ -771,8 +780,8 @@
 -(void)resetMainDot{
     int d=180;
     mainDot.frame=CGRectMake(self.view.frame.size.width/2.0-d/2.0,self.view.frame.size.width/2.0+d-44,d,d);
-    //blob.frame=CGRectMake(0,self.view.frame.size.height*.5,self.view.frame.size.width,self.view.frame.size.height*.5);
-    //blob.frame=self.view.frame;
+    blob.frame=CGRectMake(0,self.view.frame.size.height*.5,self.view.frame.size.width,self.view.frame.size.height*.5);
+    blob.frame=self.view.frame;
 
 }
 
@@ -832,6 +841,8 @@
                             else {
                                 progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
                                 [self.view sendSubviewToBack:progressView];
+                                [self.view sendSubviewToBack:blob];
+
 
                             }
                              
@@ -880,11 +891,14 @@
             [instructions updateText:@"STOP" animate:YES];
             [self setTimerGoalMarginDisplay];
             
-            [UIView animateWithDuration:0.4
+            
+            //[self.view bringSubviewToFront:blobBlur];
+            [UIView animateWithDuration:0.6
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveLinear
                              animations:^{
-                                 labelContainerBlur.alpha=1;
+                                 labelContainerBlur.alpha=1.0;
+                                 //blobBlur.alpha=0;
                              }
                              completion:^(BOOL finished){
                                  TextArrow *arrow=[levelArrows objectAtIndex:0];
@@ -1126,12 +1140,11 @@
     float l;
     if(level<TRIALSINSTAGE)l=.5+level*0.1;
     else if(level<TRIALSINSTAGE*2)l=1.0+level%TRIALSINSTAGE*0.1;
-    else if(level<TRIALSINSTAGE*3)l=3.0+level%TRIALSINSTAGE*0.2;
-    else if(level<TRIALSINSTAGE*4)l=5.0+level%TRIALSINSTAGE*0.2;
-    else if(level<TRIALSINSTAGE*5)l=10.0+level%TRIALSINSTAGE*0.5;
-    else l=level*2.0;
-    
-    
+    else if(level<TRIALSINSTAGE*3)l=1.5+level%TRIALSINSTAGE*0.2;
+    else if(level<TRIALSINSTAGE*4)l=2.5+level%TRIALSINSTAGE*0.5;
+    else l=5.0+level%TRIALSINSTAGE*1.0;
+//    else if(level<TRIALSINSTAGE*5)l=5.0+level%TRIALSINSTAGE*1.0;
+//    else l=5.0+level%TRIALSINSTAGE*1.0;
     
     return l;
 }
@@ -1180,12 +1193,24 @@
                          }
                          else{
                              life--;
+                             
+                             //drop heart
+//                             Dots *heart=[hearts objectAtIndex:life];
+//                             [UIView animateWithDuration:0.4
+//                                                   delay:0.0
+//                                                 options:UIViewAnimationOptionCurveLinear
+//                                              animations:^{
+//                                                  heart.frame=CGRectOffset(heart.frame, 0, 100);
+//                                              }
+//                                              completion:^(BOOL finished){
+//                                              }];
+
                          }
                          
                          if(life==0){
                              if(practicing==false) [self reportScore];
                              [self showGameOverSequence];
-                             resetCountdown=10;
+                             resetCountdown=20;
                              lastStage=[self getCurrentStage];
                              
                              currentLevel=0;
@@ -1214,14 +1239,13 @@
     
     //show progressview
     [self.view bringSubviewToFront:progressView];
-    progressView.subMessage.text=[NSString stringWithFormat:@"PRACTICE`\nFROM STAGE %i",[self getCurrentStage]+1];
-    //progressView.subMessage.text=@"PLAY AGAIN";
+    progressView.subMessage.text=[NSString stringWithFormat:@"CONTINUE\nFROM STAGE %i",[self getCurrentStage]+1];
     progressView.subMessage.alpha=1.0;
     playButton.alpha=1.0;
     //restartButton.center=CGPointMake(screenWidth*.5, screenHeight*.5);
     
     [UIView animateWithDuration:0.8
-                          delay:0.0
+                          delay:0.5
          usingSpringWithDamping:.5
           initialSpringVelocity:1.0
                         options:UIViewAnimationOptionCurveLinear
@@ -1231,18 +1255,13 @@
                      completion:^(BOOL finished){
                          [self countdown];
                      }];
-    
-    
 }
 
 
 -(void)countdown{
-
-    
     if(life==0){//check if countdown got interrupted by restart
         [progressView displayMessage:[NSString stringWithFormat:@"%i",resetCountdown]];
         resetCountdown--;
-        
         if(resetCountdown>=0)[self performSelector:@selector(countdown) withObject:self afterDelay:1.0];
         else{
             [UIView animateWithDuration:0.4
@@ -1256,7 +1275,7 @@
                                  progressView.subMessage.text=@"GAME OVER";
 
                                  [UIView animateWithDuration:0.8
-                                                       delay:0.8
+                                                       delay:1.2
                                                      options:UIViewAnimationOptionCurveLinear
                                                   animations:^{
                                                     progressView.subMessage.alpha=1.0;
@@ -1605,6 +1624,8 @@
                      }
                      completion:^(BOOL finished){
                          [self.view sendSubviewToBack:progressView];
+                         [self.view sendSubviewToBack:blob];
+
                          [self updateLife];
                           //fade in new counters
                           [UIView animateWithDuration:0.4
@@ -1885,6 +1906,8 @@
                      }
                      completion:^(BOOL finished){
                          [self.view sendSubviewToBack:progressView];
+                         [self.view sendSubviewToBack:blob];
+
                      }];
 
 //    if(trialSequence==0)[instructions updateText:@"START" animate:YES];

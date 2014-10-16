@@ -29,8 +29,6 @@
     
     
     UIView *labelContainer;
-    //IBOutlet UILabel *counterLabel;
-    //IBOutlet UILabel *counterGoalLabel;
      UILabel *counterLabel;
      UILabel *counterGoalLabel;
     IBOutlet UILabel *differencelLabel;
@@ -46,7 +44,7 @@
 
     
     
-    //UIVisualEffectView *blobBlur;
+    UIVisualEffectView *blobBlur;
 
     IBOutlet UIView *stats;
     UILabel *lastResults;
@@ -63,22 +61,15 @@
     NSString *timeValuesFile;
     
     NSInteger nPointsVisible;
-    
-    //NSMutableArray *levelData;
-    //NSArray *trialAccuracy;
-    
-    
+
     
     float bestScore;
     int currentLevel;
     
 
-    //MPVolumeView *volumeView;
     RBVolumeButtons *_buttonStealer;
-
     
     float resetCounter;
-    
     
     Dots *mainDot;
     NSArray *satellites;
@@ -109,6 +100,7 @@
     int lastStage;
     
     BOOL practicing;
+    UIView *blob;
     
 }
 
