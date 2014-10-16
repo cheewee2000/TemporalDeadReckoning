@@ -3,12 +3,11 @@
  
  
  
-
+add label to refresh button when in practice mode
+ 
  
  add up bonus with animation at game over
  
- 
-
  
 colors
  
@@ -26,9 +25,6 @@ colors
  bigger level dots
  
  progresview slideup touch interaction fix
- 
-
- randomize levels in stage
  
  prevent runaway timers
  
@@ -394,7 +390,7 @@ colors
 }
 -(void)restartPressed{
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"RESET" message:@"Reset this game?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"RESET" message:@"Exit practice mode and start from the beginning?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
     [alert addButtonWithTitle:@"Yes"];
     [alert show];
     [alert setTag:1];
@@ -800,24 +796,24 @@ colors
 
 -(void)setupSatellites{
     for (int i=0;i<[satellites count];i++){
-        float satD=100+arc4random()%100;
+        
+        float satD=50+arc4random()%100;
         Dots *sat= [satellites objectAtIndex:i];
         sat.frame=CGRectMake(16+(self.view.frame.size.width-16)/10.0*i,260,satD,satD);
         int dir=(arc4random() % 2 ? 1 : -1);
-        float h=mainDot.frame.size.height*(arc4random()%7/10.0);
+        float h=mainDot.frame.size.height*(arc4random()%8/10.0);
         
         CGRect orbit=CGRectMake(mainDot.frame.origin.x+satD*.15, mainDot.center.y-h/2.0, mainDot.frame.size.width-satD*.5, h);
-        [sat animateAlongPath:orbit rotate:i/10.0*M_PI_2*2.0 speed:dir*((1.0+arc4random()%40)/200.0)];
+        [sat animateAlongPath:orbit rotate:i/10.0*M_PI_2*2.0 speed:dir*((4.0+arc4random()%40)/200.0)];
 
     }
 }
 
 -(void)resetMainDot{
-    int d=180;
-    mainDot.frame=CGRectMake(self.view.frame.size.width/2.0-d/2.0,self.view.frame.size.width/2.0+d-44,d,d);
-    blob.frame=CGRectMake(0,self.view.frame.size.height*.5,self.view.frame.size.width,self.view.frame.size.height*.5);
+    int d=190;
+    mainDot.frame=CGRectMake(screenWidth/2.0-d/2.0,screenHeight-d-88,d,d);
+    blob.frame=CGRectMake(0,screenHeight*.5,screenWidth,screenHeight*.5);
     blob.frame=self.view.frame;
-
 }
 
 
