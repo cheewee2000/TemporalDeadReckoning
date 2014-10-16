@@ -3,8 +3,7 @@
  
  
  
- make level arrows slideout if new level
- make level arrows slideout after some time
+
  
  add up bonus with animation at game over
  
@@ -54,7 +53,7 @@ colors
 #define NUMLEVELARROWS 5
 
 #define TRIALSINSTAGE 2
-#define NUMHEARTS 1
+#define NUMHEARTS 2
 
 @interface ViewController () {
     
@@ -528,36 +527,38 @@ colors
                      }
                      completion:^(BOOL finished){
 
-                            for(int i=0; i<[dots count]; i++) [self updateDot:i];
+                        for(int i=0; i<[dots count]; i++) [self updateDot:i];
 
-                            if(life==0){
-                                for (int i = 0; i < [dots count];i++){
-                                    
-                                    Dots *d=[dots objectAtIndex:i ];
-                                    [d setFill:NO];
-                                    [d setText:@"" level:@""];
-                                    [d setStars:0];
-                                    [d removeFromSuperview];
-                                    
+                        if(life==0){
+                            for (int i = 0; i < [dots count];i++){
+                                
+                                Dots *d=[dots objectAtIndex:i ];
+                                [d setFill:NO];
+                                [d setText:@"" level:@""];
+                                [d setStars:0];
+                                [d removeFromSuperview];
+                                
 
-                                    //remove stagelabels
-                                    if(i%TRIALSINSTAGE==0){
-                                        int stage=floorf(i/TRIALSINSTAGE);
-                                        TextArrow *sLabel=[stageLabels objectAtIndex:stage];
-                                        sLabel.alpha=0;
-                                        [sLabel removeFromSuperview];
-                                    }
-                                    
+                                //remove stagelabels
+                                if(i%TRIALSINSTAGE==0){
+                                    int stage=floorf(i/TRIALSINSTAGE);
+                                    TextArrow *sLabel=[stageLabels objectAtIndex:stage];
+                                    sLabel.alpha=0;
+                                    [sLabel removeFromSuperview];
                                 }
-                                [dots removeAllObjects];
-                                [stageLabels removeAllObjects];
+                                
                             }
-                            
+                            [dots removeAllObjects];
+                            [stageLabels removeAllObjects];
+                        }
+                        
 
-                            [self.view bringSubviewToFront:progressView];
-                            
+                        [self.view bringSubviewToFront:progressView];
+                         float d=1.0;
+                         if(progressView.frame.origin.y==0)d=0.0;//progressview is already showing. don't animate
+                         
                             [UIView animateWithDuration:.8
-                                                  delay:1.0
+                                                  delay:d
                                  usingSpringWithDamping:.5
                                   initialSpringVelocity:1.0
                                                 options:UIViewAnimationOptionCurveLinear
@@ -679,7 +680,7 @@ colors
                                                  //[self updateDots];
 
                                                  //need delay here for currentLevel to get set !!!!!!
-                                                 [self performSelector:@selector(loadLevel) withObject:self afterDelay:3.5];
+                                                 [self performSelector:@selector(loadLevel) withObject:self afterDelay:2.5];
                                                  //[self performSelector:@selector(animateLevelReset) withObject:self afterDelay:4.0];
 
                             }];
@@ -727,11 +728,8 @@ colors
 
 -(void) updateDots{
 
-    for (int i=0; i<[dots count]; i++){
-        [self updateDot:i];
+    for (int i=0; i<[dots count]; i++)[self updateDot:i];
   
-    }
-    
     //hide xo view`
     [UIView animateWithDuration:.4
                           delay:0.0
@@ -1225,12 +1223,17 @@ colors
                                  life++;
                                  //[self addHeart:life-1];
                              }
+                             
+                             for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideOut:1+(float)i*.2];
 
                              currentLevel++;
                          }
                          else{
                              life--;
                              
+                             //slide out all but first
+                             for(int i=1; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideOut:1+(float)i*.2];
+
                              //drop heart
 //                             Dots *heart=[hearts objectAtIndex:life];
 //                             [UIView animateWithDuration:0.4
@@ -1331,6 +1334,7 @@ colors
         life=NUMHEARTS;
     }
     [self updateDots];
+    
     [self setLevel:currentLevel];
     
     [self loadData];
@@ -1515,33 +1519,42 @@ colors
              
              //ARROW2
              //float accuracyP=100.0-fabs(diff/(float)timerGoal)*100.0;
-             float accuracyP=[self getAccuracyPercentage];
-
-             NSString* percentAccuracyString = [NSString stringWithFormat:@"ACCURACY %02i%%", (int)accuracyP];
-             t= [levelArrows objectAtIndex:1];
-             [t update:@"" rightLabel:percentAccuracyString color:[self inverseColor:self.view.backgroundColor] animate:NO];
-             [t slideIn:.6+d];
+             //float accuracyP=[self getAccuracyPercentage];
+             //NSString* percentAccuracyString = [NSString stringWithFormat:@"ACCURACY %02i%%", (int)accuracyP];
              
-             //ARROW3
              NSString * stageProgressString;
              if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED",[self getLevel:currentLevel]];
              else if(life>2) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life-1];
              else if(life>1) stageProgressString=@"ONE TRY LEFT";
              else stageProgressString=@"GAME OVER";
-             t= [levelArrows objectAtIndex:2];
+             t= [levelArrows objectAtIndex:1];
              [t update:@"" rightLabel:stageProgressString color:[self inverseColor:self.view.backgroundColor] animate:NO];
-             [t slideIn:.9+d];
+             [t slideIn:.6+d];
              
-             //ARROW4
+             //ARROW3
              if([self isAccurate] && currentLevel%TRIALSINSTAGE==TRIALSINSTAGE-1) {
                  NSString * stageClearedString;
                  stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED",[self getCurrentStage]+1];
-                 t= [levelArrows objectAtIndex:3];
+                 t= [levelArrows objectAtIndex:2];
                  [t update:@"" rightLabel:stageClearedString color:[self inverseColor:self.view.backgroundColor] animate:NO];
-                 [t slideIn:1.2+d];
+                 [t slideIn:.9+d];
              }
              
+             //ARROW4
+             NSString * bonusString;
+             float trialAccuracy=fabs([[[self.ArrayOfValues objectAtIndex:currentLevel] objectForKey:@"accuracy"] floatValue]);
+             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0)
+             {
+                 bonusString=@"PERFECT! BONUS HEART";
+                 t= [levelArrows objectAtIndex:3];
+                 [t update:@"" rightLabel:bonusString color:[self inverseColor:self.view.backgroundColor] animate:NO];
+                 [t slideIn:1.2+d];
+             }
+             //             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4.0/5.0)
+             //             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3.0/5.0)
              
+
+
              [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:1.7];
              
          }];

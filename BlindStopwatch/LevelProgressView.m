@@ -21,7 +21,6 @@
         self.centerMessage.font = [UIFont fontWithName:@"DIN Condensed" size:140];
         self.centerMessage.textColor=[UIColor whiteColor];
         [self addSubview:self.centerMessage];
-        [self bringSubviewToFront:self.centerMessage];
 
         
         self.subMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, self.frame.size.width, 100)];
@@ -49,6 +48,8 @@
 
 
 -(void)displayMessage:(NSString*)s{
+    [self bringSubviewToFront:self.centerMessage];
+
     self.centerMessage.text=s;
     self.centerMessage.alpha=0;
     [UIView animateWithDuration:0.2
