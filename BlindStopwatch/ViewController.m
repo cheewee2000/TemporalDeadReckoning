@@ -407,6 +407,17 @@ colors
 
 -(void) restart{
     
+    [UIView animateWithDuration:0.8
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         progressView.centerMessage.alpha=0;
+                         progressView.subMessage.alpha=0;
+                         playButton.alpha=0.0;
+                     }
+                     completion:^(BOOL finished){
+                     }];
+    
     for (int i=0; i<dots.count; i++){
         Dots* d=[dots objectAtIndex:i];
         
@@ -427,6 +438,8 @@ colors
 
 -(void)setupGame{
     life=0;
+    [self removeDots];
+    
     currentLevel=0;
     trialSequence=-1;
     progressView.centerMessage.text=@"";
@@ -436,12 +449,8 @@ colors
     [defaults setInteger:practicing forKey:@"practicing"];
     [defaults synchronize];
 
-    //setupDots with life=0
-    [self setupDots];
-    
-    life=NUMHEARTS;
-    
     //setup new dots
+    life=NUMHEARTS;
     [self setupDots];
     [self updateLife];
     
@@ -463,7 +472,7 @@ colors
     
     //reset dots
     life=0;
-    [self setupDots];
+    [self removeDots];
 
     
     life=NUMHEARTS;
@@ -505,6 +514,30 @@ colors
     return floorf(currentLevel/TRIALSINSTAGE);
 }
 
+-(void)removeDots{
+    
+    for (int i = 0; i < [dots count];i++){
+        
+        Dots *d=[dots objectAtIndex:i ];
+        [d setFill:NO];
+        [d setText:@"" level:@""];
+        [d setStars:0];
+        [d removeFromSuperview];
+        
+        
+        //remove stagelabels
+        if(i%TRIALSINSTAGE==0){
+            int stage=floorf(i/TRIALSINSTAGE);
+            TextArrow *sLabel=[stageLabels objectAtIndex:stage];
+            sLabel.alpha=0;
+            [sLabel removeFromSuperview];
+        }
+    }
+    
+    [dots removeAllObjects];
+    [stageLabels removeAllObjects];
+}
+
 -(void)setupDots{
     int rowHeight=60;
 
@@ -524,29 +557,6 @@ colors
                      completion:^(BOOL finished){
 
                         for(int i=0; i<[dots count]; i++) [self updateDot:i];
-
-                        if(life==0){
-                            for (int i = 0; i < [dots count];i++){
-                                
-                                Dots *d=[dots objectAtIndex:i ];
-                                [d setFill:NO];
-                                [d setText:@"" level:@""];
-                                [d setStars:0];
-                                [d removeFromSuperview];
-                                
-
-                                //remove stagelabels
-                                if(i%TRIALSINSTAGE==0){
-                                    int stage=floorf(i/TRIALSINSTAGE);
-                                    TextArrow *sLabel=[stageLabels objectAtIndex:stage];
-                                    sLabel.alpha=0;
-                                    [sLabel removeFromSuperview];
-                                }
-                                
-                            }
-                            [dots removeAllObjects];
-                            [stageLabels removeAllObjects];
-                        }
                         
 
                         [self.view bringSubviewToFront:progressView];
@@ -1217,7 +1227,7 @@ colors
                              float trialAccuracy=fabs(elapsed-timerGoal);
                              if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0){
                                  life++;
-                                 //[self addHeart:life-1];
+                                 [self updateLife];
                              }
                              
                              for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideOut:1+(float)i*.2];
@@ -1229,17 +1239,6 @@ colors
                              
                              //slide out all but first
                              for(int i=1; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideOut:1+(float)i*.2];
-
-                             //drop heart
-//                             Dots *heart=[hearts objectAtIndex:life];
-//                             [UIView animateWithDuration:0.4
-//                                                   delay:0.0
-//                                                 options:UIViewAnimationOptionCurveLinear
-//                                              animations:^{
-//                                                  heart.frame=CGRectOffset(heart.frame, 0, 100);
-//                                              }
-//                                              completion:^(BOOL finished){
-//                                              }];
 
                          }
                          
@@ -1277,7 +1276,6 @@ colors
     progressView.subMessage.text=[NSString stringWithFormat:@"CONTINUE\nFROM STAGE %i",[self getCurrentStage]+1];
     progressView.subMessage.alpha=1.0;
     playButton.alpha=1.0;
-    //restartButton.center=CGPointMake(screenWidth*.5, screenHeight*.5);
     
     [UIView animateWithDuration:0.8
                           delay:0.5
@@ -1504,14 +1502,16 @@ colors
 
              //arrow delay
              float d=.2;
+             int arrowN=0;
              
              //ARROW1
-             TextArrow *t= [levelArrows objectAtIndex:0];
+             TextArrow *t= [levelArrows objectAtIndex:arrowN];
              float diff=elapsed-timerGoal;
              NSString *diffString;
              diffString=[NSString stringWithFormat:@"OFF BY %@",[self getTimeDiffString:diff]];
              [t update:@"" rightLabel:diffString color:[self inverseColor:self.view.backgroundColor] animate:NO];
              [t slideIn:.3+d];
+             arrowN++;
              
              //ARROW2
              //float accuracyP=100.0-fabs(diff/(float)timerGoal)*100.0;
@@ -1523,34 +1523,35 @@ colors
              else if(life>2) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life-1];
              else if(life>1) stageProgressString=@"ONE TRY LEFT";
              else stageProgressString=@"GAME OVER";
-             t= [levelArrows objectAtIndex:1];
+             t= [levelArrows objectAtIndex:arrowN];
              [t update:@"" rightLabel:stageProgressString color:[self inverseColor:self.view.backgroundColor] animate:NO];
              [t slideIn:.6+d];
+             arrowN++;
              
              //ARROW3
              if([self isAccurate] && currentLevel%TRIALSINSTAGE==TRIALSINSTAGE-1) {
                  NSString * stageClearedString;
                  stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED",[self getCurrentStage]+1];
-                 t= [levelArrows objectAtIndex:2];
+                 t= [levelArrows objectAtIndex:arrowN];
                  [t update:@"" rightLabel:stageClearedString color:[self inverseColor:self.view.backgroundColor] animate:NO];
                  [t slideIn:.9+d];
+                 arrowN++;
              }
              
              //ARROW4
              NSString * bonusString;
-             float trialAccuracy=fabs([[[self.ArrayOfValues objectAtIndex:currentLevel] objectForKey:@"accuracy"] floatValue]);
+             float trialAccuracy=fabs(elapsed-timerGoal);
              if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0)
              {
                  bonusString=@"PERFECT! BONUS HEART";
-                 t= [levelArrows objectAtIndex:3];
+                 t= [levelArrows objectAtIndex:arrowN];
                  [t update:@"" rightLabel:bonusString color:[self inverseColor:self.view.backgroundColor] animate:NO];
                  [t slideIn:1.2+d];
+                 arrowN++;
              }
              //             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4.0/5.0)
              //             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3.0/5.0)
              
-
-
              [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:1.7];
              
          }];
@@ -1670,7 +1671,6 @@ colors
                      completion:^(BOOL finished){
                          [self.view sendSubviewToBack:progressView];
                          [self.view sendSubviewToBack:blob];
-
                          [self updateLife];
                           //fade in new counters
                           [UIView animateWithDuration:0.4
