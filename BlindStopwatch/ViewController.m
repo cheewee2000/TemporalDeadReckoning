@@ -1,8 +1,7 @@
 //todo
 /*
- blob
  
- drop dots when game over text shows
+
  
  add up bonus with animation at game over
  
@@ -410,6 +409,26 @@ colors
 }
 
 -(void) restart{
+    
+    for (int i=0; i<dots.count; i++){
+        Dots* d=[dots objectAtIndex:i];
+        
+        [UIView animateWithDuration:0.6
+                              delay:(arc4random()%1000)*.001
+                            options:UIViewAnimationOptionCurveEaseIn
+                         animations:^{
+                             d.frame=CGRectOffset(d.frame, 0, screenHeight);
+                         }
+                         completion:^(BOOL finished){
+                             
+                         }];
+    }
+    
+    [self performSelector:@selector(setupGame) withObject:self afterDelay:2.5];
+
+}
+
+-(void)setupGame{
     life=0;
     currentLevel=0;
     trialSequence=-1;
@@ -423,11 +442,10 @@ colors
     //setupDots with life=0
     [self setupDots];
     
-    
     life=NUMHEARTS;
     
     [self updateLife];
-
+    
 }
 
 -(void) restartFromLastStage{
@@ -1279,9 +1297,15 @@ colors
                                                      options:UIViewAnimationOptionCurveLinear
                                                   animations:^{
                                                     progressView.subMessage.alpha=1.0;
+                                                      
+                                                      
+                                                      
+                                                      
                                                   }
                                                   completion:^(BOOL finished){
                                                       [self restart];
+
+                                                      
                                                   }];
                                  
                              }];
