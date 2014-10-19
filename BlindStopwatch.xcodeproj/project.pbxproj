@@ -18,6 +18,7 @@
 		4470939219ED940100F6D53C /* BlindStopwatch-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4470939119ED940100F6D53C /* BlindStopwatch-Info.plist */; };
 		4470939419EDA48100F6D53C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4470939319EDA48100F6D53C /* Images.xcassets */; };
 		4470939619EDC41E00F6D53C /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4470939519EDC41E00F6D53C /* GameKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		4480EB8519F3689D007236F7 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4480EB8319F3689D007236F7 /* MainStoryboard.storyboard */; };
 		44866B4819B78B500084652A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44866B4719B78B500084652A /* QuartzCore.framework */; };
 		448E78B319B936C100BF902A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 448E789D19B936C000BF902A /* InfoPlist.strings */; };
 		448E78B519B936C100BF902A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78A219B936C000BF902A /* AppDelegate.m */; };
@@ -31,7 +32,6 @@
 		44C2C9FA19C9E330005ACEB7 /* Level.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C2C9F919C9E330005ACEB7 /* Level.m */; };
 		44C2E02E19BE52D3009CFF88 /* Dots.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C2E02D19BE52D3009CFF88 /* Dots.m */; };
 		44F972CA19BE9E310094FCF4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F972C919BE9E310094FCF4 /* ViewController.m */; };
-		44F972CF19BE9F5E0094FCF4 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44F972CD19BE9F5E0094FCF4 /* MainStoryboard.storyboard */; };
 		44FD6D9819C49A6D006C7099 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44FD6D9719C49A6D006C7099 /* Parse.framework */; };
 		44FD6D9A19C49A86006C7099 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44FD6D9919C49A86006C7099 /* CFNetwork.framework */; };
 		44FD6D9C19C49A8B006C7099 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44FD6D9B19C49A8B006C7099 /* CoreLocation.framework */; };
@@ -64,6 +64,7 @@
 		4470939119ED940100F6D53C /* BlindStopwatch-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "BlindStopwatch-Info.plist"; sourceTree = "<group>"; };
 		4470939319EDA48100F6D53C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4470939519EDC41E00F6D53C /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		4480EB8419F3689D007236F7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
 		44866B4719B78B500084652A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		448E789E19B936C000BF902A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		448E78A219B936C000BF902A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = BlindStopwatch/AppDelegate.m; sourceTree = SOURCE_ROOT; };
@@ -85,7 +86,6 @@
 		44F77D3A19ECCC3B005DB2C8 /* BlindStopwatch-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BlindStopwatch-Prefix.pch"; sourceTree = "<group>"; };
 		44F972C819BE9E310094FCF4 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		44F972C919BE9E310094FCF4 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		44F972CE19BE9F5E0094FCF4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
 		44FD6D9719C49A6D006C7099 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		44FD6D9919C49A86006C7099 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		44FD6D9B19C49A8B006C7099 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -158,7 +158,7 @@
 		448E789C19B936C000BF902A /* en.lproj */ = {
 			isa = PBXGroup;
 			children = (
-				44F972CD19BE9F5E0094FCF4 /* MainStoryboard.storyboard */,
+				4480EB8319F3689D007236F7 /* MainStoryboard.storyboard */,
 				448E789D19B936C000BF902A /* InfoPlist.strings */,
 			);
 			name = en.lproj;
@@ -315,9 +315,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				448E78B919B936C100BF902A /* Default.png in Resources */,
-				44F972CF19BE9F5E0094FCF4 /* MainStoryboard.storyboard in Resources */,
 				4470939419EDA48100F6D53C /* Images.xcassets in Resources */,
 				4470939219ED940100F6D53C /* BlindStopwatch-Info.plist in Resources */,
+				4480EB8519F3689D007236F7 /* MainStoryboard.storyboard in Resources */,
 				448E78B719B936C100BF902A /* Default-568h@2x.png in Resources */,
 				448E78B819B936C100BF902A /* Default@2x.png in Resources */,
 				448E78B319B936C100BF902A /* InfoPlist.strings in Resources */,
@@ -350,20 +350,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		4480EB8319F3689D007236F7 /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4480EB8419F3689D007236F7 /* en */,
+			);
+			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
 		448E789D19B936C000BF902A /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				448E789E19B936C000BF902A /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		44F972CD19BE9F5E0094FCF4 /* MainStoryboard.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				44F972CE19BE9F5E0094FCF4 /* en */,
-			);
-			name = MainStoryboard.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -380,8 +380,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: cw wang (XZCX966PV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: cw wang (XZCX966PV5)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -402,7 +402,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "70cb82c6-06a4-4ce1-8204-f0447d4430af";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -418,8 +418,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: CW&T Studio LLC (L6DVQR8JB9)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: CW&T Studio LLC (L6DVQR8JB9)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -433,7 +433,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "d3057e31-8d7f-482e-beb3-cc16d29ef185";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -445,8 +445,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: cw wang (XZCX966PV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: cw wang (XZCX966PV5)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -460,7 +460,7 @@
 					"$(PROJECT_DIR)/BlindStopwatch/TestFlightSDK3.0.2",
 				);
 				PRODUCT_NAME = BlindStopwatch;
-				PROVISIONING_PROFILE = "70cb82c6-06a4-4ce1-8204-f0447d4430af";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -472,8 +472,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: CW&T Studio LLC (L6DVQR8JB9)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: CW&T Studio LLC (L6DVQR8JB9)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -487,7 +487,7 @@
 					"$(PROJECT_DIR)/BlindStopwatch/TestFlightSDK3.0.2",
 				);
 				PRODUCT_NAME = BlindStopwatch;
-				PROVISIONING_PROFILE = "70cb82c6-06a4-4ce1-8204-f0447d4430af";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

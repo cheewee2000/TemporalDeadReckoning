@@ -1,15 +1,27 @@
 //todo
 /*
  
+ fade out counterlabel last, with button?
+ arrow thicknes based on screenheight?
  
  
-add label to refresh button when in practice mode
+ 
+ continue from stage 5? X O buttons
+ 
+ bounce start arrow if button hasn't been pressed
+ 
+colors
+ 
+ no b&W in practice mode
+ add label to refreshbutton when in practice mode
+ "You are currently in practice mode. To play a game that will count towards a high score, reset the game to start from the beginning."
+
+ 
+ 
+ 
  
  
  add up bonus with animation at game over
- 
- 
-colors
  
  visual for + or - from target for last 10 tries
  
@@ -46,10 +58,19 @@ colors
 #import "RBVolumeButtons.h"
 
 
+#define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+#define IS_IPHONE (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+#define IS_IPHONE_5 (IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 568.0)
+#define IS_IPHONE_6 (IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 667.0)
+#define IS_IPHONE_6_PLUS (IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 736.0)
+
+
+
+
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 2
-#define NUMHEARTS 2
+#define TRIALSINSTAGE 5
+#define NUMHEARTS 3
 
 @interface ViewController () {
     
@@ -80,8 +101,13 @@ colors
     trialSequence=-1;
 
     
+    int vbuttonY=137;//5s
+    if(IS_IPAD)vbuttonY=237;
+    else if(IS_IPHONE_6)vbuttonY=145;
+    else if(IS_IPHONE_6_PLUS)vbuttonY=155;
+
     //instructions
-    instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(screenWidth, 137, screenWidth-8, 30.0)];
+    instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(screenWidth, vbuttonY, screenWidth-8, 44)];
     [self.view addSubview:instructions];
     
     /* Create the Tap Gesture Recognizer */
@@ -90,6 +116,7 @@ colors
     tapGestureRecognizer.numberOfTapsRequired = 1;
     [instructions addGestureRecognizer:tapGestureRecognizer];
     instructions.userInteractionEnabled = YES;
+
 
     
     labelContainer=[[UIView alloc] initWithFrame:self.view.frame];
@@ -107,6 +134,13 @@ colors
     counterLabel.clipsToBounds=NO;
     [labelContainer addSubview:counterLabel];
 
+    UITapGestureRecognizer *tapGestureRecognizer2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
+    tapGestureRecognizer2.numberOfTouchesRequired = 1;
+    tapGestureRecognizer2.numberOfTapsRequired = 1;
+    [counterLabel addGestureRecognizer:tapGestureRecognizer2];
+    counterLabel.userInteractionEnabled = YES;
+    
+    
     counterGoalLabel=[[UILabel alloc]init];
     counterGoalLabel.font = [UIFont fontWithName:@"DIN Condensed" size:screenWidth*.33];
     counterGoalLabel.adjustsFontSizeToFitWidth = YES;
@@ -116,6 +150,13 @@ colors
     counterGoalLabel.center=CGPointMake(screenWidth*.5, instructions.frame.origin.y+instructions.frame.size.height+counterGoalLabel.frame.size.height*.55);
     counterGoalLabel.clipsToBounds=NO;
     [self.view addSubview:counterGoalLabel];
+    
+    UITapGestureRecognizer *tapGestureRecognizer3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
+    tapGestureRecognizer3.numberOfTouchesRequired = 1;
+    tapGestureRecognizer3.numberOfTapsRequired = 1;
+    [counterGoalLabel addGestureRecognizer:tapGestureRecognizer3];
+    counterGoalLabel.userInteractionEnabled = YES;
+    
     
     goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, counterGoalLabel.frame.size.height-30, counterGoalLabel.frame.size.width*.5-13, 40)];
     goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:33.0];
@@ -390,7 +431,7 @@ colors
 }
 -(void)restartPressed{
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"RESET" message:@"Exit practice mode and start from the beginning?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"RESET" message:@"Start over?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
     [alert addButtonWithTitle:@"Yes"];
     [alert show];
     [alert setTag:1];
@@ -406,7 +447,9 @@ colors
 }
 
 -(void) restart{
-    
+    //set life asap so countdown timer stops
+    life=0;
+
     [UIView animateWithDuration:0.8
                           delay:0.0
                         options:UIViewAnimationOptionCurveLinear
@@ -414,6 +457,7 @@ colors
                          progressView.centerMessage.alpha=0;
                          progressView.subMessage.alpha=0;
                          playButton.alpha=0.0;
+                         
                      }
                      completion:^(BOOL finished){
                      }];
@@ -437,7 +481,6 @@ colors
 }
 
 -(void)setupGame{
-    life=0;
     [self removeDots];
     
     currentLevel=0;
@@ -457,7 +500,9 @@ colors
 }
 
 -(void) restartFromLastStage{
-
+    //reset dots
+    life=0;
+    
     [UIView animateWithDuration:0.8
                           delay:0.0
                         options:UIViewAnimationOptionCurveLinear
@@ -470,8 +515,7 @@ colors
                      }];
     
     
-    //reset dots
-    life=0;
+
     [self removeDots];
 
     
@@ -630,10 +674,8 @@ colors
 
                                                     if(i%TRIALSINSTAGE==0){
                                                         //add stage label
-                                                        TextArrow *sLabel = [[TextArrow alloc] initWithFrame:CGRectMake(0, y-100, 70, 15)];
-                                                        sLabel.instructionText.font = [UIFont fontWithName:@"DIN Condensed" size:17.0];
+                                                        TextArrow *sLabel = [[TextArrow alloc] initWithFrame:CGRectMake(0, y-100, 70, 16)];
                                                         sLabel.instructionText.textColor = [UIColor blackColor];
-                                                        sLabel.instructionText.frame=CGRectOffset(sLabel.instructionText.frame, 0, -2);
                                                         sLabel.drawArrowRight=true;
                                                         sLabel.alpha=1;
 

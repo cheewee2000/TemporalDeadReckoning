@@ -16,29 +16,29 @@
     if (self) {
         
         self.backgroundColor = [UIColor clearColor];
-        self.textAlignment=NSTextAlignmentLeft;
-        self.font = [UIFont fontWithName:@"DIN Condensed" size:38.0];
+        //self.textAlignment=NSTextAlignmentLeft;
+        //self.font = [UIFont fontWithName:@"DIN Condensed" size:38.0];
         self.text = @"";
         
         
         int h=self.frame.size.height;
             
-        self.instructionText = [ [UILabel alloc ] initWithFrame:CGRectMake(h*.5, 0, self.frame.size.width, h+9) ];
+        self.instructionText = [ [UILabel alloc ] initWithFrame:CGRectMake(h*.5, 0, self.frame.size.width, h*1.25) ];
         self.instructionText.textColor = [UIColor whiteColor];
         self.instructionText.backgroundColor = [UIColor clearColor];
-        self.instructionText.font = [UIFont fontWithName:@"DIN Condensed" size:33.0];
+        self.instructionText.font = [UIFont fontWithName:@"DIN Condensed" size:self.frame.size.height];
         self.instructionText.text = @"";
-        self.instructionText.alpha=1.00;
+        self.instructionText.alpha=1;
         [self addSubview:self.instructionText];
         [self bringSubviewToFront:self.instructionText];
         
-        self.rightLabel = [ [UILabel alloc ] initWithFrame:CGRectMake(h*.5, 0, self.frame.size.width-h*.5-5, h+9) ];
+        self.rightLabel = [ [UILabel alloc ] initWithFrame:CGRectMake(h*.5, 0, self.frame.size.width-h*.5-5, h*1.25) ];
         self.rightLabel.textColor = [UIColor whiteColor];
         self.rightLabel.textAlignment=NSTextAlignmentRight;
         self.rightLabel.backgroundColor = [UIColor clearColor];
-        self.rightLabel.font = [UIFont fontWithName:@"DIN Condensed" size:33.0];
+        self.rightLabel.font = [UIFont fontWithName:@"DIN Condensed" size:self.frame.size.height];
         self.rightLabel.text = @"";
-        self.rightLabel.alpha=1.00;
+        self.rightLabel.alpha=1;
         [self addSubview:self.rightLabel];
         [self bringSubviewToFront:self.rightLabel];
         
