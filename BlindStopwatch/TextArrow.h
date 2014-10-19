@@ -22,6 +22,7 @@
 -(void)resetFrame;
 -(void)update:(NSString*) str rightLabel:(NSString*) rStr color:(UIColor*)c animate:(BOOL) animate;
 -(void)resetFrameY;
+-(void)bounce;
 
 @property UIColor *color;
 @property UILabel *rightLabel;

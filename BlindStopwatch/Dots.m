@@ -23,7 +23,7 @@
         [self.label setTransform:CGAffineTransformMakeRotation(M_PI *.25)];
         [self addSubview:self.label];
         self.label.backgroundColor = [UIColor clearColor];
-        self.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:11];
+        self.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
 
         self.level=[[UILabel alloc] initWithFrame:CGRectMake(0, 40, 100, 20)];
         self.level.text=@"";
@@ -31,7 +31,7 @@
         [self.level setTransform:CGAffineTransformMakeRotation(M_PI *.25)];
         [self addSubview:self.level];
         self.level.backgroundColor = [UIColor clearColor];
-        self.level.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:11];
+        self.level.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
 
     
         int starSize=30;

@@ -220,6 +220,28 @@
 }
 
 
-
+-(void)bounce{
+    [UIView animateWithDuration:SLIDESPEED
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         self.frame = CGRectMake(120,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
+                     }
+                     completion:^(BOOL finished){
+                         
+                         [UIView animateWithDuration:SLIDESPEED*2
+                                               delay:0
+                              usingSpringWithDamping:.25
+                               initialSpringVelocity:.1
+                                             options:UIViewAnimationOptionCurveEaseIn
+                                          animations:^{
+                                              self.frame = CGRectMake(0,self.frame.origin.y,self.frame.size.width,self.frame.size.height);
+                                          }
+                                          completion:^(BOOL finished){
+                                          }];
+                         
+                     }];
+   
+}
 
 @end

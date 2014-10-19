@@ -1,46 +1,43 @@
 //todo
 /*
  
+ 
+
+ 
+ slide up level notifications
+ 
+ all buttons round
+ 
  fade out counterlabel last, with button?
- arrow thicknes based on screenheight?
  
- 
- 
- continue from stage 5? X O buttons
- 
- bounce start arrow if button hasn't been pressed
  
 colors
  
- no b&W in practice mode
- add label to refreshbutton when in practice mode
- "You are currently in practice mode. To play a game that will count towards a high score, reset the game to start from the beginning."
+ no practice mode.
+ gameover countdown runs in background
+ gamve over->countdown->continue->inapp purchase
+ 
+ custom alert for restart. use bottom popup
 
  
  
- 
- 
- 
- add up bonus with animation at game over
+ startup sequence animation
  
  visual for + or - from target for last 10 tries
  
- 
  highlight previous highest level
-
+ 
+ add up bonus with animation at game over
+ 
+ 
  sound effects
  
  achievements
 -flawless stage
  -perfect stage
  
- bigger level dots
- 
- progresview slideup touch interaction fix
- 
  prevent runaway timers
  
- startup sequence animation
  
  juicy feedback for 99% 95% 100%
 
@@ -109,6 +106,7 @@ colors
     //instructions
     instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(screenWidth, vbuttonY, screenWidth-8, 44)];
     [self.view addSubview:instructions];
+    
     
     /* Create the Tap Gesture Recognizer */
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
@@ -363,6 +361,8 @@ colors
     
     blob=[[UIView alloc] init];
     [self.view addSubview:blob];
+
+    
     //set blob frame
     [self resetMainDot];
     
@@ -404,7 +404,8 @@ colors
     blobBlur.frame = self.view.bounds;
     blobBlur.alpha=1.0;
     [blob addSubview:blobBlur];
-    
+    blobBlur.userInteractionEnabled = YES;
+
     
     xView=[[UIImageView alloc] init];
     [xView setImage:[UIImage imageNamed: @"x"]];
@@ -1223,9 +1224,9 @@ colors
     float l;
     if(level<TRIALSINSTAGE)l=.5+level*0.1;
     else if(level<TRIALSINSTAGE*2)l=1.0+level%TRIALSINSTAGE*0.1;
-    else if(level<TRIALSINSTAGE*3)l=1.5+level%TRIALSINSTAGE*0.2;
-    else if(level<TRIALSINSTAGE*4)l=2.5+level%TRIALSINSTAGE*0.5;
-    else l=5.0+level%TRIALSINSTAGE*1.0;
+    else if(level<TRIALSINSTAGE*3)l=1.0+level%TRIALSINSTAGE*0.2;
+    else if(level<TRIALSINSTAGE*4)l=2.0+level%TRIALSINSTAGE*0.5;
+    else l=2.0+level%TRIALSINSTAGE*1.0;
 //    else if(level<TRIALSINSTAGE*5)l=5.0+level%TRIALSINSTAGE*1.0;
 //    else l=5.0+level%TRIALSINSTAGE*1.0;
     
@@ -1727,6 +1728,7 @@ colors
                                                [instructions resetFrame];
                                                [instructions update:@"START" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:NO];
                                                [instructions slideIn:0];
+
                                                [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.7];
                                            }];
                           
@@ -1739,7 +1741,20 @@ colors
 
 -(void)resetTrialSequence{
     trialSequence=0;
+    [self performSelector:@selector(instructionBounce) withObject:self afterDelay:5.0];
 }
+
+-(void)instructionBounce{
+
+    if(trialSequence==0)
+    {
+        [instructions bounce];
+        [self performSelector:@selector(instructionBounce) withObject:self afterDelay:5.0];
+    }
+    
+}
+
+
 
 -(void)slideOutCounterLabel{
     //move counter with arrow
@@ -1994,7 +2009,7 @@ colors
                      completion:^(BOOL finished){
                          [self.view sendSubviewToBack:progressView];
                          [self.view sendSubviewToBack:blob];
-
+                         
                      }];
 
 //    if(trialSequence==0)[instructions updateText:@"START" animate:YES];
