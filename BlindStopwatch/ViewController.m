@@ -1,5 +1,6 @@
 //todo
 /*
+ tweak timing
  
 colors
  
@@ -526,10 +527,10 @@ colors
     trialSequence=-1;
     progressView.centerMessage.text=@"";
     progressView.subMessage.text=@"";
-    practicing=true;
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setInteger:practicing forKey:@"practicing"];
-    [defaults synchronize];
+    //practicing=true;
+    //NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    //[defaults setInteger:practicing forKey:@"practicing"];
+    //[defaults synchronize];
     
     //setup new dots
     [self setupDots];
@@ -1218,9 +1219,9 @@ colors
     float l;
     if(level<TRIALSINSTAGE)l=.5+level*0.1;
     else if(level<TRIALSINSTAGE*2)l=1.0+level%TRIALSINSTAGE*0.1;
-    else if(level<TRIALSINSTAGE*3)l=1.0+level%TRIALSINSTAGE*0.2;
-    else if(level<TRIALSINSTAGE*4)l=2.0+level%TRIALSINSTAGE*0.5;
-    else l=2.0+level%TRIALSINSTAGE*1.0;
+    else if(level<TRIALSINSTAGE*3)l=1.5+level%TRIALSINSTAGE*0.2;
+    else if(level<TRIALSINSTAGE*4)l=2.5+level%TRIALSINSTAGE*0.5;
+    else l=5.0+level%TRIALSINSTAGE*1.0;
 //    else if(level<TRIALSINSTAGE*5)l=5.0+level%TRIALSINSTAGE*1.0;
 //    else l=5.0+level%TRIALSINSTAGE*1.0;
     
@@ -1243,13 +1244,12 @@ colors
     [self.view bringSubviewToFront:xView];
     
     [UIView animateWithDuration:0.4
-                          delay:0.0
+                          delay:0.5
                         options:UIViewAnimationOptionCurveEaseIn
                      animations:^{
                          if([self isAccurate]){
                              Dots *dot=[dots objectAtIndex:currentLevel];
                              oView.frame = CGRectMake( dot.frame.origin.x,dot.frame.origin.y+screenHeight-44,dot.frame.size.width,dot.frame.size.height);
-
                          }
                          else{
                              Dots *heart=[hearts objectAtIndex:life-1];
@@ -1283,7 +1283,7 @@ colors
                          }
                          
                          
-                         [self performSelector:@selector(showLevelAlerts) withObject:self afterDelay:1.0];
+                         [self performSelector:@selector(showLevelAlerts) withObject:self afterDelay:.4];
 
 
                      }];
@@ -1296,7 +1296,7 @@ colors
 -(void)showLevelAlerts{
     
     //arrow delay
-    float d=.2;
+    float d=0;
     int arrowN=0;
     int spacing=screenHeight-44;
     
@@ -1335,7 +1335,7 @@ colors
     
     NSString * stageProgressString;
     if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED",[self getLevel:currentLevel]];
-    else if(life>1) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life-1];
+    else if(life>1) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life];
     else if(life>0) stageProgressString=@"ONE TRY LEFT";
     else stageProgressString=@"GAME OVER";
     t= [levelArrows objectAtIndex:arrowN];
@@ -1435,15 +1435,16 @@ colors
     [levelAlert slideDown:0];
     for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideDown:(float)i*.2+.5];
     
-    //check for stage up to add dots
+    [instructions slideOut:0];
     
     if(life==0){
-        resetCountdown=20;
+        resetCountdown=3;
         lastStage=[self getCurrentStage];
         currentLevel=0;
         [self performSelector:@selector(showGameOverSequence) withObject:self afterDelay:1];
     }
     
+    //check for stage up to add dots
     else if ( (currentLevel%TRIALSINSTAGE==0 && [self isAccurate])){
         [self performSelector:@selector(setupDots) withObject:self afterDelay:1];
     }
@@ -1458,6 +1459,7 @@ colors
 -(void)loadLevel{
     if(currentLevel==0 && life==0){
         life=NUMHEARTS;
+        [self updateLife];
     }
     
     [self setLevel:currentLevel];
@@ -1666,19 +1668,12 @@ colors
 
 
 -(void)showXO{
-    
     if([self isAccurate]){
-        //[instructions update:@"" rightLabel:@"NICE" color:[UIColor colorWithRed:0 green:1 blue:0 alpha:1] animate:YES];
         [self displayXorO:YES];
-        
     }
     else{
         [self displayXorO:NO];
-
-        //if(elapsed-timerGoal>0)[instructions update:@"" rightLabel:@"TOO SLOW" color:[UIColor colorWithRed:1 green:0 blue:0 alpha:1] animate:YES];
-        //if(elapsed-timerGoal<0)[instructions update:@"" rightLabel:@"TOO FAST" color:[UIColor colorWithRed:1 green:0 blue:0 alpha:1] animate:YES];
     }
-
 }
 
 -(void)displayXorO:(bool)showO{
@@ -1764,9 +1759,9 @@ colors
                                                counterGoalLabel.alpha=1.0;
                                            }
                                            completion:^(BOOL finished){
-                                               [instructions resetFrame];
-                                               [instructions update:@"START" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:NO];
-                                               [instructions slideIn:0];
+                                               //[instructions resetFrame];
+                                               [instructions update:@"START" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:YES];
+                                               //[instructions slideIn:0];
 
                                                [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.7];
                                            }];
