@@ -2,22 +2,22 @@
 /*
  
 colors
- 
- no practice mode.
- gameover countdown runs in background
- gamve over->countdown->continue->inapp purchase
- 
- custom alert for restart. use bottom popup
+ try two color graphics. no white
 
  
+ drop stagelabels when game over
+
+ gameover countdown runs in background
+ gamve over->countdown->continue->inapp purchase
+
+ highlight previous highest level
+
  
  startup sequence animation
  
  visual for + or - from target for last 10 tries
  
- highlight previous highest level
- 
- add up bonus with animation at game over
+ graph animation at game over
  
  
  sound effects
@@ -31,7 +31,6 @@ colors
  
  juicy feedback for 99% 95% 100%
 
- try two color graphics. no white
 
  tempura achievements
 */
@@ -149,8 +148,9 @@ colors
     levelArrows=[[NSMutableArray alloc] init];
     for (int i=0; i<NUMLEVELARROWS; i++) {
         //TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, counterGoalLabel.frame.origin.y+counterGoalLabel.frame.size.height+5+i*40, screenWidth, 30.0)];
-        TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, screenHeight-i*35-44-35, screenWidth, 30.0)];
+        TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, screenHeight-i*35-44-35, screenWidth, 44)];
         arrow.drawArrow=false;
+        arrow.rightLabel.textColor=[UIColor blackColor];
         [levelArrows addObject:arrow];
         [self.view addSubview:arrow];
         [self.view sendSubviewToBack:arrow];
@@ -188,9 +188,9 @@ colors
     if([defaults objectForKey:@"practicing"] == nil) practicing=false;
     else practicing = (int)[defaults integerForKey:@"practicing"];
     
-    
-    //
 
+    //currentLevel=35;
+    
     //[self loadData:currentLevel];
     //[self loadLevelProgress];
     
@@ -299,19 +299,20 @@ colors
     progressView=[[LevelProgressView alloc] initWithFrame:CGRectMake(0, screenHeight, self.view.frame.size.width, self.view.frame.size.height*2.0)];
     progressView.clipsToBounds=YES;
     [self.view addSubview:progressView];
-    
+    progressView.backgroundColor=[self getForegroundColor];
+
     
     UIButton *trophyButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage * trophy=[UIImage imageNamed:@"trophy"];
     [trophyButton setBackgroundImage:trophy forState:UIControlStateNormal];
     [trophyButton adjustsImageWhenHighlighted];
     [trophyButton setFrame:CGRectMake(0,0,44,44)];
-    trophyButton.center=CGPointMake(screenWidth/2.0, screenHeight-100);
+    trophyButton.center=CGPointMake(screenWidth/2.0, screenHeight-60);
     [trophyButton addTarget:self action:@selector(showLeaderboardAndAchievements:) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:trophyButton];
 
-    highScoreLabel=[[UILabel alloc] initWithFrame:CGRectMake(32,10,screenWidth,26)];
-    highScoreLabel.center=CGPointMake(screenWidth*.5, screenHeight-64);
+    highScoreLabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0,screenWidth,26)];
+    highScoreLabel.center=CGPointMake(screenWidth*.5, trophyButton.frame.origin.y+trophyButton.frame.size.height+15);
     highScoreLabel.textAlignment=NSTextAlignmentCenter;
     highScoreLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
     [progressView addSubview:highScoreLabel];
@@ -323,7 +324,7 @@ colors
     [restartButton setBackgroundImage:restart forState:UIControlStateNormal];
     [restartButton adjustsImageWhenHighlighted];
     [restartButton setFrame:CGRectMake(0,0,44,44)];
-    restartButton.center=CGPointMake(screenWidth-30, screenHeight-30);
+    restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-60);
     [restartButton addTarget:self action:@selector(restartPressed) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:restartButton];
     
@@ -594,15 +595,15 @@ colors
                      animations:^{
                          if(practicing) {
                           self.view.backgroundColor=[UIColor colorWithWhite:.7 alpha:1];
-                             restartButton.tintColor=[self getBackgroundColor];
+                             restartButton.tintColor=[self getBackgroundColor:currentLevel];
                              
                          }
                          else{
-                             self.view.backgroundColor=[self getBackgroundColor];
+                             self.view.backgroundColor=[self getBackgroundColor:currentLevel];
                              restartButton.tintColor=[UIColor blackColor];
                          }
-                         progressView.backgroundColor=[self inverseColor:self.view.backgroundColor];
-
+                         
+                         //progressView.backgroundColor=[self getForegroundColor];
                      }
                      completion:^(BOOL finished){
 
@@ -613,9 +614,9 @@ colors
                          float d=1.0;
                          if(progressView.frame.origin.y==0)d=0.0;//progressview is already showing. don't animate
                          
-                            [UIView animateWithDuration:.8
+                            [UIView animateWithDuration:.4
                                                   delay:d
-                                 usingSpringWithDamping:.5
+                                 usingSpringWithDamping:.8
                                   initialSpringVelocity:1.0
                                                 options:UIViewAnimationOptionCurveLinear
                                              animations:^{
@@ -623,10 +624,6 @@ colors
                                              }
                                              completion:^(BOOL finished){
                                                  
-                                                 //remove levelArrows
-                                                 [self.view bringSubviewToFront:progressView];
-                                                 for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideDown:0.0];
-
                                             for (int i = 0; i < TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE;i++){
                                                 float dotDia=12;
                                                 float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
@@ -659,7 +656,7 @@ colors
                                                         int stage=floorf(i/TRIALSINSTAGE);
                                                         TextArrow *sLabel=[stageLabels objectAtIndex:stage];
                                                         sLabel.alpha=1;
-                                                        [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:self.view.backgroundColor animate:NO];
+                                                        [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:i] animate:NO];
 
                                                         //shift label down
                                                         [UIView animateWithDuration:.8
@@ -690,7 +687,7 @@ colors
                                                         [progressView addSubview:sLabel];
                                                         
                                                         int stage=floorf(i/TRIALSINSTAGE);
-                                                        [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:self.view.backgroundColor animate:NO];
+                                                        [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:i] animate:NO];
                                                         
                                                         [UIView animateWithDuration:.8
                                                                               delay:0.4
@@ -731,12 +728,7 @@ colors
                                                 }
                                             }
                                            
-
-                                                 //[self updateDots];
-
-                                                 //need delay here for currentLevel to get set !!!!!!
-                                                 [self performSelector:@selector(loadLevel) withObject:self afterDelay:2.5];
-                                                 //[self performSelector:@selector(animateLevelReset) withObject:self afterDelay:4.0];
+                                    [self performSelector:@selector(loadLevel) withObject:self afterDelay:2.5];
 
                             }];
                    }];
@@ -922,7 +914,7 @@ colors
 
         [UIView animateWithDuration:0.4
                               delay:0.0
-             usingSpringWithDamping:.5
+             usingSpringWithDamping:.8
               initialSpringVelocity:1.0
                             options:UIViewAnimationOptionCurveLinear
                          animations:^{
@@ -948,7 +940,7 @@ colors
         
         [UIView animateWithDuration:0.4
                               delay:0.0
-             usingSpringWithDamping:.5
+             usingSpringWithDamping:.8
               initialSpringVelocity:1.0
                             options:UIViewAnimationOptionCurveLinear
                          animations:^{
@@ -1009,14 +1001,14 @@ colors
                                  //blobBlur.alpha=0;
                              }
                              completion:^(BOOL finished){
-                                 TextArrow *arrow=[levelArrows objectAtIndex:0];
-                                 
-                                 if(arrow.frame.origin.x==0){
-                                     //slide out level Arrows if they're still showing
-                                     float randomDelay=arc4random_uniform(20)/20.0;
-                                     
-
-                                 }
+//                                 TextArrow *arrow=[levelArrows objectAtIndex:0];
+//                                 
+//                                 if(arrow.frame.origin.x==0){
+//                                     //slide out level Arrows if they're still showing
+//                                     float randomDelay=arc4random_uniform(20)/20.0;
+//                                     
+//
+//                                 }
                              }];
 
             
@@ -1211,7 +1203,6 @@ colors
     
     
     timerGoal=[self getLevel:level];
-    [self updateTimeDisplay:0];
 
     
      //change background color
@@ -1219,23 +1210,45 @@ colors
                            delay:0.0
                          options:UIViewAnimationOptionCurveLinear
                       animations:^{
-                          if(practicing) self.view.backgroundColor=[UIColor colorWithWhite:.7 alpha:1.0];
-                          else self.view.backgroundColor=[self getBackgroundColor];
                           
-                          UIColor * inverse=[self inverseColor:self.view.backgroundColor];
-                          [instructions setColor:inverse];
-                          progressView.backgroundColor=inverse;
+                          counterGoalLabel.alpha=0;
+                          counterLabel.alpha=0;
+                          goalPrecision.alpha=0;
+                          
+                          if(practicing) self.view.backgroundColor=[UIColor colorWithWhite:.7 alpha:1.0];
+                          else self.view.backgroundColor=[self getBackgroundColor:currentLevel];
+                          
+
+                          instructions.instructionText.textColor=self.view.backgroundColor;
+                          instructions.rightLabel.textColor=self.view.backgroundColor;
+                          
+                          
+//                          [instructions setColor:[self inverseColor:self.view.backgroundColor]];
+//                          progressView.backgroundColor=[self inverseColor:self.view.backgroundColor];
+//                          counterLabel.textColor=[self inverseColor:self.view.backgroundColor];
+//                          counterGoalLabel.textColor=[self inverseColor:self.view.backgroundColor];
+//                          goalPrecision.textColor=[self inverseColor:self.view.backgroundColor];
+                          
+                          [instructions setColor:[self getForegroundColor]];
+                          progressView.backgroundColor=[self getForegroundColor];
+                          counterLabel.textColor=[self getForegroundColor];
+                          counterGoalLabel.textColor=[self getForegroundColor];
+                          goalPrecision.textColor=[self getForegroundColor];
+                          
                           
                         }
                       completion:^(BOOL finished){
 
+                          [self updateTimeDisplay:0];
+                          [self setTimerGoalMarginDisplay];
+
                          [UIView animateWithDuration:0.6
-                                               delay:0.5
-                              usingSpringWithDamping:.6
-                               initialSpringVelocity:1.0
+                                               delay:0.0
                                              options:UIViewAnimationOptionCurveLinear
                                           animations:^{
-                                              [self setTimerGoalMarginDisplay];
+                                              counterGoalLabel.alpha=1;
+                                              counterLabel.alpha=1;
+                                              goalPrecision.alpha=1;
                                           }
                                           completion:^(BOOL finished){
                                               [self animateLevelReset];
@@ -1251,7 +1264,7 @@ colors
     else if(level<TRIALSINSTAGE*2)l=1.0+level%TRIALSINSTAGE*0.1;
     else if(level<TRIALSINSTAGE*3)l=1.5+level%TRIALSINSTAGE*0.2;
     else if(level<TRIALSINSTAGE*4)l=2.5+level%TRIALSINSTAGE*0.5;
-    else l=5.0+level%TRIALSINSTAGE*1.0;
+    else l=level*1.0-15;
 //    else if(level<TRIALSINSTAGE*5)l=5.0+level%TRIALSINSTAGE*1.0;
 //    else l=5.0+level%TRIALSINSTAGE*1.0;
     
@@ -1274,7 +1287,7 @@ colors
     [self.view bringSubviewToFront:xView];
     
     [UIView animateWithDuration:0.4
-                          delay:0.5
+                          delay:0.8
                         options:UIViewAnimationOptionCurveEaseIn
                      animations:^{
                          if([self isAccurate]){
@@ -1304,16 +1317,15 @@ colors
                              life--;
                          }
                          
-                         
-                         [self updateLife];
-                         [self updateDots];
-
                          if(life==0){
+                             lastStage=[self getCurrentStage];
                              if(practicing==false) [self reportScore];
                          }
                          
+                         [self updateLife];
+                         [self updateDots];
                          
-                         [self performSelector:@selector(showLevelAlerts) withObject:self afterDelay:.4];
+                         [self performSelector:@selector(showLevelAlerts) withObject:self afterDelay:.5];
 
 
                      }];
@@ -1327,11 +1339,14 @@ colors
     
     //arrow delay
     float d=0;
+    float inc=.1;
     int arrowN=0;
-    int spacing=screenHeight-44;
+    int spacing=screenHeight-44-35;
     
     
-    [levelAlert update:@"" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:NO];
+    //[levelAlert update:@"" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:NO];
+    [levelAlert update:@"" rightLabel:@"" color:[self getForegroundColor] animate:NO];
+    
     spacing-=5+levelAlert.frame.size.height;
     d+=.3;
     [levelAlert slideUpTo:spacing delay:d];
@@ -1343,9 +1358,9 @@ colors
     float diff=elapsed-timerGoal;
     NSString *diffString;
     diffString=[NSString stringWithFormat:@"OFF BY %@",[self getTimeDiffString:diff]];
-    [t update:@"" rightLabel:diffString color:[self inverseColor:self.view.backgroundColor] animate:NO];
+    [t update:@"" rightLabel:diffString color:[self getForegroundColor] animate:NO];
     spacing-=5+t.frame.size.height;
-    d+=.3;
+    d+=inc;
     [t slideUpTo:spacing delay:d];
     arrowN++;
     
@@ -1355,34 +1370,34 @@ colors
     NSString* percentAccuracyString = [NSString stringWithFormat:@"ACCURACY %02i%%", (int)accuracyP];
     t= [levelArrows objectAtIndex:arrowN];
 
-    [t update:@"" rightLabel:percentAccuracyString color:[self inverseColor:self.view.backgroundColor] animate:NO];
+    [t update:@"" rightLabel:percentAccuracyString color:[self getForegroundColor] animate:NO];
     spacing-=5+t.frame.size.height;
-    d+=.3;
+    d+=inc;
     [t slideUpTo:spacing delay:d];
     arrowN++;
     
     
     
     NSString * stageProgressString;
-    if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED",[self getLevel:currentLevel]];
+    if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED",[self getLevel:currentLevel-1]];
     else if(life>1) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life];
     else if(life>0) stageProgressString=@"ONE TRY LEFT";
     else stageProgressString=@"GAME OVER";
     t= [levelArrows objectAtIndex:arrowN];
-    [t update:@"" rightLabel:stageProgressString color:[self inverseColor:self.view.backgroundColor] animate:NO];
+    [t update:@"" rightLabel:stageProgressString color:[self getForegroundColor] animate:NO];
     spacing-=5+t.frame.size.height;
-    d+=.3;
+    d+=inc;
     [t slideUpTo:spacing delay:d];
     arrowN++;
     
     //ARROW3
-    if([self isAccurate] && currentLevel%TRIALSINSTAGE==TRIALSINSTAGE) {
+    if([self isAccurate] && currentLevel%TRIALSINSTAGE==0) {
         NSString * stageClearedString;
-        stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED",[self getCurrentStage]+1];
+        stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED",[self getCurrentStage]];
         t= [levelArrows objectAtIndex:arrowN];
-        [t update:@"" rightLabel:stageClearedString color:[self inverseColor:self.view.backgroundColor] animate:NO];
+        [t update:@"" rightLabel:stageClearedString color:[self getForegroundColor] animate:NO];
         spacing-=5+t.frame.size.height;
-        d+=.3;
+        d+=inc;
         [t slideUpTo:spacing delay:d];
         arrowN++;
     }
@@ -1394,9 +1409,9 @@ colors
     {
         bonusString=@"PERFECT! BONUS HEART";
         t= [levelArrows objectAtIndex:arrowN];
-        [t update:@"" rightLabel:bonusString color:[self inverseColor:self.view.backgroundColor] animate:NO];
+        [t update:@"" rightLabel:bonusString color:[self getForegroundColor] animate:NO];
         spacing-=5+t.frame.size.height;
-        d+=.3;
+        d+=inc;
         [t slideUpTo:spacing delay:d];
         arrowN++;
     }
@@ -1410,13 +1425,16 @@ colors
     
     //show progressview
     [self.view bringSubviewToFront:progressView];
-    progressView.subMessage.text=[NSString stringWithFormat:@"CONTINUE\nFROM STAGE %i",[self getCurrentStage]+1];
+    [progressView bringSubviewToFront:progressView.subMessage];
+
+    progressView.subMessage.text=[NSString stringWithFormat:@"CONTINUE\nFROM STAGE %i",lastStage+1];
     progressView.subMessage.alpha=1.0;
     playButton.alpha=1.0;
     
-    [UIView animateWithDuration:0.8
+    
+    [UIView animateWithDuration:0.4
                           delay:0.5
-         usingSpringWithDamping:.5
+         usingSpringWithDamping:.8
           initialSpringVelocity:1.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
@@ -1429,6 +1447,9 @@ colors
 
 
 -(void)countdown{
+    [self.view bringSubviewToFront:progressView];
+    [progressView bringSubviewToFront:progressView.subMessage];
+    
     if(life==0){//check if countdown got interrupted by restart
         [progressView displayMessage:[NSString stringWithFormat:@"%i",resetCountdown]];
         resetCountdown--;
@@ -1463,13 +1484,12 @@ colors
     
     [self.view bringSubviewToFront:progressView];
     [levelAlert slideDown:0];
-    for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideDown:(float)i*.2+.5];
+    for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideDown:(float)i*.1+.2];
     
     [instructions slideOut:0];
     
     if(life==0){
         resetCountdown=3;
-        lastStage=[self getCurrentStage];
         currentLevel=0;
         [self performSelector:@selector(showGameOverSequence) withObject:self afterDelay:1];
     }
@@ -1740,15 +1760,12 @@ colors
 
 }
 -(void)morphOrDropDots{
-    [instructions update:@"" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:YES];
+    [instructions update:@"" rightLabel:@"" color:[self getForegroundColor] animate:YES];
     
     [UIView animateWithDuration:0.4
                           delay:0.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
-                         //counterLabel.alpha=0.0;
-                         //if([self isAccurate])counterGoalLabel.alpha=0.0;
-                         //instructions.alpha=0.5;
                          labelContainerBlur.alpha=0.0;
                      }
                      completion:^(BOOL finished){
@@ -1766,9 +1783,9 @@ colors
     [self updateTimeDisplay:0];
 
     
-    [UIView animateWithDuration:0.8
+    [UIView animateWithDuration:0.4
                           delay:0
-         usingSpringWithDamping:.5
+         usingSpringWithDamping:.8
           initialSpringVelocity:1.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
@@ -1790,9 +1807,8 @@ colors
                                            }
                                            completion:^(BOOL finished){
                                                //[instructions resetFrame];
-                                               [instructions update:@"START" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:YES];
-                                               //[instructions slideIn:0];
-
+                                               [instructions update:@"START" rightLabel:@"" color:[self getForegroundColor] animate:NO];
+                                               [instructions slideIn:0];
                                                [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.7];
                                            }];
                           
@@ -1819,97 +1835,72 @@ colors
 }
 
 
-
--(void)slideOutCounterLabel{
-    //move counter with arrow
-    [UIView animateWithDuration:0.1
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseIn
-     
-                     animations:^{
-                         counterLabel.frame = CGRectMake(-counterLabel.frame.size.width,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
-                     }
-                     completion:^(BOOL finished){
-                    }];
-}
-
-
--(void)slideInCounterLabel{
-
-     //counterLabel.text=@"00:00.000";
-     counterLabel.frame = CGRectMake(counterLabel.frame.size.width,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
-     
-     [UIView animateWithDuration:0.2
-                           delay:0.4
-          usingSpringWithDamping:.8
-           initialSpringVelocity:1.0
-                         options:UIViewAnimationOptionCurveLinear
-      
-                      animations:^{
-                          counterLabel.frame = CGRectMake(0,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
-                      }
-                      completion:^(BOOL finished){
-                      }];
-    
-}
-
--(void)slideOutInCounterLabel{
-    counterLabel.text=@"00:00.000";
-    counterLabel.frame = CGRectMake(counterLabel.frame.size.width,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
-    
-    [UIView animateWithDuration:0.2
-                          delay:0.4
-         usingSpringWithDamping:.8
-          initialSpringVelocity:1.0
-                        options:UIViewAnimationOptionCurveLinear
-     
-                     animations:^{
-                         counterLabel.frame = CGRectMake(0,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
-                     }
-                     completion:^(BOOL finished){
-                         [self slideInCounterLabel];
-                     }];
-    
-}
-
-
-
-
-
-
-
-
-
 # pragma mark Helpers
 
--(UIColor*) getBackgroundColor{
+-(UIColor*) getBackgroundColor:(int)currentL {
     
+//    NSArray * backgroundColors = [[NSArray alloc] initWithObjects:
+//                                  [UIColor colorWithRed:47/255.0 green:206/255.0 blue:3/255.0 alpha:1],
+//                                  [UIColor colorWithRed:254/255.0 green:3/255.0 blue:215/255.0 alpha:1],
+//                                  [UIColor colorWithRed:255/255.0 green:61/255.0 blue:132/255.0 alpha:1],
+//                                  [UIColor colorWithRed:250/255.0 green:128/255.0 blue:167/255.0 alpha:1],
+//                                  [UIColor colorWithRed:255/255.0 green:191/255.0 blue:53/255.0 alpha:1],
+//                                  [UIColor colorWithRed:0/255.0 green:168/255.0 blue:198/255.0 alpha:1],
+//                                  [UIColor colorWithRed:174/255.0 green:226/255.0 blue:57/255.0 alpha:1],
+//                                  [UIColor colorWithRed:255/255.0 green:78/255.0 blue:80/255.0 alpha:1],
+//                                  [UIColor colorWithRed:255/255.0 green:0/255.0 blue:81/255.0 alpha:1],
+//                                  [UIColor colorWithRed:182/255.0 green:255/255.0 blue:0/255.0 alpha:1],
+//                                  [UIColor colorWithRed:34/255.0 green:141/255.0 blue:255/255.0 alpha:1],
+//                                  [UIColor colorWithRed:255/255.0 green:0/255.0 blue:146/255.0 alpha:1],
+//                                  [UIColor colorWithRed:186/255.0 green:1/255.0 blue:255/255.0 alpha:1],
+//                                  nil];
+
     NSArray * backgroundColors = [[NSArray alloc] initWithObjects:
-                                  [UIColor colorWithRed:47/255.0 green:206/255.0 blue:3/255.0 alpha:1],
-                                  [UIColor colorWithRed:254/255.0 green:3/255.0 blue:215/255.0 alpha:1],
-                                  [UIColor colorWithRed:255/255.0 green:61/255.0 blue:132/255.0 alpha:1],
-                                  [UIColor colorWithRed:250/255.0 green:128/255.0 blue:167/255.0 alpha:1],
-                                  [UIColor colorWithRed:255/255.0 green:191/255.0 blue:53/255.0 alpha:1],
-                                  [UIColor colorWithRed:0/255.0 green:168/255.0 blue:198/255.0 alpha:1],
-                                  [UIColor colorWithRed:174/255.0 green:226/255.0 blue:57/255.0 alpha:1],
-                                  [UIColor colorWithRed:255/255.0 green:78/255.0 blue:80/255.0 alpha:1],
-                                  [UIColor colorWithRed:255/255.0 green:0/255.0 blue:81/255.0 alpha:1],
-                                  [UIColor colorWithRed:182/255.0 green:255/255.0 blue:0/255.0 alpha:1],
-                                  [UIColor colorWithRed:34/255.0 green:141/255.0 blue:255/255.0 alpha:1],
-                                  [UIColor colorWithRed:255/255.0 green:0/255.0 blue:146/255.0 alpha:1],
-                                  [UIColor colorWithRed:186/255.0 green:1/255.0 blue:255/255.0 alpha:1],
-                                  
+                                  [UIColor colorWithRed:206/255.0 green:0/255.0 blue:78/255.0 alpha:1],
+                                  [UIColor colorWithRed:255/255.0 green:153/255.0 blue:0/255.0 alpha:1],
+                                  [UIColor colorWithRed:253/255.0 green:242/255.0 blue:62/255.0 alpha:1],
+                                  [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1],
+                                  [UIColor colorWithRed:18/255.0 green:118/255.0 blue:135/255.0 alpha:1],
+                                  [UIColor colorWithRed:62/255.0 green:62/255.0 blue:55/255.0 alpha:1],
+                                  [UIColor colorWithRed:200/255.0 green:203/255.0 blue:207/255.0 alpha:1],//
+                                  [UIColor colorWithRed:71/255.0 green:86/255.0 blue:72/255.0 alpha:1],
                                   nil];
-    int currentStage=floorf(currentLevel/TRIALSINSTAGE);
+    
+    int currentStage=floorf(currentL/TRIALSINSTAGE);
     int cl=currentStage%[backgroundColors count];
     
     return backgroundColors[cl];
 }
+
+-(UIColor*) getForegroundColor{
+    
+    NSArray * foregroundColor = [[NSArray alloc] initWithObjects:
+                                  [UIColor colorWithRed:248/255.0 green:238/255.0 blue:223/255.0 alpha:1],
+                                  [UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1],
+                                  [UIColor colorWithRed:255/255.0 green:61/255.0 blue:132/255.0 alpha:1],
+                                  [UIColor colorWithRed:0/255.0 green:163/255.0 blue:238/255.0 alpha:1],
+                                  [UIColor colorWithRed:222/255.0 green:195/255.0 blue:133/255.0 alpha:1],
+                                  [UIColor colorWithRed:254/255.0 green:253/255.0 blue:211/255.0 alpha:1],
+                                  [UIColor colorWithRed:271/255.0 green:14/255.0 blue:0/255.0 alpha:1],//
+                                  [UIColor colorWithRed:157/255.0 green:21/255.0 blue:0/255.0 alpha:1],
+
+                                  nil];
+    
+    int currentStage=floorf(currentLevel/TRIALSINSTAGE);
+    int cl=currentStage%[foregroundColor count];
+    
+    return foregroundColor[cl];
+}
+
+
+
+
+
 -(UIColor*) inverseColor:(UIColor*) color
 {
     CGFloat r,g,b,a;
     [color getRed:&r green:&g blue:&b alpha:&a];
-    return [UIColor colorWithRed:1.-r green:1.-g blue:1.-b alpha:a];
+    return [UIColor colorWithRed:1.-r-.2 green:1.-g-.2 blue:1.-b-.2 alpha:a];
 }
 
 
@@ -2064,7 +2055,7 @@ colors
     
     [UIView animateWithDuration:0.4
                           delay:0.4
-         usingSpringWithDamping:.6
+         usingSpringWithDamping:.8
           initialSpringVelocity:1.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
