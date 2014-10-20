@@ -1,6 +1,5 @@
 //todo
 /*
- tweak timing
  
 colors
  
@@ -890,19 +889,22 @@ colors
     CGPoint location = [aTouch locationInView:self.view];
     CGPoint previousLocation = [aTouch previousLocationInView:self.view];
 
-    [self.view bringSubviewToFront:progressView];
+    if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
     
-    
-    [UIView animateWithDuration:0.1
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveLinear
-                     animations:^{
-                            progressView.frame=CGRectOffset(progressView.frame, 0,location.y - previousLocation.y);
-                         
-                     }
-                     completion:^(BOOL finished){
-                         
-                     }];
+        [self.view bringSubviewToFront:progressView];
+        
+        [UIView animateWithDuration:0.1
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                                progressView.frame=CGRectOffset(progressView.frame, 0,location.y - previousLocation.y);
+                             
+                         }
+                         completion:^(BOOL finished){
+                             
+                         }];
+        
+    }
     
     
 }
@@ -911,6 +913,13 @@ colors
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 
+    UITouch *aTouch = [touches anyObject];
+    CGPoint location = [aTouch locationInView:self.view];
+    CGPoint previousLocation = [aTouch previousLocationInView:self.view];
+    
+    if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
+
+
         [UIView animateWithDuration:0.4
                               delay:0.0
              usingSpringWithDamping:.5
@@ -918,7 +927,9 @@ colors
                             options:UIViewAnimationOptionCurveLinear
                          animations:^{
 
-                             if(progressView.frame.origin.y<screenHeight/2.0) {
+                             //if(progressView.frame.origin.y<screenHeight/2.0)
+                             if(location.y<previousLocation.y)
+                             {
                                 progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
                                  [self.view bringSubviewToFront:progressView];
                              }
@@ -931,7 +942,26 @@ colors
                          completion:^(BOOL finished){
                              
                          }];
-
+    }
+    //in case touch slipped outside
+    else{
+        
+        [UIView animateWithDuration:0.4
+                              delay:0.0
+             usingSpringWithDamping:.5
+              initialSpringVelocity:1.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+   
+                                 progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
+                                 [self.view sendSubviewToBack:progressView];
+                                 [self.view sendSubviewToBack:blob];
+                         }
+                         completion:^(BOOL finished){
+                             
+                         }];
+        
+    }
 }
 
 - (IBAction)scalePiece:(UIPinchGestureRecognizer *)gestureRecognizer
