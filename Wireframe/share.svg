@@ -20,11 +20,11 @@
 </g>
 <g id="Rounded_Rectangle_9_copy_2_1_" enable-background="new    ">
 </g>
-<circle cx="50" cy="49.375" r="47.625"/>
+<circle cx="50" cy="49.375" r="45"/>
 <g>
 	<line fill="none" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" x1="50" y1="49.5" x2="50" y2="23"/>
 	<polyline fill="none" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" points="60.125,33.125 50,23 39.75,33.25 	"/>
 </g>
-<polyline fill="none" stroke="#FFFFFF" stroke-width="3.9859" stroke-miterlimit="10" points="28,40.024 28,67.726 72.5,67.726 
+<polyline fill="none" stroke="#FFFFFF" stroke-width="3.9859" stroke-miterlimit="10" points="28,40.024 28,67.727 72.5,67.727 
 	72.5,40.024 "/>
 </svg>

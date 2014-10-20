@@ -101,6 +101,78 @@
     self.frame=CGRectMake(self.frame.origin.x, saveFrame.origin.y, self.frame.size.width, self.frame.size.height);
 }
 
+-(void)slideDown:(float) delay{
+    
+    if(self.frame.origin.y<[[UIScreen mainScreen] bounds].size.height){
+        [UIView animateWithDuration:SLIDESPEED*2
+                              delay:delay
+             usingSpringWithDamping:.8
+              initialSpringVelocity:1.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             self.frame = CGRectMake(0,[[UIScreen mainScreen] bounds].size.height,self.frame.size.width,self.frame.size.height);
+                         }
+                         completion:^(BOOL finished){
+                             //set arrow to below frame
+                             self.frame = CGRectMake(0,[[UIScreen mainScreen] bounds].size.height,saveFrame.size.width,saveFrame.size.height);
+                             
+                         }];
+    }
+    else{
+        self.frame = CGRectMake(0,[[UIScreen mainScreen] bounds].size.height,saveFrame.size.width,saveFrame.size.height);
+    }
+
+    [self setNeedsDisplay];
+}
+
+-(void)slideUp:(float) delay{
+    
+    if(self.frame.origin.y>=[[UIScreen mainScreen] bounds].size.height){
+        [UIView animateWithDuration:SLIDESPEED
+                              delay:delay
+             usingSpringWithDamping:.8
+              initialSpringVelocity:1.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             self.frame = saveFrame;
+                         }
+                         completion:^(BOOL finished){
+                             //set arrow to below frame
+                             self.frame = saveFrame;
+                             
+                         }];
+    }
+    else{
+        self.frame = saveFrame;
+    }
+    
+    [self setNeedsDisplay];
+}
+
+-(void)slideUpTo:(float)yPos delay:(float) delay{
+    
+    if(self.frame.origin.y>=[[UIScreen mainScreen] bounds].size.height){
+        [UIView animateWithDuration:SLIDESPEED
+                              delay:delay
+             usingSpringWithDamping:.8
+              initialSpringVelocity:1.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             self.frame = CGRectMake(self.frame.origin.x, yPos, self.frame.size.width, self.frame.size.height);
+                         }
+                         completion:^(BOOL finished){
+                             //set arrow to below frame
+                             self.frame = CGRectMake(self.frame.origin.x, yPos, self.frame.size.width, self.frame.size.height);
+                         }];
+    }
+    else{
+        self.frame = CGRectMake(self.frame.origin.x, yPos, self.frame.size.width, self.frame.size.height);
+    }
+    
+    [self setNeedsDisplay];
+}
+
+
 -(void)slideOut:(float) delay{
     
     if(self.frame.origin.x<10 && self.frame.origin.x>=0 ){
@@ -126,6 +198,10 @@
     
     [self setNeedsDisplay];
 }
+
+
+
+
 -(void)slideIn:(float) delay{
     
     //set arrow to right of frame

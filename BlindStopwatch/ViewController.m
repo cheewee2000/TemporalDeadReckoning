@@ -1,16 +1,6 @@
 //todo
 /*
  
- 
-
- 
- slide up level notifications
- 
- all buttons round
- 
- fade out counterlabel last, with button?
- 
- 
 colors
  
  no practice mode.
@@ -131,13 +121,6 @@ colors
     counterLabel.center=CGPointMake(screenWidth*.5, instructions.frame.origin.y-counterLabel.frame.size.height*.30);
     counterLabel.clipsToBounds=NO;
     [labelContainer addSubview:counterLabel];
-
-    UITapGestureRecognizer *tapGestureRecognizer2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
-    tapGestureRecognizer2.numberOfTouchesRequired = 1;
-    tapGestureRecognizer2.numberOfTapsRequired = 1;
-    [counterLabel addGestureRecognizer:tapGestureRecognizer2];
-    counterLabel.userInteractionEnabled = YES;
-    
     
     counterGoalLabel=[[UILabel alloc]init];
     counterGoalLabel.font = [UIFont fontWithName:@"DIN Condensed" size:screenWidth*.33];
@@ -165,13 +148,35 @@ colors
 
     levelArrows=[[NSMutableArray alloc] init];
     for (int i=0; i<NUMLEVELARROWS; i++) {
-        TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(2.0, counterGoalLabel.frame.origin.y+counterGoalLabel.frame.size.height+5+i*40, screenWidth-8, 30.0)];
+        //TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, counterGoalLabel.frame.origin.y+counterGoalLabel.frame.size.height+5+i*40, screenWidth, 30.0)];
+        TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, screenHeight-i*35-44-35, screenWidth, 30.0)];
         arrow.drawArrow=false;
         [levelArrows addObject:arrow];
         [self.view addSubview:arrow];
         [self.view sendSubviewToBack:arrow];
-        [arrow slideOut:0];
+        [arrow slideDown:0];
     }
+    
+    levelAlert=[[TextArrow alloc ] initWithFrame:CGRectMake(0, screenHeight-49.0-50, screenWidth, 50.0)];
+    [levelAlert slideDown:0];
+    levelAlert.drawArrow=false;
+    [self.view addSubview:levelAlert];
+    [self.view sendSubviewToBack:levelAlert];
+    levelAlert.userInteractionEnabled=YES;
+
+    UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage * next=[UIImage imageNamed:@"next"];
+    [nextButton setBackgroundImage:next forState:UIControlStateNormal];
+    [nextButton adjustsImageWhenHighlighted];
+    [nextButton setFrame:CGRectMake(0,0,44,44)];
+    nextButton.center=CGPointMake( levelAlert.frame.size.width-22-8,levelAlert.frame.size.height/2.0);
+    [nextButton addTarget:self action:@selector(nextButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    nextButton.userInteractionEnabled=YES;
+    [levelAlert addSubview:nextButton];
+    
+    
+    
+    
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if([defaults objectForKey:@"currentLevel"] == nil) currentLevel=0;
@@ -291,7 +296,7 @@ colors
 
     
     //dot array for level progress
-    progressView=[[LevelProgressView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height*2.0)];
+    progressView=[[LevelProgressView alloc] initWithFrame:CGRectMake(0, screenHeight, self.view.frame.size.width, self.view.frame.size.height*2.0)];
     progressView.clipsToBounds=YES;
     [self.view addSubview:progressView];
     
@@ -349,14 +354,12 @@ colors
     //life hearsts
     if([defaults objectForKey:@"life"] == nil) life=NUMHEARTS;
     else life = (int)[defaults integerForKey:@"life"];
-    
     hearts=[[NSMutableArray alloc]init];
-    //for (int i=0; i<life; i++)[self addHeart:i];
 
     [self updateLife];
     [self loadData];
-    [self setupDots];
-    
+    [self performSelector:@selector(setupDots) withObject:self afterDelay:1.0];
+
     //big dot
     
     blob=[[UIView alloc] init];
@@ -410,22 +413,20 @@ colors
     xView=[[UIImageView alloc] init];
     [xView setImage:[UIImage imageNamed: @"x"]];
     [self.view addSubview:xView];
-    [self.view sendSubviewToBack:xView];
+    [self.view bringSubviewToFront:xView];
+    
     xView.alpha=0;
 
     oView=[[UIImageView alloc] init];
     [oView setImage:[UIImage imageNamed: @"o"]];
     [self.view addSubview:oView];
-    [self.view sendSubviewToBack:oView];
+    [self.view bringSubviewToFront:oView];
     oView.alpha=0;
     [self xoViewOffScreen];
 
     
     [self.view sendSubviewToBack:progressView];
     [self.view sendSubviewToBack:blob];
-
-    
-
 
     //game center
     [self authenticateLocalPlayer];
@@ -585,6 +586,7 @@ colors
 
 -(void)setupDots{
     int rowHeight=60;
+    
 
     [UIView animateWithDuration:0.4
                           delay:0.0
@@ -593,11 +595,14 @@ colors
                          if(practicing) {
                           self.view.backgroundColor=[UIColor colorWithWhite:.7 alpha:1];
                              restartButton.tintColor=[self getBackgroundColor];
+                             
                          }
                          else{
                              self.view.backgroundColor=[self getBackgroundColor];
                              restartButton.tintColor=[UIColor blackColor];
                          }
+                         progressView.backgroundColor=[self inverseColor:self.view.backgroundColor];
+
                      }
                      completion:^(BOOL finished){
 
@@ -619,7 +624,8 @@ colors
                                              completion:^(BOOL finished){
                                                  
                                                  //remove levelArrows
-                                                 for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideOut:0.0];
+                                                 [self.view bringSubviewToFront:progressView];
+                                                 for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideDown:0.0];
 
                                             for (int i = 0; i < TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE;i++){
                                                 float dotDia=12;
@@ -890,9 +896,6 @@ colors
                           delay:0.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
-//                         blob.frame = CGRectOffset(blob.frame, (location.x - previousLocation.x), 0);
-//                         counterGoalLabel.frame = CGRectOffset(counterGoalLabel.frame, (location.x - previousLocation.x)*.5, 0);
-//                         instructions.frame = CGRectOffset(instructions.frame, (location.x - previousLocation.x)*.3, 0);
                             progressView.frame=CGRectOffset(progressView.frame, 0,location.y - previousLocation.y);
                          
                      }
@@ -913,11 +916,7 @@ colors
               initialSpringVelocity:1.0
                             options:UIViewAnimationOptionCurveLinear
                          animations:^{
-                             
-//                             [self resetMainDot];
-//                             counterGoalLabel.frame=CGRectMake(0, counterGoalLabel.frame.origin.y, counterGoalLabel.frame.size.width, counterGoalLabel.frame.size.height);
-//                             counterLabel.frame = CGRectMake(0,counterLabel.frame.origin.y,counterLabel.frame.size.width,counterLabel.frame.size.height);
-//                             instructions.frame = CGRectMake(0,instructions.frame.origin.y,instructions.frame.size.width,instructions.frame.size.height);
+
                              if(progressView.frame.origin.y<screenHeight/2.0) {
                                 progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
                                  [self.view bringSubviewToFront:progressView];
@@ -926,13 +925,7 @@ colors
                                 progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
                                 [self.view sendSubviewToBack:progressView];
                                 [self.view sendSubviewToBack:blob];
-
-
                             }
-                             
-//                             if(location.y - previousLocation.y<-100) progressView.frame=self.view.frame;
-//                             else if(location.y - previousLocation.y>100)  progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight);
-//                             
                          }
                          completion:^(BOOL finished){
                              
@@ -990,7 +983,8 @@ colors
                                  if(arrow.frame.origin.x==0){
                                      //slide out level Arrows if they're still showing
                                      float randomDelay=arc4random_uniform(20)/20.0;
-                                     for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideOut:(float)i*.2+randomDelay];
+                                     
+
                                  }
                              }];
 
@@ -1245,6 +1239,9 @@ colors
 -(void)checkLevelUp{
 
 
+    [self.view bringSubviewToFront:oView];
+    [self.view bringSubviewToFront:xView];
+    
     [UIView animateWithDuration:0.4
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseIn
@@ -1270,39 +1267,23 @@ colors
                              float trialAccuracy=fabs(elapsed-timerGoal);
                              if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0){
                                  life++;
-                                 [self updateLife];
                              }
-                             
-                             for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideOut:1+(float)i*.2];
-
                              currentLevel++;
                          }
                          else{
                              life--;
-                             
-                             //slide out all but first
-                             for(int i=1; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideOut:1+(float)i*.2];
-
                          }
                          
+                         
+                         [self updateLife];
+                         [self updateDots];
+
                          if(life==0){
                              if(practicing==false) [self reportScore];
-                             [self showGameOverSequence];
-                             resetCountdown=20;
-                             lastStage=[self getCurrentStage];
-                             
-                             currentLevel=0;
-                             return;
                          }
                          
-                         //check for stage up to add dots
-                         if ( (currentLevel%TRIALSINSTAGE==0 && [self isAccurate])){
-                          [self setupDots];
-                         }
-                         else{
-                             //need delay here for currentLevel to get set !!!!!!
-                             [self performSelector:@selector(loadLevel) withObject:self afterDelay:0.5];
-                         }
+                         
+                         [self performSelector:@selector(showLevelAlerts) withObject:self afterDelay:1.0];
 
 
                      }];
@@ -1311,6 +1292,89 @@ colors
 
     
 }
+
+-(void)showLevelAlerts{
+    
+    //arrow delay
+    float d=.2;
+    int arrowN=0;
+    int spacing=screenHeight-44;
+    
+    
+    [levelAlert update:@"" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:NO];
+    spacing-=5+levelAlert.frame.size.height;
+    d+=.3;
+    [levelAlert slideUpTo:spacing delay:d];
+    [self.view bringSubviewToFront:levelAlert];
+    
+    
+    //ARROW1
+    TextArrow *t= [levelArrows objectAtIndex:arrowN];
+    float diff=elapsed-timerGoal;
+    NSString *diffString;
+    diffString=[NSString stringWithFormat:@"OFF BY %@",[self getTimeDiffString:diff]];
+    [t update:@"" rightLabel:diffString color:[self inverseColor:self.view.backgroundColor] animate:NO];
+    spacing-=5+t.frame.size.height;
+    d+=.3;
+    [t slideUpTo:spacing delay:d];
+    arrowN++;
+    
+    //ARROW2
+    //float accuracyP=100.0-fabs(diff/(float)timerGoal)*100.0;
+    float accuracyP=[self getAccuracyPercentage];
+    NSString* percentAccuracyString = [NSString stringWithFormat:@"ACCURACY %02i%%", (int)accuracyP];
+    t= [levelArrows objectAtIndex:arrowN];
+
+    [t update:@"" rightLabel:percentAccuracyString color:[self inverseColor:self.view.backgroundColor] animate:NO];
+    spacing-=5+t.frame.size.height;
+    d+=.3;
+    [t slideUpTo:spacing delay:d];
+    arrowN++;
+    
+    
+    
+    NSString * stageProgressString;
+    if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED",[self getLevel:currentLevel]];
+    else if(life>1) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life-1];
+    else if(life>0) stageProgressString=@"ONE TRY LEFT";
+    else stageProgressString=@"GAME OVER";
+    t= [levelArrows objectAtIndex:arrowN];
+    [t update:@"" rightLabel:stageProgressString color:[self inverseColor:self.view.backgroundColor] animate:NO];
+    spacing-=5+t.frame.size.height;
+    d+=.3;
+    [t slideUpTo:spacing delay:d];
+    arrowN++;
+    
+    //ARROW3
+    if([self isAccurate] && currentLevel%TRIALSINSTAGE==TRIALSINSTAGE) {
+        NSString * stageClearedString;
+        stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED",[self getCurrentStage]+1];
+        t= [levelArrows objectAtIndex:arrowN];
+        [t update:@"" rightLabel:stageClearedString color:[self inverseColor:self.view.backgroundColor] animate:NO];
+        spacing-=5+t.frame.size.height;
+        d+=.3;
+        [t slideUpTo:spacing delay:d];
+        arrowN++;
+    }
+    
+    //ARROW4
+    NSString * bonusString;
+    float trialAccuracy=fabs(elapsed-timerGoal);
+    if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0)
+    {
+        bonusString=@"PERFECT! BONUS HEART";
+        t= [levelArrows objectAtIndex:arrowN];
+        [t update:@"" rightLabel:bonusString color:[self inverseColor:self.view.backgroundColor] animate:NO];
+        spacing-=5+t.frame.size.height;
+        d+=.3;
+        [t slideUpTo:spacing delay:d];
+        arrowN++;
+    }
+
+    
+}
+
+
 
 -(void)showGameOverSequence{
     
@@ -1365,15 +1429,38 @@ colors
     }
 }
 
+-(void)nextButtonPressed{
+    
+    [self.view bringSubviewToFront:progressView];
+    [levelAlert slideDown:0];
+    for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideDown:(float)i*.2+.5];
+    
+    //check for stage up to add dots
+    
+    if(life==0){
+        resetCountdown=20;
+        lastStage=[self getCurrentStage];
+        currentLevel=0;
+        [self performSelector:@selector(showGameOverSequence) withObject:self afterDelay:1];
+    }
+    
+    else if ( (currentLevel%TRIALSINSTAGE==0 && [self isAccurate])){
+        [self performSelector:@selector(setupDots) withObject:self afterDelay:1];
+    }
+    else{
+        [self performSelector:@selector(loadLevel) withObject:self afterDelay:1];
+    }
+
+    
+}
+
 
 -(void)loadLevel{
     if(currentLevel==0 && life==0){
         life=NUMHEARTS;
     }
-    [self updateDots];
     
     [self setLevel:currentLevel];
-    
     [self loadData];
     [self.myGraph reloadGraph];
 }
@@ -1543,59 +1630,7 @@ colors
              
              [self showXO];
 
-             //arrow delay
-             float d=.2;
-             int arrowN=0;
-             
-             //ARROW1
-             TextArrow *t= [levelArrows objectAtIndex:arrowN];
-             float diff=elapsed-timerGoal;
-             NSString *diffString;
-             diffString=[NSString stringWithFormat:@"OFF BY %@",[self getTimeDiffString:diff]];
-             [t update:@"" rightLabel:diffString color:[self inverseColor:self.view.backgroundColor] animate:NO];
-             [t slideIn:.3+d];
-             arrowN++;
-             
-             //ARROW2
-             //float accuracyP=100.0-fabs(diff/(float)timerGoal)*100.0;
-             //float accuracyP=[self getAccuracyPercentage];
-             //NSString* percentAccuracyString = [NSString stringWithFormat:@"ACCURACY %02i%%", (int)accuracyP];
-             
-             NSString * stageProgressString;
-             if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED",[self getLevel:currentLevel]];
-             else if(life>2) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life-1];
-             else if(life>1) stageProgressString=@"ONE TRY LEFT";
-             else stageProgressString=@"GAME OVER";
-             t= [levelArrows objectAtIndex:arrowN];
-             [t update:@"" rightLabel:stageProgressString color:[self inverseColor:self.view.backgroundColor] animate:NO];
-             [t slideIn:.6+d];
-             arrowN++;
-             
-             //ARROW3
-             if([self isAccurate] && currentLevel%TRIALSINSTAGE==TRIALSINSTAGE-1) {
-                 NSString * stageClearedString;
-                 stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED",[self getCurrentStage]+1];
-                 t= [levelArrows objectAtIndex:arrowN];
-                 [t update:@"" rightLabel:stageClearedString color:[self inverseColor:self.view.backgroundColor] animate:NO];
-                 [t slideIn:.9+d];
-                 arrowN++;
-             }
-             
-             //ARROW4
-             NSString * bonusString;
-             float trialAccuracy=fabs(elapsed-timerGoal);
-             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0)
-             {
-                 bonusString=@"PERFECT! BONUS HEART";
-                 t= [levelArrows objectAtIndex:arrowN];
-                 [t update:@"" rightLabel:bonusString color:[self inverseColor:self.view.backgroundColor] animate:NO];
-                 [t slideIn:1.2+d];
-                 arrowN++;
-             }
-             //             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4.0/5.0)
-             //             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3.0/5.0)
-             
-             [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:1.7];
+             [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:.5];
              
          }];
 
@@ -1680,20 +1715,24 @@ colors
 
 }
 -(void)morphOrDropDots{
+    [instructions update:@"" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:YES];
+    
     [UIView animateWithDuration:0.4
                           delay:0.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
-                         counterLabel.alpha=0.0;
-                         if([self isAccurate])counterGoalLabel.alpha=0.0;
-                         instructions.alpha=0;
+                         //counterLabel.alpha=0.0;
+                         //if([self isAccurate])counterGoalLabel.alpha=0.0;
+                         //instructions.alpha=0.5;
                          labelContainerBlur.alpha=0.0;
                      }
                      completion:^(BOOL finished){
 
-                         [self saveTrialData];
-                         [self checkLevelUp];
                     }];
+    
+    
+    [self saveTrialData];
+    [self checkLevelUp];
 }
 
 -(void)animateLevelReset{

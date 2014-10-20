@@ -23,6 +23,9 @@
 -(void)update:(NSString*) str rightLabel:(NSString*) rStr color:(UIColor*)c animate:(BOOL) animate;
 -(void)resetFrameY;
 -(void)bounce;
+-(void)slideUp:(float) delay;
+-(void)slideUpTo:(float)yPos delay:(float) delay;
+-(void)slideDown:(float) delay;
 
 @property UIColor *color;
 @property UILabel *rightLabel;

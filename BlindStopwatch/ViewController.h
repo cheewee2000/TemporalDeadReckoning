@@ -34,6 +34,7 @@
     IBOutlet UILabel *differencelLabel;
     
     TextArrow* instructions;
+    TextArrow* levelAlert;
     NSMutableArray * levelArrows;
     
     IBOutlet UILabel *nextLevelLabel;
