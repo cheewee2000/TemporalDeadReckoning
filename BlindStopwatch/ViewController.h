@@ -36,6 +36,7 @@
     TextArrow* instructions;
     TextArrow* levelAlert;
     NSMutableArray * levelArrows;
+    UIButton *nextButton;
     
     IBOutlet UILabel *nextLevelLabel;
     

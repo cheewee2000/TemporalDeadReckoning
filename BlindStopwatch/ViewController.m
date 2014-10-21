@@ -1,8 +1,7 @@
 //todo
 /*
  
-colors
- try two color graphics. no white
+ 
 
  
  drop stagelabels when game over
@@ -91,6 +90,7 @@ colors
     if(IS_IPAD)vbuttonY=237;
     else if(IS_IPHONE_6)vbuttonY=145;
     else if(IS_IPHONE_6_PLUS)vbuttonY=155;
+    else if(IS_IPHONE)vbuttonY=95;
 
     //instructions
     instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(screenWidth, vbuttonY, screenWidth-8, 44)];
@@ -144,7 +144,7 @@ colors
     goalPrecision.textColor = [UIColor whiteColor];
     goalPrecision.text = @"";
     [counterGoalLabel addSubview:goalPrecision];
-
+    
     levelArrows=[[NSMutableArray alloc] init];
     for (int i=0; i<NUMLEVELARROWS; i++) {
         //TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, counterGoalLabel.frame.origin.y+counterGoalLabel.frame.size.height+5+i*40, screenWidth, 30.0)];
@@ -157,21 +157,23 @@ colors
         [arrow slideDown:0];
     }
     
-    levelAlert=[[TextArrow alloc ] initWithFrame:CGRectMake(0, screenHeight-49.0-50, screenWidth, 50.0)];
+    levelAlert=[[TextArrow alloc ] initWithFrame:CGRectMake(0, screenHeight-49.0-50, screenWidth, 60.0)];
     [levelAlert slideDown:0];
     levelAlert.drawArrow=false;
     [self.view addSubview:levelAlert];
     [self.view sendSubviewToBack:levelAlert];
     levelAlert.userInteractionEnabled=YES;
 
-    UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage * next=[UIImage imageNamed:@"next"];
+    next = [next imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [nextButton setBackgroundImage:next forState:UIControlStateNormal];
     [nextButton adjustsImageWhenHighlighted];
     [nextButton setFrame:CGRectMake(0,0,44,44)];
     nextButton.center=CGPointMake( levelAlert.frame.size.width-22-8,levelAlert.frame.size.height/2.0);
     [nextButton addTarget:self action:@selector(nextButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     nextButton.userInteractionEnabled=YES;
+
     [levelAlert addSubview:nextButton];
     
     
@@ -431,6 +433,9 @@ colors
 
     //game center
     [self authenticateLocalPlayer];
+    
+    
+    if(life==0)[self restart];
 }
 -(void)restartPressed{
     
@@ -657,7 +662,8 @@ colors
                                                         TextArrow *sLabel=[stageLabels objectAtIndex:stage];
                                                         sLabel.alpha=1;
                                                         [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:i] animate:NO];
-
+                                                        sLabel.instructionText.textColor=[self getForegroundColor];
+                                                        
                                                         //shift label down
                                                         [UIView animateWithDuration:.8
                                                                               delay:0.4
@@ -688,7 +694,8 @@ colors
                                                         
                                                         int stage=floorf(i/TRIALSINSTAGE);
                                                         [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:i] animate:NO];
-                                                        
+                                                        sLabel.instructionText.textColor=[self getForegroundColor];
+
                                                         [UIView animateWithDuration:.8
                                                                               delay:0.4
                                                              usingSpringWithDamping:.5
@@ -881,8 +888,11 @@ colors
     CGPoint location = [aTouch locationInView:self.view];
     CGPoint previousLocation = [aTouch previousLocationInView:self.view];
 
-    if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
-    
+    //if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
+    if ([counterGoalLabel pointInside: [self.view convertPoint:location toView: counterGoalLabel] withEvent:event] ||
+        [instructions pointInside: [self.view convertPoint:location toView: instructions] withEvent:event]) {
+        return;
+    }
         [self.view bringSubviewToFront:progressView];
         
         [UIView animateWithDuration:0.1
@@ -896,7 +906,7 @@ colors
                              
                          }];
         
-    }
+    //}
     
     
 }
@@ -909,9 +919,11 @@ colors
     CGPoint location = [aTouch locationInView:self.view];
     CGPoint previousLocation = [aTouch previousLocationInView:self.view];
     
-    if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
-
-
+    //if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
+    if ([counterGoalLabel pointInside: [self.view convertPoint:location toView: counterGoalLabel] withEvent:event] ||
+        [instructions pointInside: [self.view convertPoint:location toView: instructions] withEvent:event]) {
+        return;
+    }
         [UIView animateWithDuration:0.4
                               delay:0.0
              usingSpringWithDamping:.8
@@ -934,26 +946,26 @@ colors
                          completion:^(BOOL finished){
                              
                          }];
-    }
-    //in case touch slipped outside
-    else{
-        
-        [UIView animateWithDuration:0.4
-                              delay:0.0
-             usingSpringWithDamping:.8
-              initialSpringVelocity:1.0
-                            options:UIViewAnimationOptionCurveLinear
-                         animations:^{
-   
-                                 progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
-                                 [self.view sendSubviewToBack:progressView];
-                                 [self.view sendSubviewToBack:blob];
-                         }
-                         completion:^(BOOL finished){
-                             
-                         }];
-        
-    }
+    //}
+//    //in case touch slipped outside
+//    else{
+//        
+//        [UIView animateWithDuration:0.4
+//                              delay:0.0
+//             usingSpringWithDamping:.8
+//              initialSpringVelocity:1.0
+//                            options:UIViewAnimationOptionCurveLinear
+//                         animations:^{
+//   
+//                                 progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
+//                                 [self.view sendSubviewToBack:progressView];
+//                                 [self.view sendSubviewToBack:blob];
+//                         }
+//                         completion:^(BOOL finished){
+//                             
+//                         }];
+//        
+//    }
 }
 
 - (IBAction)scalePiece:(UIPinchGestureRecognizer *)gestureRecognizer
@@ -1336,7 +1348,7 @@ colors
 }
 
 -(void)showLevelAlerts{
-    
+
     //arrow delay
     float d=0;
     float inc=.1;
@@ -1344,13 +1356,8 @@ colors
     int spacing=screenHeight-44-35;
     
     
-    //[levelAlert update:@"" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:NO];
-    [levelAlert update:@"" rightLabel:@"" color:[self getForegroundColor] animate:NO];
     
-    spacing-=5+levelAlert.frame.size.height;
-    d+=.3;
-    [levelAlert slideUpTo:spacing delay:d];
-    [self.view bringSubviewToFront:levelAlert];
+
     
     
     //ARROW1
@@ -1362,6 +1369,7 @@ colors
     spacing-=5+t.frame.size.height;
     d+=inc;
     [t slideUpTo:spacing delay:d];
+    [self.view bringSubviewToFront:t];
     arrowN++;
     
     //ARROW2
@@ -1374,6 +1382,7 @@ colors
     spacing-=5+t.frame.size.height;
     d+=inc;
     [t slideUpTo:spacing delay:d];
+    [self.view bringSubviewToFront:t];
     arrowN++;
     
     
@@ -1388,6 +1397,7 @@ colors
     spacing-=5+t.frame.size.height;
     d+=inc;
     [t slideUpTo:spacing delay:d];
+    [self.view bringSubviewToFront:t];
     arrowN++;
     
     //ARROW3
@@ -1399,6 +1409,7 @@ colors
         spacing-=5+t.frame.size.height;
         d+=inc;
         [t slideUpTo:spacing delay:d];
+        [self.view bringSubviewToFront:t];
         arrowN++;
     }
     
@@ -1413,10 +1424,25 @@ colors
         spacing-=5+t.frame.size.height;
         d+=inc;
         [t slideUpTo:spacing delay:d];
+        [self.view bringSubviewToFront:t];
         arrowN++;
     }
 
     
+    //[levelAlert update:@"" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:NO];
+    
+    if([self isAccurate])[levelAlert update:@"" rightLabel:@"NEXT LEVEL" color:[self getForegroundColor] animate:NO];
+    else if(life==0)[levelAlert update:@"" rightLabel:@"" color:[self getForegroundColor] animate:NO];
+    else [levelAlert update:@"" rightLabel:@"TRY AGAIN"   color:[self getForegroundColor] animate:NO];
+    
+    levelAlert.rightLabel.frame=CGRectMake(levelAlert.rightLabel.frame.origin.x, levelAlert.rightLabel.frame.origin.y, levelAlert.frame.size.width-nextButton.frame.size.width*2.2, levelAlert.rightLabel.frame.size.height);
+    levelAlert.rightLabel.textColor=[UIColor blackColor];
+    nextButton.tintColor=[self getBackgroundColor:currentLevel];
+
+    spacing-=5+levelAlert.frame.size.height;
+    d+=.3;
+    [levelAlert slideUpTo:spacing delay:d];
+    [self.view bringSubviewToFront:levelAlert];
 }
 
 
@@ -1856,8 +1882,10 @@ colors
 //                                  nil];
 
     NSArray * backgroundColors = [[NSArray alloc] initWithObjects:
-                                  [UIColor colorWithRed:206/255.0 green:0/255.0 blue:78/255.0 alpha:1],
-                                  [UIColor colorWithRed:255/255.0 green:153/255.0 blue:0/255.0 alpha:1],
+                                  //[UIColor colorWithRed:206/255.0 green:0/255.0 blue:78/255.0 alpha:1],
+                                  [UIColor colorWithRed:255/255.0 green:217/255.0 blue:15/255.0 alpha:1],
+                                  [UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1],
+
                                   [UIColor colorWithRed:253/255.0 green:242/255.0 blue:62/255.0 alpha:1],
                                   [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1],
                                   [UIColor colorWithRed:18/255.0 green:118/255.0 blue:135/255.0 alpha:1],
@@ -1875,8 +1903,10 @@ colors
 -(UIColor*) getForegroundColor{
     
     NSArray * foregroundColor = [[NSArray alloc] initWithObjects:
-                                  [UIColor colorWithRed:248/255.0 green:238/255.0 blue:223/255.0 alpha:1],
-                                  [UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1],
+                                  //[UIColor colorWithRed:248/255.0 green:238/255.0 blue:223/255.0 alpha:1],
+                                 [UIColor colorWithRed:85/255.0 green:85/255.0 blue:98/255.0 alpha:1],
+                                 [UIColor colorWithRed:255/255.0 green:153/255.0 blue:0/255.0 alpha:1],
+
                                   [UIColor colorWithRed:255/255.0 green:61/255.0 blue:132/255.0 alpha:1],
                                   [UIColor colorWithRed:0/255.0 green:163/255.0 blue:238/255.0 alpha:1],
                                   [UIColor colorWithRed:222/255.0 green:195/255.0 blue:133/255.0 alpha:1],
