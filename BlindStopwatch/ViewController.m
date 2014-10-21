@@ -301,7 +301,7 @@
     progressView=[[LevelProgressView alloc] initWithFrame:CGRectMake(0, screenHeight, self.view.frame.size.width, self.view.frame.size.height*2.0)];
     progressView.clipsToBounds=YES;
     [self.view addSubview:progressView];
-    progressView.backgroundColor=[self getForegroundColor];
+    progressView.backgroundColor=[self getForegroundColor:currentLevel];
 
     
     UIButton *trophyButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -662,7 +662,7 @@
                                                         TextArrow *sLabel=[stageLabels objectAtIndex:stage];
                                                         sLabel.alpha=1;
                                                         [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:i] animate:NO];
-                                                        sLabel.instructionText.textColor=[self getForegroundColor];
+                                                        sLabel.instructionText.textColor=[self getForegroundColor:i];
                                                         
                                                         //shift label down
                                                         [UIView animateWithDuration:.8
@@ -694,7 +694,7 @@
                                                         
                                                         int stage=floorf(i/TRIALSINSTAGE);
                                                         [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:i] animate:NO];
-                                                        sLabel.instructionText.textColor=[self getForegroundColor];
+                                                        sLabel.instructionText.textColor=[self getForegroundColor:i];
 
                                                         [UIView animateWithDuration:.8
                                                                               delay:0.4
@@ -810,6 +810,8 @@
 
         UIImageView* heart=[hearts objectAtIndex:i];
 
+        [self.view bringSubviewToFront:heart];
+        
         if(i<life) {
             heart.alpha=1.0;
 
@@ -920,10 +922,10 @@
     CGPoint previousLocation = [aTouch previousLocationInView:self.view];
     
     //if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
-    if ([counterGoalLabel pointInside: [self.view convertPoint:location toView: counterGoalLabel] withEvent:event] ||
-        [instructions pointInside: [self.view convertPoint:location toView: instructions] withEvent:event]) {
-        return;
-    }
+//    if ([counterGoalLabel pointInside: [self.view convertPoint:location toView: counterGoalLabel] withEvent:event] ||
+//        [instructions pointInside: [self.view convertPoint:location toView: instructions] withEvent:event]) {
+//        return;
+//    }
         [UIView animateWithDuration:0.4
                               delay:0.0
              usingSpringWithDamping:.8
@@ -932,7 +934,7 @@
                          animations:^{
 
                              //if(progressView.frame.origin.y<screenHeight/2.0)
-                             if(location.y<previousLocation.y)
+                             if(location.y<previousLocation.y-10 || location.y<screenHeight/2.0)
                              {
                                 progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
                                  [self.view bringSubviewToFront:progressView];
@@ -1241,11 +1243,11 @@
 //                          counterGoalLabel.textColor=[self inverseColor:self.view.backgroundColor];
 //                          goalPrecision.textColor=[self inverseColor:self.view.backgroundColor];
                           
-                          [instructions setColor:[self getForegroundColor]];
-                          progressView.backgroundColor=[self getForegroundColor];
-                          counterLabel.textColor=[self getForegroundColor];
-                          counterGoalLabel.textColor=[self getForegroundColor];
-                          goalPrecision.textColor=[self getForegroundColor];
+                          [instructions setColor:[self getForegroundColor:currentLevel]];
+                          progressView.backgroundColor=[self getForegroundColor:currentLevel];
+                          counterLabel.textColor=[self getForegroundColor:currentLevel];
+                          counterGoalLabel.textColor=[self getForegroundColor:currentLevel];
+                          goalPrecision.textColor=[self getForegroundColor:currentLevel];
                           
                           
                         }
@@ -1334,9 +1336,9 @@
                              if(practicing==false) [self reportScore];
                          }
                          
-                         [self updateLife];
-                         [self updateDots];
                          
+                         [self performSelector:@selector(updateLife) withObject:self afterDelay:.1];
+                         [self performSelector:@selector(updateDots) withObject:self afterDelay:.1];
                          [self performSelector:@selector(showLevelAlerts) withObject:self afterDelay:.5];
 
 
@@ -1355,17 +1357,13 @@
     int arrowN=0;
     int spacing=screenHeight-44-35;
     
-    
-    
-
-    
-    
+ 
     //ARROW1
     TextArrow *t= [levelArrows objectAtIndex:arrowN];
     float diff=elapsed-timerGoal;
     NSString *diffString;
     diffString=[NSString stringWithFormat:@"OFF BY %@",[self getTimeDiffString:diff]];
-    [t update:@"" rightLabel:diffString color:[self getForegroundColor] animate:NO];
+    [t update:@"" rightLabel:diffString color:instructions.color animate:NO];
     spacing-=5+t.frame.size.height;
     d+=inc;
     [t slideUpTo:spacing delay:d];
@@ -1378,7 +1376,7 @@
     NSString* percentAccuracyString = [NSString stringWithFormat:@"ACCURACY %02i%%", (int)accuracyP];
     t= [levelArrows objectAtIndex:arrowN];
 
-    [t update:@"" rightLabel:percentAccuracyString color:[self getForegroundColor] animate:NO];
+    [t update:@"" rightLabel:percentAccuracyString color:instructions.color animate:NO];
     spacing-=5+t.frame.size.height;
     d+=inc;
     [t slideUpTo:spacing delay:d];
@@ -1391,21 +1389,22 @@
     if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED",[self getLevel:currentLevel-1]];
     else if(life>1) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life];
     else if(life>0) stageProgressString=@"ONE TRY LEFT";
-    else stageProgressString=@"GAME OVER";
-    t= [levelArrows objectAtIndex:arrowN];
-    [t update:@"" rightLabel:stageProgressString color:[self getForegroundColor] animate:NO];
-    spacing-=5+t.frame.size.height;
-    d+=inc;
-    [t slideUpTo:spacing delay:d];
-    [self.view bringSubviewToFront:t];
-    arrowN++;
+    if(life>0){
+        t= [levelArrows objectAtIndex:arrowN];
+        [t update:@"" rightLabel:stageProgressString color:instructions.color animate:NO];
+        spacing-=5+t.frame.size.height;
+        d+=inc;
+        [t slideUpTo:spacing delay:d];
+        [self.view bringSubviewToFront:t];
+        arrowN++;
+    }
     
     //ARROW3
     if([self isAccurate] && currentLevel%TRIALSINSTAGE==0) {
         NSString * stageClearedString;
         stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED",[self getCurrentStage]];
         t= [levelArrows objectAtIndex:arrowN];
-        [t update:@"" rightLabel:stageClearedString color:[self getForegroundColor] animate:NO];
+        [t update:@"" rightLabel:stageClearedString color:instructions.color animate:NO];
         spacing-=5+t.frame.size.height;
         d+=inc;
         [t slideUpTo:spacing delay:d];
@@ -1420,7 +1419,7 @@
     {
         bonusString=@"PERFECT! BONUS HEART";
         t= [levelArrows objectAtIndex:arrowN];
-        [t update:@"" rightLabel:bonusString color:[self getForegroundColor] animate:NO];
+        [t update:@"" rightLabel:bonusString color:instructions.color animate:NO];
         spacing-=5+t.frame.size.height;
         d+=inc;
         [t slideUpTo:spacing delay:d];
@@ -1431,16 +1430,16 @@
     
     //[levelAlert update:@"" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:NO];
     
-    if([self isAccurate])[levelAlert update:@"" rightLabel:@"NEXT LEVEL" color:[self getForegroundColor] animate:NO];
-    else if(life==0)[levelAlert update:@"" rightLabel:@"" color:[self getForegroundColor] animate:NO];
-    else [levelAlert update:@"" rightLabel:@"TRY AGAIN"   color:[self getForegroundColor] animate:NO];
+    if([self isAccurate])[levelAlert update:@"" rightLabel:@"NEXT LEVEL" color:instructions.color animate:NO];
+    else if(life==0)[levelAlert update:@"" rightLabel:@"GAME OVER" color:instructions.color animate:NO];
+    else [levelAlert update:@"" rightLabel:@"TRY AGAIN"   color:instructions.color animate:NO];
     
     levelAlert.rightLabel.frame=CGRectMake(levelAlert.rightLabel.frame.origin.x, levelAlert.rightLabel.frame.origin.y, levelAlert.frame.size.width-nextButton.frame.size.width*2.2, levelAlert.rightLabel.frame.size.height);
     levelAlert.rightLabel.textColor=[UIColor blackColor];
     nextButton.tintColor=[self getBackgroundColor:currentLevel];
 
     spacing-=5+levelAlert.frame.size.height;
-    d+=.3;
+    d+=inc;
     [levelAlert slideUpTo:spacing delay:d];
     [self.view bringSubviewToFront:levelAlert];
 }
@@ -1509,9 +1508,9 @@
 -(void)nextButtonPressed{
     
     [self.view bringSubviewToFront:progressView];
-    [levelAlert slideDown:0];
     for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideDown:(float)i*.1+.2];
-    
+    [levelAlert slideDown:NUMLEVELARROWS*.1+.2];
+
     [instructions slideOut:0];
     
     if(life==0){
@@ -1786,7 +1785,7 @@
 
 }
 -(void)morphOrDropDots{
-    [instructions update:@"" rightLabel:@"" color:[self getForegroundColor] animate:YES];
+    [instructions update:@"" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:YES];
     
     [UIView animateWithDuration:0.4
                           delay:0.0
@@ -1833,7 +1832,7 @@
                                            }
                                            completion:^(BOOL finished){
                                                //[instructions resetFrame];
-                                               [instructions update:@"START" rightLabel:@"" color:[self getForegroundColor] animate:NO];
+                                               [instructions update:@"START" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:NO];
                                                [instructions slideIn:0];
                                                [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.7];
                                            }];
@@ -1863,7 +1862,7 @@
 
 # pragma mark Helpers
 
--(UIColor*) getBackgroundColor:(int)currentL {
+-(UIColor*) getBackgroundColor:(int)level {
     
 //    NSArray * backgroundColors = [[NSArray alloc] initWithObjects:
 //                                  [UIColor colorWithRed:47/255.0 green:206/255.0 blue:3/255.0 alpha:1],
@@ -1894,13 +1893,13 @@
                                   [UIColor colorWithRed:71/255.0 green:86/255.0 blue:72/255.0 alpha:1],
                                   nil];
     
-    int currentStage=floorf(currentL/TRIALSINSTAGE);
+    int currentStage=floorf(level/TRIALSINSTAGE);
     int cl=currentStage%[backgroundColors count];
     
     return backgroundColors[cl];
 }
 
--(UIColor*) getForegroundColor{
+-(UIColor*) getForegroundColor:(int)level {
     
     NSArray * foregroundColor = [[NSArray alloc] initWithObjects:
                                   //[UIColor colorWithRed:248/255.0 green:238/255.0 blue:223/255.0 alpha:1],
@@ -1916,9 +1915,8 @@
 
                                   nil];
     
-    int currentStage=floorf(currentLevel/TRIALSINSTAGE);
+    int currentStage=floorf(level/TRIALSINSTAGE);
     int cl=currentStage%[foregroundColor count];
-    
     return foregroundColor[cl];
 }
 
