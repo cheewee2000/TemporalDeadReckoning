@@ -98,11 +98,11 @@
     
     
     /* Create the Tap Gesture Recognizer */
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
-    tapGestureRecognizer.numberOfTouchesRequired = 1;
-    tapGestureRecognizer.numberOfTapsRequired = 1;
-    [instructions addGestureRecognizer:tapGestureRecognizer];
-    instructions.userInteractionEnabled = YES;
+//    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
+//    tapGestureRecognizer.numberOfTouchesRequired = 1;
+//    tapGestureRecognizer.numberOfTapsRequired = 1;
+//    [instructions addGestureRecognizer:tapGestureRecognizer];
+//    instructions.userInteractionEnabled = YES;
 
 
     
@@ -136,7 +136,7 @@
     tapGestureRecognizer3.numberOfTapsRequired = 1;
     [counterGoalLabel addGestureRecognizer:tapGestureRecognizer3];
     counterGoalLabel.userInteractionEnabled = YES;
-    
+
     
     goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, counterGoalLabel.frame.size.height-30, counterGoalLabel.frame.size.width*.5-13, 40)];
     goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:33.0];
@@ -381,6 +381,15 @@
     [self resetMainDot];
     [blob addSubview:mainDot];
     
+
+    //mainDot.userInteractionEnabled = YES;
+    //blob.userInteractionEnabled = YES;
+    //self.view.userInteractionEnabled=YES;
+//    UISwipeGestureRecognizer *swipeUpDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swiped:)];
+//    [swipeUpDown setDirection:(UISwipeGestureRecognizerDirectionUp | UISwipeGestureRecognizerDirectionDown )];
+//    [self.view addGestureRecognizer:swipeUpDown];
+//    
+    
     //satellites
     satellites=[NSArray array];
     for (int i=0;i<10;i++){
@@ -394,23 +403,24 @@
     }
     [self setupSatellites];
     
-//    differencelLabel.alpha=0;
-//    [self.view bringSubviewToFront:differencelLabel];
-    
-    
-
     
     UIBlurEffect *blurEffect= [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
     labelContainerBlur = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
     labelContainerBlur.frame = self.view.bounds;
     labelContainerBlur.alpha=0;
     [labelContainer addSubview:labelContainerBlur];
-   
+    
+    //labelContainer.userInteractionEnabled=YES;
+//    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
+//    tapGestureRecognizer.numberOfTouchesRequired = 1;
+//    tapGestureRecognizer.numberOfTapsRequired = 1;
+//    [self.view addGestureRecognizer:tapGestureRecognizer];
+//    
     blobBlur = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
     blobBlur.frame = self.view.bounds;
     blobBlur.alpha=1.0;
     [blob addSubview:blobBlur];
-    blobBlur.userInteractionEnabled = YES;
+    //blobBlur.userInteractionEnabled = YES;
 
     
     xView=[[UIImageView alloc] init];
@@ -483,6 +493,22 @@
                              
                          }];
     }
+    
+    for (int i=0; i<stageLabels.count; i++){
+        TextArrow* sl=[stageLabels objectAtIndex:i];
+        
+        [UIView animateWithDuration:0.6
+                              delay:(arc4random()%1000)*.001
+                            options:UIViewAnimationOptionCurveEaseIn
+                         animations:^{
+                             sl.frame=CGRectOffset(sl.frame, 0, screenHeight);
+                         }
+                         completion:^(BOOL finished){
+                             
+                         }];
+    }
+    
+    
     
     [self performSelector:@selector(setupGame) withObject:self afterDelay:2.5];
 
@@ -809,11 +835,11 @@
     for (int i=0;i<[hearts count];i++){
 
         UIImageView* heart=[hearts objectAtIndex:i];
-
-        [self.view bringSubviewToFront:heart];
         
         if(i<life) {
-            heart.alpha=1.0;
+            [self.view bringSubviewToFront:heart];
+
+                heart.alpha=1.0;
 
                 if(heart.frame.origin.y>screenHeight){
                     heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15);
@@ -833,6 +859,7 @@
             }
         }
         else{
+            //drop heart
             
             [self.view sendSubviewToBack:heart];
             [self.view sendSubviewToBack:blob];
@@ -891,10 +918,10 @@
     CGPoint previousLocation = [aTouch previousLocationInView:self.view];
 
     //if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
-    if ([counterGoalLabel pointInside: [self.view convertPoint:location toView: counterGoalLabel] withEvent:event] ||
-        [instructions pointInside: [self.view convertPoint:location toView: instructions] withEvent:event]) {
-        return;
-    }
+//    if ([counterGoalLabel pointInside: [self.view convertPoint:location toView: counterGoalLabel] withEvent:event] ||
+//        [instructions pointInside: [self.view convertPoint:location toView: instructions] withEvent:event]) {
+//        return;
+//    }
         [self.view bringSubviewToFront:progressView];
         
         [UIView animateWithDuration:0.1
@@ -913,14 +940,40 @@
     
 }
 
-
+//-(void) swiped:(UISwipeGestureRecognizer *)recognizer {
+//    
+//    [UIView animateWithDuration:0.4
+//                          delay:0.0
+//         usingSpringWithDamping:.8
+//          initialSpringVelocity:1.0
+//                        options:UIViewAnimationOptionCurveLinear
+//                     animations:^{
+//                         
+//                         //if(progressView.frame.origin.y<screenHeight/2.0)
+//                         if(recognizer.direction==UISwipeGestureRecognizerDirectionUp)
+//                         {
+//                             progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
+//                             [self.view bringSubviewToFront:progressView];
+//                         }
+//                         else if(recognizer.direction==UISwipeGestureRecognizerDirectionDown){
+//                             progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
+//                             [self.view sendSubviewToBack:progressView];
+//                             [self.view sendSubviewToBack:blob];
+//                         }
+//                     }
+//                     completion:^(BOOL finished){
+//                        
+//                     
+//                     }];
+//
+//}
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 
     UITouch *aTouch = [touches anyObject];
     CGPoint location = [aTouch locationInView:self.view];
     CGPoint previousLocation = [aTouch previousLocationInView:self.view];
-    
+//
     //if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
 //    if ([counterGoalLabel pointInside: [self.view convertPoint:location toView: counterGoalLabel] withEvent:event] ||
 //        [instructions pointInside: [self.view convertPoint:location toView: instructions] withEvent:event]) {
@@ -934,7 +987,7 @@
                          animations:^{
 
                              //if(progressView.frame.origin.y<screenHeight/2.0)
-                             if(location.y<previousLocation.y-10 || location.y<screenHeight/2.0)
+                             if(location.y<previousLocation.y-2 || ( progressView.frame.origin.y<screenHeight/2.0 && location.y<previousLocation.y) )
                              {
                                 progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
                                  [self.view bringSubviewToFront:progressView];
@@ -996,33 +1049,29 @@
 //volume buttons
 -(void)buttonPressed{
     
+    
     //START
         if(trialSequence==0){
+            
             trialSequence=1;
 
             startTime=[NSDate timeIntervalSinceReferenceDate];
             [self updateTime];
             [instructions updateText:@"STOP" animate:YES];
             [self setTimerGoalMarginDisplay];
-            
-            
+        
             //[self.view bringSubviewToFront:blobBlur];
             [UIView animateWithDuration:0.6
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveLinear
                              animations:^{
                                  labelContainerBlur.alpha=1.0;
+                                 progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
+
                                  //blobBlur.alpha=0;
                              }
                              completion:^(BOOL finished){
-//                                 TextArrow *arrow=[levelArrows objectAtIndex:0];
-//                                 
-//                                 if(arrow.frame.origin.x==0){
-//                                     //slide out level Arrows if they're still showing
-//                                     float randomDelay=arc4random_uniform(20)/20.0;
-//                                     
-//
-//                                 }
+
                              }];
 
             
@@ -1232,17 +1281,9 @@
                           if(practicing) self.view.backgroundColor=[UIColor colorWithWhite:.7 alpha:1.0];
                           else self.view.backgroundColor=[self getBackgroundColor:currentLevel];
                           
-
                           instructions.instructionText.textColor=self.view.backgroundColor;
                           instructions.rightLabel.textColor=self.view.backgroundColor;
-                          
-                          
-//                          [instructions setColor:[self inverseColor:self.view.backgroundColor]];
-//                          progressView.backgroundColor=[self inverseColor:self.view.backgroundColor];
-//                          counterLabel.textColor=[self inverseColor:self.view.backgroundColor];
-//                          counterGoalLabel.textColor=[self inverseColor:self.view.backgroundColor];
-//                          goalPrecision.textColor=[self inverseColor:self.view.backgroundColor];
-                          
+
                           [instructions setColor:[self getForegroundColor:currentLevel]];
                           progressView.backgroundColor=[self getForegroundColor:currentLevel];
                           counterLabel.textColor=[self getForegroundColor:currentLevel];
@@ -1508,9 +1549,8 @@
 -(void)nextButtonPressed{
     
     [self.view bringSubviewToFront:progressView];
-    for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideDown:(float)i*.1+.2];
-    [levelAlert slideDown:NUMLEVELARROWS*.1+.2];
-
+    for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideDown:(float)i*.1];
+    [levelAlert slideDown:(float)(NUMLEVELARROWS)*.1];
     [instructions slideOut:0];
     
     if(life==0){
