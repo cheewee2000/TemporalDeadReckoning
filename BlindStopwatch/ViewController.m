@@ -1423,20 +1423,24 @@
     }
     
     //ARROW4
-    NSString * bonusString;
+    NSString * bonusString=@"";
     float trialAccuracy=fabs(elapsed-timerGoal);
-    if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0)
-    {
-        bonusString=@"PERFECT! BONUS HEART";
-        t= [levelArrows objectAtIndex:arrowN];
-        [t update:@"" rightLabel:bonusString color:instructions.color animate:NO];
-        spacing-=5+t.frame.size.height;
-        d+=inc;
-        [t slideUpTo:spacing delay:d];
-        [self.view bringSubviewToFront:t];
-        arrowN++;
-    }
+    if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0) bonusString=@"PERFECT! BONUS HEART";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/5.0) bonusString=@"NICE!";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/5.0) bonusString=@"GREAT!";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]) bonusString=@"CLOSE ENOUGH";
+    else if(elapsed-timerGoal<0) bonusString=@"TOO FAST";
+    else if(elapsed-timerGoal>0) bonusString=@"TOO SLOW";
 
+    t= [levelArrows objectAtIndex:arrowN];
+    [t update:@"" rightLabel:bonusString color:instructions.color animate:NO];
+    spacing-=5+t.frame.size.height;
+    d+=inc;
+    [t slideUpTo:spacing delay:d];
+    [self.view bringSubviewToFront:t];
+    arrowN++;
+    
+    
     
     //[levelAlert update:@"" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:NO];
     
