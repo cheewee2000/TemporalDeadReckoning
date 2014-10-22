@@ -5,15 +5,11 @@
 #define CGRectSetPos( r, x, y ) CGRectMake( x, y, r.size.width, r.size.height )
 #import "RBVolumeButtons.h"
 
-
 #define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 #define IS_IPHONE (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 #define IS_IPHONE_5 (IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 568.0)
 #define IS_IPHONE_6 (IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 667.0)
 #define IS_IPHONE_6_PLUS (IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 736.0)
-
-
-
 
 #define NUMLEVELARROWS 5
 
@@ -290,12 +286,12 @@
     [restartButton adjustsImageWhenHighlighted];
     [restartButton setFrame:CGRectMake(0,0,44,44)];
     restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-60);
-    [restartButton addTarget:self action:@selector(restartPressed) forControlEvents:UIControlEventTouchUpInside];
+    [restartButton addTarget:self action:@selector(restart) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:restartButton];
     
     
     playButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIImage * play=[UIImage imageNamed:@"play"];
+    UIImage * play=[UIImage imageNamed:@"next"];
     [playButton setBackgroundImage:play forState:UIControlStateNormal];
     [playButton adjustsImageWhenHighlighted];
     [playButton setFrame:CGRectMake(0,0,44,44)];
@@ -443,6 +439,20 @@
                      completion:^(BOOL finished){
                      }];
     
+    [UIView animateWithDuration:0.4
+                          delay:0.0
+         usingSpringWithDamping:.8
+          initialSpringVelocity:1.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-60);
+                     }
+                     completion:^(BOOL finished){
+                     }];
+    
+
+    
+    
     for (int i=0; i<dots.count; i++){
         Dots* d=[dots objectAtIndex:i];
         
@@ -535,10 +545,9 @@
 -(void)addHeart:(int)i{
     UIImageView * heart=[[UIImageView alloc] init];
     [heart setImage:[UIImage imageNamed: @"heart"]];
-    heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15);
-    [hearts addObject:heart];
     heart.alpha=0.0;
-    //hearts = [hearts arrayByAddingObject:heart];
+    heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight+100,15,15);
+    [hearts addObject:heart];
     [self.view addSubview:hearts[i]];
     [self.view sendSubviewToBack:hearts[i]];
 }
@@ -801,11 +810,8 @@
         
         if(i<life) {
             [self.view bringSubviewToFront:heart];
-
                 heart.alpha=1.0;
-
                 if(heart.frame.origin.y>screenHeight){
-                    heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15);
                     heart.transform = CGAffineTransformScale(CGAffineTransformIdentity, .01, .01);
                     //spring in  heart
                 [UIView animateWithDuration:.4
@@ -814,6 +820,7 @@
                       initialSpringVelocity:1.0
                                     options:UIViewAnimationOptionCurveLinear
                                          animations:^{
+                                             heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15);
                                              heart.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
                                          }
                                          completion:^(BOOL finished){
@@ -1042,15 +1049,11 @@
     //STOP
     else if(trialSequence==1){
             trialSequence=2;
-            ///AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
             counterLabel.alpha=1.0;
-
     }
-    
-    else if(trialSequence==2){
-        
+    //NEXT
+    else if(trialSequence==2 && levelAlert.frame.origin.y<screenHeight){
         [self nextButtonPressed];
-        
     }
 
 }
@@ -1456,6 +1459,14 @@
     d+=inc;
     [levelAlert slideUpTo:spacing delay:d];
     [self.view bringSubviewToFront:levelAlert];
+
+    
+    
+    [instructions update:@"" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:NO];
+    d+=inc;
+    [instructions slideIn:d];
+    
+    
 }
 
 
@@ -1503,16 +1514,31 @@
                              }
                              completion:^(BOOL finished){
                                  progressView.subMessage.text=@"GAME OVER";
+                                 
 
-                                 [UIView animateWithDuration:0.8
-                                                       delay:1.2
+                                 [UIView animateWithDuration:0.4
+                                                       delay:0.8
                                                      options:UIViewAnimationOptionCurveLinear
                                                   animations:^{
                                                     progressView.subMessage.alpha=1.0;
+                                                      
                                                   }
                                                   completion:^(BOOL finished){
-                                                      [self restart];
                                                   }];
+                                 
+                                 [UIView animateWithDuration:0.4
+                                                       delay:0.8
+                                      usingSpringWithDamping:.8
+                                       initialSpringVelocity:1.0
+                                                     options:UIViewAnimationOptionCurveLinear
+                                                  animations:^{
+                                                      restartButton.center=CGPointMake(screenWidth*.5, progressView.subMessage.frame.origin.y+progressView.subMessage.frame.size.height);
+                                                      
+                                                  }
+                                                  completion:^(BOOL finished){
+                                                  }];
+                                 
+                                 
                                  
                              }];
         }
@@ -1757,9 +1783,12 @@
 
 -(void)showXO{
     if([self isAccurate]){
+//        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
         [self displayXorO:YES];
+        
     }
     else{
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
         [self displayXorO:NO];
     }
 }
@@ -1777,12 +1806,11 @@
                          float w=210;
                          float y=screenHeight-44-w-30;
                          float x=screenWidth/2.0-w/2.0;
-                         
                          if([self isAccurate])oView.frame=CGRectMake( x, y, w, w);
                          else xView.frame=CGRectMake(x, y, w, w);
                      }
                      completion:^(BOOL finished){
- 
+//                         if(![self isAccurate])AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
                      }];
     
 }
@@ -1798,7 +1826,8 @@
 
 }
 -(void)morphOrDropDots{
-    [instructions update:@"" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:YES];
+    //[instructions update:@"" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:YES];
+    [instructions slideOut:0];
     
     [UIView animateWithDuration:0.4
                           delay:0.0
@@ -1857,11 +1886,12 @@
 }
 
 
+-(void)setTrialSequence:(int)n{
+    trialSequence=n;
+}
+
 -(void)resetTrialSequence{
     trialSequence=0;
-    [instructions update:@"START" rightLabel:@"*press volume button" color:[self getForegroundColor:currentLevel] animate:YES];
-    instructions.rightLabel.font=[UIFont fontWithName:@"DIN Condensed" size:screenHeight*.03];
-
     [self performSelector:@selector(instructionBounce) withObject:self afterDelay:5.0];
 }
 
@@ -1869,6 +1899,8 @@
 
     if(trialSequence==0)
     {
+        [instructions update:@"START" rightLabel:@"*press volume button" color:[self getForegroundColor:currentLevel] animate:NO];
+        instructions.rightLabel.font=[UIFont fontWithName:@"DIN Condensed" size:screenHeight*.03];
         [instructions bounce];
         [self performSelector:@selector(instructionBounce) withObject:self afterDelay:5.0];
     }
