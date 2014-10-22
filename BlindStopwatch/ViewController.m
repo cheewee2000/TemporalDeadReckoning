@@ -1855,6 +1855,9 @@
 
 -(void)resetTrialSequence{
     trialSequence=0;
+    [instructions update:@"START" rightLabel:@"*press volume button" color:[self getForegroundColor:currentLevel] animate:YES];
+    instructions.rightLabel.font=[UIFont fontWithName:@"DIN Condensed" size:screenHeight*.03];
+
     [self performSelector:@selector(instructionBounce) withObject:self afterDelay:5.0];
 }
 
