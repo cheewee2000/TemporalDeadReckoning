@@ -12,7 +12,7 @@
 {
    
 }
-
+@property UIView * dotsContainer;
 @property UILabel * centerMessage;
 @property UILabel * subMessage;
 

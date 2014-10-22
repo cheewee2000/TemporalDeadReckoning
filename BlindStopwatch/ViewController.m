@@ -107,7 +107,7 @@
     levelArrows=[[NSMutableArray alloc] init];
     for (int i=0; i<NUMLEVELARROWS; i++) {
         //TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, counterGoalLabel.frame.origin.y+counterGoalLabel.frame.size.height+5+i*40, screenWidth, 30.0)];
-        TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, screenHeight-i*35-44-35, screenWidth, 44)];
+        TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, screenHeight-i*35-44-35, screenWidth, screenHeight*.055)];
         arrow.drawArrow=false;
         arrow.rightLabel.textColor=[UIColor blackColor];
         [levelArrows addObject:arrow];
@@ -116,7 +116,7 @@
         [arrow slideDown:0];
     }
     
-    levelAlert=[[TextArrow alloc ] initWithFrame:CGRectMake(0, screenHeight-49.0-50, screenWidth, 60.0)];
+    levelAlert=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.15)];
     [levelAlert slideDown:0];
     levelAlert.drawArrow=false;
     [self.view addSubview:levelAlert];
@@ -128,8 +128,8 @@
     next = [next imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [nextButton setBackgroundImage:next forState:UIControlStateNormal];
     [nextButton adjustsImageWhenHighlighted];
-    [nextButton setFrame:CGRectMake(0,0,44,44)];
-    nextButton.center=CGPointMake( levelAlert.frame.size.width-22-8,levelAlert.frame.size.height/2.0);
+    [nextButton setFrame:CGRectMake(0,0,levelAlert.frame.size.height*.85,levelAlert.frame.size.height*.85)];
+    nextButton.center=CGPointMake( levelAlert.frame.size.width-nextButton.frame.size.width*.5-10,levelAlert.frame.size.height/2.0);
     [nextButton addTarget:self action:@selector(nextButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     nextButton.userInteractionEnabled=YES;
 
@@ -590,7 +590,6 @@
 
 -(void)setupDots{
     int rowHeight=60;
-    
 
     [UIView animateWithDuration:0.4
                           delay:0.0
@@ -627,10 +626,12 @@
                                              }
                                              completion:^(BOOL finished){
                                                  
-                                            for (int i = 0; i < TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE;i++){
+                                                int nExtraLevelsToShow=0;
+                                                 
+                                                 for (int i = 0; i < TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE*(1+nExtraLevelsToShow) ; i++){
                                                 float dotDia=12;
                                                 float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
-                                                float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*[self getCurrentStage];
+                                                float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*([self getCurrentStage]+nExtraLevelsToShow);
                                                 
                                                 
                                                 //update existing dots
@@ -688,7 +689,7 @@
                                                         sLabel.alpha=1;
 
                                                         [stageLabels addObject:sLabel];
-                                                        [progressView addSubview:sLabel];
+                                                        [progressView.dotsContainer addSubview:sLabel];
                                                         
                                                         int stage=floorf(i/TRIALSINSTAGE);
                                                         [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:i] animate:NO];
@@ -712,7 +713,7 @@
                                                     dot.alpha = 1;
                                                     dot.backgroundColor = [UIColor clearColor];
                                                     [dots addObject:dot];
-                                                    [progressView addSubview:dots[i]];
+                                                    [progressView.dotsContainer addSubview:dots[i]];
                                                     
                                                     dot.transform = CGAffineTransformScale(CGAffineTransformIdentity, .00001, .000001);
                                                     //add level label
@@ -742,7 +743,6 @@
 
 -(void) updateDot:(int)i{
     Dots *dot=[dots objectAtIndex:i];
-
     
     //goal String
     NSTimeInterval level=[self getLevel:i];
@@ -772,10 +772,7 @@
     else {
         [dot setFill:NO];
     }
-    
-
-    
-    
+   
 }
 
 -(void) updateDots{
@@ -1452,10 +1449,11 @@
     
     //[levelAlert update:@"" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:NO];
     
-    if([self isAccurate])[levelAlert update:@"" rightLabel:@"NEXT LEVEL" color:instructions.color animate:NO];
-    else if(life==0)[levelAlert update:@"" rightLabel:@"GAME OVER" color:instructions.color animate:NO];
-    else [levelAlert update:@"" rightLabel:@"TRY AGAIN"   color:instructions.color animate:NO];
-    
+//    if([self isAccurate])[levelAlert update:@"" rightLabel:@"NEXT LEVEL" color:instructions.color animate:NO];
+//    else if(life==0)[levelAlert update:@"" rightLabel:@"GAME OVER" color:instructions.color animate:NO];
+//    else [levelAlert update:@"" rightLabel:@"TRY AGAIN"   color:instructions.color animate:NO];
+    [levelAlert update:@"" rightLabel:@""   color:instructions.color animate:NO];
+
     levelAlert.rightLabel.frame=CGRectMake(levelAlert.rightLabel.frame.origin.x, levelAlert.rightLabel.frame.origin.y, levelAlert.frame.size.width-nextButton.frame.size.width*2.2, levelAlert.rightLabel.frame.size.height);
     levelAlert.rightLabel.textColor=[UIColor blackColor];
     nextButton.tintColor=[self getBackgroundColor:currentLevel];
@@ -1904,8 +1902,8 @@
 
     if(trialSequence==0)
     {
-        [instructions update:@"START" rightLabel:@"*press volume button" color:[self getForegroundColor:currentLevel] animate:NO];
-        instructions.rightLabel.font=[UIFont fontWithName:@"DIN Condensed" size:screenHeight*.03];
+        [instructions update:@"START" rightLabel:@"PRESS VOLUME BUTTON" color:[self getForegroundColor:currentLevel] animate:NO];
+        instructions.rightLabel.font=[UIFont fontWithName:@"DIN Condensed" size:screenHeight*.025];
         [instructions bounce];
         [self performSelector:@selector(instructionBounce) withObject:self afterDelay:5.0];
     }

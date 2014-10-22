@@ -13,6 +13,11 @@
     self = [super initWithFrame:theFrame];
     if (self) {
         
+        self.dotsContainer=[[UIView alloc] init];
+        self.dotsContainer.frame=CGRectMake(0, 0, self.frame.size.width, self.frame.size.height*2);
+        [self addSubview:self.dotsContainer];
+        [self bringSubviewToFront:self.dotsContainer];
+        
         self.centerMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, self.frame.size.width, 160)];
         self.centerMessage.center=CGPointMake(self.frame.size.width/2.0, self.frame.size.height/4.0-80);
         self.centerMessage.text=@"";
@@ -34,6 +39,7 @@
         [self addSubview:self.subMessage];
         [self bringSubviewToFront:self.subMessage];
         
+ 
         
     }
     return self;
