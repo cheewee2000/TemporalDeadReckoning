@@ -548,8 +548,8 @@
     heart.alpha=0.0;
     heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight+100,15,15);
     [hearts addObject:heart];
-    [self.view addSubview:hearts[i]];
-    [self.view sendSubviewToBack:hearts[i]];
+    [labelContainer addSubview:hearts[i]];
+    [labelContainer sendSubviewToBack:hearts[i]];
 }
 -(void)updateHighscore{
     if(bestScore>0){
@@ -810,9 +810,11 @@
         
         if(i<life) {
             [self.view bringSubviewToFront:heart];
+            if(heart.frame.origin.y>screenHeight){
+
                 heart.alpha=1.0;
-                if(heart.frame.origin.y>screenHeight){
-                    heart.transform = CGAffineTransformScale(CGAffineTransformIdentity, .01, .01);
+                //heart.transform = CGAffineTransformScale(CGAffineTransformIdentity, .01, .01);
+
                     //spring in  heart
                 [UIView animateWithDuration:.4
                                       delay:0.4 * i
@@ -821,18 +823,19 @@
                                     options:UIViewAnimationOptionCurveLinear
                                          animations:^{
                                              heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15);
-                                             heart.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+                                             //heart.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
                                          }
                                          completion:^(BOOL finished){
-                                             
                                          }];
             }
         }
         else{
             //drop heart
             
-            [self.view sendSubviewToBack:heart];
-            [self.view sendSubviewToBack:blob];
+            //[self.view sendSubviewToBack:heart];
+            //[self.view sendSubviewToBack:blob];
+            [self.view bringSubviewToFront:progressView];
+            
             [UIView animateWithDuration:.4
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveEaseIn
@@ -892,6 +895,8 @@
 //        [instructions pointInside: [self.view convertPoint:location toView: instructions] withEvent:event]) {
 //        return;
 //    }
+  //  if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
+
         [self.view bringSubviewToFront:progressView];
         
         [UIView animateWithDuration:0.1
@@ -905,7 +910,7 @@
                              
                          }];
         
-    //}
+  //  }
     
     
 }
