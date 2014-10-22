@@ -1,40 +1,3 @@
-//todo
-/*
- 
- 
-
- 
- drop stagelabels when game over
-
- gameover countdown runs in background
- gamve over->countdown->continue->inapp purchase
-
- highlight previous highest level
-
- 
- startup sequence animation
- 
- visual for + or - from target for last 10 tries
- 
- graph animation at game over
- 
- 
- sound effects
- 
- achievements
--flawless stage
- -perfect stage
- 
- prevent runaway timers
- 
- 
- juicy feedback for 99% 95% 100%
-
-
- tempura achievements
-*/
-
-
 #import "ViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 //#import <AVFoundation/AVFoundation.h>
@@ -1082,6 +1045,12 @@
             ///AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
             counterLabel.alpha=1.0;
 
+    }
+    
+    else if(trialSequence==2){
+        
+        [self nextButtonPressed];
+        
     }
 
 }
