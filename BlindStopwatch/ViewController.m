@@ -1024,9 +1024,9 @@
 //volume buttons
 -(void)buttonPressed{
     
-    
+    if(progressView.frame.origin.y==0)return;
     //START
-        if(trialSequence==0){
+    if(trialSequence==0){
             
             trialSequence=1;
 
