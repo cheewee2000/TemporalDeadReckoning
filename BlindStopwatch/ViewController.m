@@ -15,6 +15,7 @@
 
 #define TRIALSINSTAGE 5
 #define NUMHEARTS 3
+#define SHOWNEXTRASTAGES 2
 
 @interface ViewController () {
     
@@ -49,6 +50,7 @@
     if(IS_IPAD)vbuttonY=237;
     else if(IS_IPHONE_6)vbuttonY=145;
     else if(IS_IPHONE_6_PLUS)vbuttonY=155;
+    else if(IS_IPHONE_5)vbuttonY=128;
     else if(IS_IPHONE)vbuttonY=95;
 
     //instructions
@@ -116,7 +118,7 @@
         [arrow slideDown:0];
     }
     
-    levelAlert=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.15)];
+    levelAlert=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.125)];
     [levelAlert slideDown:0];
     levelAlert.drawArrow=false;
     [self.view addSubview:levelAlert];
@@ -132,12 +134,9 @@
     nextButton.center=CGPointMake( levelAlert.frame.size.width-nextButton.frame.size.width*.5-10,levelAlert.frame.size.height/2.0);
     [nextButton addTarget:self action:@selector(nextButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     nextButton.userInteractionEnabled=YES;
-
     [levelAlert addSubview:nextButton];
     
-    
-    
-    
+
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if([defaults objectForKey:@"currentLevel"] == nil) currentLevel=0;
@@ -623,15 +622,15 @@
                                                 options:UIViewAnimationOptionCurveLinear
                                              animations:^{
                                                  progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
+                                                 progressView.dotsContainer.frame=progressView.frame;
                                              }
                                              completion:^(BOOL finished){
                                                  
-                                                int nExtraLevelsToShow=0;
                                                  
-                                                 for (int i = 0; i < TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE*(1+nExtraLevelsToShow) ; i++){
+                                                 for (int i = 0; i < [self getCurrentStage]*TRIALSINSTAGE*(2+SHOWNEXTRASTAGES) ; i++){
                                                 float dotDia=12;
                                                 float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
-                                                float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*([self getCurrentStage]+nExtraLevelsToShow);
+                                                float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*([self getCurrentStage]+SHOWNEXTRASTAGES);
                                                 
                                                 
                                                 //update existing dots
@@ -715,12 +714,12 @@
                                                     [dots addObject:dot];
                                                     [progressView.dotsContainer addSubview:dots[i]];
                                                     
-                                                    dot.transform = CGAffineTransformScale(CGAffineTransformIdentity, .00001, .000001);
+                                                    dot.transform = CGAffineTransformScale(CGAffineTransformIdentity, .001, .001);
                                                     //add level label
                                                     [self updateDot:i];
                                                 //animate dot appearance
-                                                [UIView animateWithDuration:.4
-                                                                      delay:.8+(i-currentLevel)*.3
+                                                [UIView animateWithDuration:.2
+                                                                      delay:.4+(i-currentLevel)*.15
                                                      usingSpringWithDamping:.5
                                                       initialSpringVelocity:1.0
                                                                     options:UIViewAnimationOptionCurveLinear
@@ -962,10 +961,14 @@
                              if(location.y<previousLocation.y-2 || ( progressView.frame.origin.y<screenHeight/2.0 && location.y<previousLocation.y) )
                              {
                                 progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
+                                 progressView.dotsContainer.frame=progressView.frame;
+
                                  [self.view bringSubviewToFront:progressView];
                              }
                             else {
                                 progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
+                                progressView.dotsContainer.frame=CGRectMake(0,-60*SHOWNEXTRASTAGES, screenWidth, screenHeight*2.0);
+
                                 [self.view sendSubviewToBack:progressView];
                                 [self.view sendSubviewToBack:blob];
                             }
@@ -1025,11 +1028,12 @@
     //START
     if(trialSequence==0){
             
-            trialSequence=1;
+        trialSequence=1;
 
-            startTime=[NSDate timeIntervalSinceReferenceDate];
-            [self updateTime];
-            [instructions updateText:@"STOP" animate:YES];
+        startTime=[NSDate timeIntervalSinceReferenceDate];
+        [self updateTime];
+        [instructions update:@"STOP" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:YES];
+        
             [self setTimerGoalMarginDisplay];
         
             //[self.view bringSubviewToFront:blobBlur];
@@ -1039,6 +1043,7 @@
                              animations:^{
                                  labelContainerBlur.alpha=1.0;
                                  progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
+                                 progressView.dotsContainer.frame=CGRectMake(0,-60*SHOWNEXTRASTAGES, screenWidth, screenHeight*2.0);
 
                                  //blobBlur.alpha=0;
                              }
@@ -1321,7 +1326,7 @@
                      animations:^{
                          if([self isAccurate]){
                              Dots *dot=[dots objectAtIndex:currentLevel];
-                             oView.frame = CGRectMake( dot.frame.origin.x,dot.frame.origin.y+screenHeight-44,dot.frame.size.width,dot.frame.size.height);
+                             oView.frame = CGRectMake( dot.frame.origin.x,dot.frame.origin.y+screenHeight-44-60*SHOWNEXTRASTAGES,dot.frame.size.width,dot.frame.size.height);
                          }
                          else{
                              Dots *heart=[hearts objectAtIndex:life-1];
@@ -1374,10 +1379,31 @@
     
  
     //ARROW1
-    TextArrow *t= [levelArrows objectAtIndex:arrowN];
+    TextArrow *t;//= [levelArrows objectAtIndex:arrowN];
+    
+    NSString * bonusString=@"";
+    float trialAccuracy=fabs(elapsed-timerGoal);
+    if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0) bonusString=@"PERFECT! BONUS HEART";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/5.0) bonusString=@"NICE!";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/5.0) bonusString=@"GREAT!";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]) bonusString=@"CLOSE ENOUGH";
+    else if(elapsed-timerGoal<0) bonusString=@"TOO FAST";
+    else if(elapsed-timerGoal>0) bonusString=@"TOO SLOW";
+    
+    t= [levelArrows objectAtIndex:arrowN];
+    [t update:@"" rightLabel:bonusString color:instructions.color animate:NO];
+    spacing-=5+t.frame.size.height;
+    d+=inc;
+    [t slideUpTo:spacing delay:d];
+    [self.view bringSubviewToFront:t];
+    arrowN++;
+    
+    
+    
     float diff=elapsed-timerGoal;
     NSString *diffString;
     diffString=[NSString stringWithFormat:@"OFF BY %@",[self getTimeDiffString:diff]];
+    t= [levelArrows objectAtIndex:arrowN];
     [t update:@"" rightLabel:diffString color:instructions.color animate:NO];
     spacing-=5+t.frame.size.height;
     d+=inc;
@@ -1390,7 +1416,6 @@
     float accuracyP=[self getAccuracyPercentage];
     NSString* percentAccuracyString = [NSString stringWithFormat:@"ACCURACY %02i%%", (int)accuracyP];
     t= [levelArrows objectAtIndex:arrowN];
-
     [t update:@"" rightLabel:percentAccuracyString color:instructions.color animate:NO];
     spacing-=5+t.frame.size.height;
     d+=inc;
@@ -1404,7 +1429,8 @@
     if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED",[self getLevel:currentLevel-1]];
     else if(life>1) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life];
     else if(life>0) stageProgressString=@"ONE TRY LEFT";
-    if(life>0){
+    else stageProgressString=@"GAME OVER";
+    //if(life>0){
         t= [levelArrows objectAtIndex:arrowN];
         [t update:@"" rightLabel:stageProgressString color:instructions.color animate:NO];
         spacing-=5+t.frame.size.height;
@@ -1412,7 +1438,7 @@
         [t slideUpTo:spacing delay:d];
         [self.view bringSubviewToFront:t];
         arrowN++;
-    }
+   //}
     
     //ARROW3
     if([self isAccurate] && currentLevel%TRIALSINSTAGE==0) {
@@ -1428,22 +1454,7 @@
     }
     
     //ARROW4
-    NSString * bonusString=@"";
-    float trialAccuracy=fabs(elapsed-timerGoal);
-    if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0) bonusString=@"PERFECT! BONUS HEART";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/5.0) bonusString=@"NICE!";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/5.0) bonusString=@"GREAT!";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]) bonusString=@"CLOSE ENOUGH";
-    else if(elapsed-timerGoal<0) bonusString=@"TOO FAST";
-    else if(elapsed-timerGoal>0) bonusString=@"TOO SLOW";
 
-    t= [levelArrows objectAtIndex:arrowN];
-    [t update:@"" rightLabel:bonusString color:instructions.color animate:NO];
-    spacing-=5+t.frame.size.height;
-    d+=inc;
-    [t slideUpTo:spacing delay:d];
-    [self.view bringSubviewToFront:t];
-    arrowN++;
     
     
     
@@ -1492,6 +1503,7 @@
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
                          progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
+                         progressView.dotsContainer.frame=progressView.frame;
                      }
                      completion:^(BOOL finished){
                          [self countdown];
@@ -1861,6 +1873,8 @@
                      animations:^{
                          //slide progressview down
                          progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight*2.0);
+                         progressView.dotsContainer.frame=CGRectMake(0,-60*SHOWNEXTRASTAGES, screenWidth, screenHeight*2.0);
+
                      }
                      completion:^(BOOL finished){
                          [self.view sendSubviewToBack:progressView];
@@ -2139,6 +2153,7 @@
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
                          progressView.frame=CGRectMake(0, screenHeight-44, progressView.frame.size.width, progressView.frame.size.height);
+                         progressView.dotsContainer.frame=CGRectMake(0,-60*SHOWNEXTRASTAGES, screenWidth, screenHeight*2.0);
                      }
                      completion:^(BOOL finished){
                          [self.view sendSubviewToBack:progressView];
