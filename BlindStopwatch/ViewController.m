@@ -1248,7 +1248,7 @@
 
     
      //change background color
-     [UIView animateWithDuration:0.6
+     [UIView animateWithDuration:0.4
                            delay:0.0
                          options:UIViewAnimationOptionCurveLinear
                       animations:^{
@@ -1276,7 +1276,7 @@
                           [self updateTimeDisplay:0];
                           [self setTimerGoalMarginDisplay];
 
-                         [UIView animateWithDuration:0.6
+                         [UIView animateWithDuration:0.2
                                                delay:0.0
                                              options:UIViewAnimationOptionCurveLinear
                                           animations:^{
@@ -1844,7 +1844,7 @@
     //[instructions update:@"" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:YES];
     [instructions slideOut:0];
     
-    [UIView animateWithDuration:0.4
+    [UIView animateWithDuration:0.2
                           delay:0.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
@@ -1881,8 +1881,8 @@
                          [self.view sendSubviewToBack:blob];
                          [self updateLife];
                           //fade in new counters
-                          [UIView animateWithDuration:0.4
-                                                delay:0.4
+                          [UIView animateWithDuration:0.2
+                                                delay:0.0
                                               options:UIViewAnimationOptionCurveLinear
                                            animations:^{
                                                counterLabel.alpha=1.0;
@@ -1928,22 +1928,6 @@
 # pragma mark Helpers
 
 -(UIColor*) getBackgroundColor:(int)level {
-    
-//    NSArray * backgroundColors = [[NSArray alloc] initWithObjects:
-//                                  [UIColor colorWithRed:47/255.0 green:206/255.0 blue:3/255.0 alpha:1],
-//                                  [UIColor colorWithRed:254/255.0 green:3/255.0 blue:215/255.0 alpha:1],
-//                                  [UIColor colorWithRed:255/255.0 green:61/255.0 blue:132/255.0 alpha:1],
-//                                  [UIColor colorWithRed:250/255.0 green:128/255.0 blue:167/255.0 alpha:1],
-//                                  [UIColor colorWithRed:255/255.0 green:191/255.0 blue:53/255.0 alpha:1],
-//                                  [UIColor colorWithRed:0/255.0 green:168/255.0 blue:198/255.0 alpha:1],
-//                                  [UIColor colorWithRed:174/255.0 green:226/255.0 blue:57/255.0 alpha:1],
-//                                  [UIColor colorWithRed:255/255.0 green:78/255.0 blue:80/255.0 alpha:1],
-//                                  [UIColor colorWithRed:255/255.0 green:0/255.0 blue:81/255.0 alpha:1],
-//                                  [UIColor colorWithRed:182/255.0 green:255/255.0 blue:0/255.0 alpha:1],
-//                                  [UIColor colorWithRed:34/255.0 green:141/255.0 blue:255/255.0 alpha:1],
-//                                  [UIColor colorWithRed:255/255.0 green:0/255.0 blue:146/255.0 alpha:1],
-//                                  [UIColor colorWithRed:186/255.0 green:1/255.0 blue:255/255.0 alpha:1],
-//                                  nil];
 
     NSArray * backgroundColors = [[NSArray alloc] initWithObjects:
                                   //[UIColor colorWithRed:206/255.0 green:0/255.0 blue:78/255.0 alpha:1],
