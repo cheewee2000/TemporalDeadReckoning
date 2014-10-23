@@ -25,9 +25,11 @@
 -(void) resetPosition;
 - (void) animateAlongPath:(CGRect) frame rotate:(float) radians speed:(float)speed;
 -(void) setStars:(int)s;
+-(void) setColor:(UIColor *)color;
 
 @property UILabel *label;
 @property UILabel *level;
 @property float *labelValue;
+@property UIColor* dotColor;
 
 @end

@@ -99,6 +99,8 @@
     UIButton *restartButton;
     UIButton *playButton;
 
+    UIButton *trophyButton;
+    
     int lastStage;
     
     BOOL practicing;

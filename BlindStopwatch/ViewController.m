@@ -262,8 +262,9 @@
     progressView.backgroundColor=[self getForegroundColor:currentLevel];
 
     
-    UIButton *trophyButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    trophyButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage * trophy=[UIImage imageNamed:@"trophy"];
+    trophy = [trophy imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [trophyButton setBackgroundImage:trophy forState:UIControlStateNormal];
     [trophyButton adjustsImageWhenHighlighted];
     [trophyButton setFrame:CGRectMake(0,0,44,44)];
@@ -317,9 +318,6 @@
     else life = (int)[defaults integerForKey:@"life"];
     hearts=[[NSMutableArray alloc]init];
 
-    [self updateLife];
-    [self loadData];
-    [self performSelector:@selector(setupDots) withObject:self afterDelay:.5];
 
     //big dot
     
@@ -543,7 +541,7 @@
 
 -(void)addHeart:(int)i{
     UIImageView * heart=[[UIImageView alloc] init];
-    [heart setImage:[UIImage imageNamed: @"heart"]];
+    [heart setImage:[[UIImage imageNamed: @"heart"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
     heart.alpha=0.0;
     heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight+100,15,15);
     [hearts addObject:heart];
@@ -682,7 +680,7 @@
 
                                                     if(i%TRIALSINSTAGE==0){
                                                         //add stage label
-                                                        TextArrow *sLabel = [[TextArrow alloc] initWithFrame:CGRectMake(0, y-100, 70, 16)];
+                                                        TextArrow *sLabel = [[TextArrow alloc] initWithFrame:CGRectMake(0, -20, 70, 16)];
                                                         sLabel.instructionText.textColor = [UIColor blackColor];
                                                         sLabel.drawArrowRight=true;
                                                         sLabel.alpha=1;
@@ -694,8 +692,8 @@
                                                         [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:i] animate:NO];
                                                         sLabel.instructionText.textColor=[self getForegroundColor:i];
 
-                                                        [UIView animateWithDuration:.8
-                                                                              delay:0.4
+                                                        [UIView animateWithDuration:.4
+                                                                              delay:0.4+stage*.1
                                                              usingSpringWithDamping:.5
                                                               initialSpringVelocity:1.0
                                                                             options:UIViewAnimationOptionCurveLinear
@@ -711,6 +709,8 @@
                                                     Dots *dot = [[Dots alloc] initWithFrame:CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia)];
                                                     dot.alpha = 1;
                                                     dot.backgroundColor = [UIColor clearColor];
+                                                    [dot setColor:self.view.backgroundColor];
+                                                    
                                                     [dots addObject:dot];
                                                     [progressView.dotsContainer addSubview:dots[i]];
                                                     
@@ -719,7 +719,7 @@
                                                     [self updateDot:i];
                                                 //animate dot appearance
                                                 [UIView animateWithDuration:.2
-                                                                      delay:.4+(i-currentLevel)*.15
+                                                                      delay:.8+(i-currentLevel)*.05
                                                      usingSpringWithDamping:.5
                                                       initialSpringVelocity:1.0
                                                                     options:UIViewAnimationOptionCurveLinear
@@ -742,7 +742,8 @@
 
 -(void) updateDot:(int)i{
     Dots *dot=[dots objectAtIndex:i];
-    
+    dot.color=self.view.backgroundColor;
+
     //goal String
     NSTimeInterval level=[self getLevel:i];
     NSDate* nDate = [NSDate dateWithTimeIntervalSince1970: level];
@@ -806,14 +807,26 @@
         
         if(i<life) {
             [self.view bringSubviewToFront:heart];
+            
+            //update color
+            [UIView animateWithDuration:.4
+                                  delay:0.0
+                                options:UIViewAnimationOptionCurveLinear
+                             animations:^{
+                                 heart.tintColor=counterGoalLabel.textColor;
+                             }
+                             completion:^(BOOL finished){
+                             }];
+
+        
             if(heart.frame.origin.y>screenHeight){
 
                 heart.alpha=1.0;
                 //heart.transform = CGAffineTransformScale(CGAffineTransformIdentity, .01, .01);
 
-                    //spring in  heart
+                    //heart in
                 [UIView animateWithDuration:.4
-                                      delay:0.4 * i
+                                      delay:0.05 * i
                      usingSpringWithDamping:0.5
                       initialSpringVelocity:1.0
                                     options:UIViewAnimationOptionCurveLinear
@@ -1269,7 +1282,9 @@
                           counterGoalLabel.textColor=[self getForegroundColor:currentLevel];
                           goalPrecision.textColor=[self getForegroundColor:currentLevel];
                           
-                          
+                          restartButton.tintColor=[self getBackgroundColor:currentLevel];
+                          trophyButton.tintColor=[self getBackgroundColor:currentLevel];
+                          highScoreLabel.textColor=[self getBackgroundColor:currentLevel];
                         }
                       completion:^(BOOL finished){
 
@@ -1373,11 +1388,15 @@
 
     //arrow delay
     float d=0;
-    float inc=.1;
+    float inc=.05;
     int arrowN=0;
     int margin=screenHeight-44-35;
     int spacing=-1;
     
+    for (int i=0; i<NUMLEVELARROWS; i++){
+        TextArrow * t=[levelArrows objectAtIndex:i];
+        t.rightLabel.textColor=self.view.backgroundColor;
+    }
  
     //ARROW1
     TextArrow *t;//= [levelArrows objectAtIndex:arrowN];
@@ -1477,7 +1496,7 @@
 
     
     
-    [instructions update:@"" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:NO];
+    [instructions update:@"" rightLabel:@"" color:counterGoalLabel.textColor animate:NO];
     d+=inc;
     [instructions slideIn:d];
     
@@ -2130,6 +2149,9 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [self loadData];
+    [self performSelector:@selector(setupDots) withObject:self afterDelay:.5];
+
     
     [UIView animateWithDuration:0.4
                           delay:0.4

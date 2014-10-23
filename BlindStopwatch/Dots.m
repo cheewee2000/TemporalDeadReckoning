@@ -15,8 +15,11 @@
     if (self) {
         startFrame=self.frame;
 
+        
         self.clipsToBounds=NO;
 
+        self.dotColor=[UIColor blackColor];
+        
         self.label=[[UILabel alloc] initWithFrame:CGRectMake(0, 40, 100, 20)];
         self.label.text=@"";
         self.label.textAlignment = NSTextAlignmentLeft;
@@ -37,7 +40,7 @@
         int starSize=30;
         stars=[NSArray array];
         UIImageView* starLeft=[[UIImageView alloc] init];
-        [starLeft setImage:[UIImage imageNamed: @"starLeft"]];
+        [starLeft setImage:[[UIImage imageNamed: @"starLeft"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
         starLeft.frame=CGRectMake(0,0,starSize,starSize);
         starLeft.center=CGPointMake(self.frame.size.width/2.0, self.frame.size.height/2.0);
         [self addSubview:starLeft];
@@ -45,7 +48,7 @@
         stars = [stars arrayByAddingObject:starLeft];
         
         UIImageView* starMiddle=[[UIImageView alloc] init];
-        [starMiddle setImage:[UIImage imageNamed: @"starMiddle"]];
+        [starMiddle setImage:[[UIImage imageNamed: @"starMiddle"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
         starMiddle.frame=CGRectMake(0,0,starSize,starSize);
         starMiddle.center=CGPointMake(self.frame.size.width/2.0, self.frame.size.height/2.0);
         [self addSubview:starMiddle];
@@ -53,7 +56,7 @@
         stars = [stars arrayByAddingObject:starMiddle];
         
         UIImageView* starRight=[[UIImageView alloc] init];
-        [starRight setImage:[UIImage imageNamed: @"starRight"]];
+        [starRight setImage:[[UIImage imageNamed: @"starRight"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
         starRight.frame=CGRectMake(0,0,starSize,starSize);
         starRight.center=CGPointMake(self.frame.size.width/2.0, self.frame.size.height/2.0);
         [self addSubview:starRight];
@@ -104,8 +107,15 @@
     CGFloat lineWidth = 1;
     CGRect borderRect = CGRectInset(rect, lineWidth , lineWidth );
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetRGBStrokeColor(context, 0,0,0, 1.0);
-     CGContextSetRGBFillColor(context, 0, 0, 0, 1.0);
+    
+    CGFloat r,g,b,a;
+    [self.dotColor getRed:&r green:&g blue:&b alpha:&a];
+    
+    CGContextSetRGBStrokeColor(context, r, g, b, a);
+    CGContextSetRGBFillColor(context, r, g, b, a);
+
+//    CGContextSetRGBStrokeColor(context, 0,0,0, 1.0);
+//     CGContextSetRGBFillColor(context, 0, 0, 0, 1.0);
     CGContextSetLineWidth(context, lineWidth);
     if(fill) CGContextFillEllipseInRect (context, borderRect);
     CGContextStrokeEllipseInRect(context, borderRect);
@@ -122,7 +132,16 @@
     fill=b;
     [self setNeedsDisplay];
 }
-
+-(void) setColor:(UIColor *)color
+{
+    self.dotColor=color;
+    for(int i=0; i<[stars count]; i++){
+        UIImageView*s=[stars objectAtIndex:i];
+        s.tintColor=color;
+    }
+    self.label.textColor=color;
+    self.level.textColor=color;
+}
 -(void) setText:(NSString *) s level:(NSString *)l
 {
     self.label.text=s;
