@@ -319,7 +319,7 @@
 
     [self updateLife];
     [self loadData];
-    [self performSelector:@selector(setupDots) withObject:self afterDelay:1.0];
+    [self performSelector:@selector(setupDots) withObject:self afterDelay:.5];
 
     //big dot
     
@@ -627,7 +627,7 @@
                                              completion:^(BOOL finished){
                                                  
                                                  
-                                                 for (int i = 0; i < [self getCurrentStage]*TRIALSINSTAGE*(2+SHOWNEXTRASTAGES) ; i++){
+                                                 for (int i = 0; i < TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE+TRIALSINSTAGE*SHOWNEXTRASTAGES; i++){
                                                 float dotDia=12;
                                                 float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
                                                 float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*([self getCurrentStage]+SHOWNEXTRASTAGES);
@@ -1375,7 +1375,8 @@
     float d=0;
     float inc=.1;
     int arrowN=0;
-    int spacing=screenHeight-44-35;
+    int margin=screenHeight-44-35;
+    int spacing=-1;
     
  
     //ARROW1
@@ -1392,9 +1393,9 @@
     
     t= [levelArrows objectAtIndex:arrowN];
     [t update:@"" rightLabel:bonusString color:instructions.color animate:NO];
-    spacing-=5+t.frame.size.height;
+    margin-=spacing+t.frame.size.height;
     d+=inc;
-    [t slideUpTo:spacing delay:d];
+    [t slideUpTo:margin delay:d];
     [self.view bringSubviewToFront:t];
     arrowN++;
     
@@ -1405,9 +1406,9 @@
     diffString=[NSString stringWithFormat:@"OFF BY %@",[self getTimeDiffString:diff]];
     t= [levelArrows objectAtIndex:arrowN];
     [t update:@"" rightLabel:diffString color:instructions.color animate:NO];
-    spacing-=5+t.frame.size.height;
+    margin-=spacing+t.frame.size.height;
     d+=inc;
-    [t slideUpTo:spacing delay:d];
+    [t slideUpTo:margin delay:d];
     [self.view bringSubviewToFront:t];
     arrowN++;
     
@@ -1417,9 +1418,9 @@
     NSString* percentAccuracyString = [NSString stringWithFormat:@"ACCURACY %02i%%", (int)accuracyP];
     t= [levelArrows objectAtIndex:arrowN];
     [t update:@"" rightLabel:percentAccuracyString color:instructions.color animate:NO];
-    spacing-=5+t.frame.size.height;
+    margin-=spacing+t.frame.size.height;
     d+=inc;
-    [t slideUpTo:spacing delay:d];
+    [t slideUpTo:margin delay:d];
     [self.view bringSubviewToFront:t];
     arrowN++;
     
@@ -1433,9 +1434,9 @@
     //if(life>0){
         t= [levelArrows objectAtIndex:arrowN];
         [t update:@"" rightLabel:stageProgressString color:instructions.color animate:NO];
-        spacing-=5+t.frame.size.height;
+        margin-=spacing+t.frame.size.height;
         d+=inc;
-        [t slideUpTo:spacing delay:d];
+        [t slideUpTo:margin delay:d];
         [self.view bringSubviewToFront:t];
         arrowN++;
    //}
@@ -1446,9 +1447,9 @@
         stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED",[self getCurrentStage]];
         t= [levelArrows objectAtIndex:arrowN];
         [t update:@"" rightLabel:stageClearedString color:instructions.color animate:NO];
-        spacing-=5+t.frame.size.height;
+        margin-=spacing+t.frame.size.height;
         d+=inc;
-        [t slideUpTo:spacing delay:d];
+        [t slideUpTo:margin delay:d];
         [self.view bringSubviewToFront:t];
         arrowN++;
     }
@@ -1469,9 +1470,9 @@
     levelAlert.rightLabel.textColor=[UIColor blackColor];
     nextButton.tintColor=[self getBackgroundColor:currentLevel];
 
-    spacing-=5+levelAlert.frame.size.height;
+    margin-=spacing+levelAlert.frame.size.height;
     d+=inc;
-    [levelAlert slideUpTo:spacing delay:d];
+    [levelAlert slideUpTo:margin delay:d];
     [self.view bringSubviewToFront:levelAlert];
 
     
