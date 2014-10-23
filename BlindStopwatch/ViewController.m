@@ -278,7 +278,7 @@
     highScoreLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
     [progressView addSubview:highScoreLabel];
     [self updateHighscore];
-    
+
     restartButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage * restart=[UIImage imageNamed:@"restart"];
     restart = [restart imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -292,6 +292,7 @@
     
     playButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage * play=[UIImage imageNamed:@"next"];
+    play = [play imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [playButton setBackgroundImage:play forState:UIControlStateNormal];
     [playButton adjustsImageWhenHighlighted];
     [playButton setFrame:CGRectMake(0,0,44,44)];
@@ -380,14 +381,14 @@
 
     
     xView=[[UIImageView alloc] init];
-    [xView setImage:[UIImage imageNamed: @"x"]];
+    [xView setImage:[[UIImage imageNamed: @"x"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
     [self.view addSubview:xView];
     [self.view bringSubviewToFront:xView];
     
     xView.alpha=0;
 
     oView=[[UIImageView alloc] init];
-    [oView setImage:[UIImage imageNamed: @"o"]];
+    [oView setImage:[[UIImage imageNamed: @"o"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
     [self.view addSubview:oView];
     [self.view bringSubviewToFront:oView];
     oView.alpha=0;
@@ -613,6 +614,7 @@
                          float d=1.0;
                          if(progressView.frame.origin.y==0)d=0.0;//progressview is already showing. don't animate
                          
+
                             [UIView animateWithDuration:.4
                                                   delay:d
                                  usingSpringWithDamping:.8
@@ -1266,6 +1268,10 @@
                          options:UIViewAnimationOptionCurveLinear
                       animations:^{
                           
+                          trophyButton.alpha=1;
+                          highScoreLabel.alpha=1;
+                          restartButton.alpha=1;
+                          
                           counterGoalLabel.alpha=0;
                           counterLabel.alpha=0;
                           goalPrecision.alpha=0;
@@ -1513,8 +1519,11 @@
 
     progressView.subMessage.text=[NSString stringWithFormat:@"CONTINUE\nFROM STAGE %i",lastStage+1];
     progressView.subMessage.alpha=1.0;
+    progressView.subMessage.textColor=trophyButton.tintColor;
+    progressView.centerMessage.textColor=trophyButton.tintColor;
+
     playButton.alpha=1.0;
-    
+    playButton.tintColor=trophyButton.tintColor;
     
     [UIView animateWithDuration:0.4
                           delay:0.5
@@ -1583,8 +1592,8 @@
 -(void)nextButtonPressed{
     
     [self.view bringSubviewToFront:progressView];
-    for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideDown:(float)i*.1];
-    [levelAlert slideDown:(float)(NUMLEVELARROWS)*.1];
+    for(int i=0; i<NUMLEVELARROWS; i++)[[levelArrows objectAtIndex:i] slideDown:(float)i*.05];
+    [levelAlert slideDown:(float)(NUMLEVELARROWS)*.05];
     [instructions slideOut:0];
     
     if(life==0){
@@ -1832,6 +1841,9 @@
 
     xView.alpha=1.0;
     oView.alpha=1.0;
+    xView.tintColor=[self getBackgroundColor:currentLevel];
+    oView.tintColor=[self getBackgroundColor:currentLevel];
+    
     [UIView animateWithDuration:0.6
                           delay:0.0
          usingSpringWithDamping:.5
@@ -2144,6 +2156,10 @@
 {
     //set view offscreen for bounce in
     progressView.frame=CGRectMake(0, screenHeight, progressView.frame.size.width, progressView.frame.size.height);
+    trophyButton.alpha=0;
+    highScoreLabel.alpha=0;
+    restartButton.alpha=0;
+    
     [super viewWillAppear:animated];
 }
 
