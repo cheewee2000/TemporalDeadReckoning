@@ -5,6 +5,11 @@
 #define CGRectSetPos( r, x, y ) CGRectMake( x, y, r.size.width, r.size.height )
 #import "RBVolumeButtons.h"
 
+#include <assert.h>
+#include <mach/mach.h>
+#include <mach/mach_time.h>
+#include <unistd.h>
+
 #define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 #define IS_IPHONE (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 #define IS_IPHONE_5 (IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 568.0)
@@ -15,7 +20,7 @@
 
 #define TRIALSINSTAGE 5
 #define NUMHEARTS 3
-#define SHOWNEXTRASTAGES 2
+#define SHOWNEXTRASTAGES 3
 
 @interface ViewController () {
     
@@ -630,13 +635,16 @@
                                                  
                                              }
                                              completion:^(BOOL finished){
+                                                 int nDotsToShow=TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE;
+          
+                                                 if(nDotsToShow<TRIALSINSTAGE*SHOWNEXTRASTAGES)nDotsToShow=TRIALSINSTAGE*SHOWNEXTRASTAGES;
                                                  
-                                                 
-                                                 for (int i = 0; i < TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE+TRIALSINSTAGE*SHOWNEXTRASTAGES; i++){
+                                                 for (int i = 0; i < nDotsToShow; i++){
                                                 float dotDia=12;
                                                 float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
-                                                float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*([self getCurrentStage]+SHOWNEXTRASTAGES);
-                                                
+                                                //float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*([self getCurrentStage]+SHOWNEXTRASTAGES);
+                                                     float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*floor(nDotsToShow/TRIALSINSTAGE-1);
+
                                                 
                                                 //update existing dots
                                                 if(i<[dots count]){
@@ -988,7 +996,9 @@
                              }
                             else {
                                 progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
-                                progressView.dotsContainer.frame=CGRectMake(0,-60*SHOWNEXTRASTAGES, screenWidth, screenHeight*2.0);
+                                TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
+                                float y=sLabel.frame.origin.y;
+                                progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, screenHeight*2.0);
 
                                 [self.view sendSubviewToBack:progressView];
                                 [self.view sendSubviewToBack:blob];
@@ -1052,7 +1062,7 @@
         trialSequence=1;
 
         startTime=[NSDate timeIntervalSinceReferenceDate];
-        [self updateTime];
+        //[self updateTime];
         [instructions update:@"STOP" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:YES];
         
             [self setTimerGoalMarginDisplay];
@@ -1064,8 +1074,9 @@
                              animations:^{
                                  //labelContainerBlur.alpha=1.0;
                                  progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
-                                 progressView.dotsContainer.frame=CGRectMake(0,-60*SHOWNEXTRASTAGES, screenWidth, screenHeight*2.0);
-
+                                 TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
+                                 float y=sLabel.frame.origin.y;
+                                 progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, screenHeight*2.0);
                                  //blobBlur.alpha=0;
                              }
                              completion:^(BOOL finished){
@@ -1077,6 +1088,10 @@
     //STOP
     else if(trialSequence==1){
             trialSequence=2;
+            NSTimeInterval currentTime=[NSDate timeIntervalSinceReferenceDate];
+            elapsed = currentTime-startTime;
+            [self updateTimeDisplay:elapsed];
+            [self animateLevelDotScore];
             counterLabel.alpha=1.0;
     }
     //NEXT
@@ -1353,7 +1368,7 @@
                      animations:^{
                          if([self isAccurate]){
                              Dots *dot=[dots objectAtIndex:currentLevel];
-                             oView.frame = CGRectMake( dot.frame.origin.x,dot.frame.origin.y+screenHeight-44-60*SHOWNEXTRASTAGES,dot.frame.size.width,dot.frame.size.height);
+                             oView.frame = CGRectMake( dot.frame.origin.x,dot.frame.origin.y+screenHeight-44-60,dot.frame.size.width,dot.frame.size.height);
                          }
                          else{
                              Dots *heart=[hearts objectAtIndex:life-1];
@@ -1658,18 +1673,18 @@
     if(trialSequence==1){
 
         //if(elapsed<1){
-          //  [self updateTimeDisplay:currentTime-startTime];
+            [self updateTimeDisplay:currentTime-startTime];
             [self performSelector:@selector(updateTime) withObject:self afterDelay:0.0001];
 //        }else{
 //            [counterLabel setText:[NSString stringWithFormat:@"%02u:%02u.%03u",arc4random()%99, arc4random()%60, arc4random()%999]];
 //            [self performSelector:@selector(updateTime) withObject:self afterDelay:arc4random()%10*0.001];
 //        }
     }
-    else{
-        [self updateTimeDisplay:elapsed];
-        [self animateLevelDotScore];
- 
-    }
+//    else{
+//        [self updateTimeDisplay:elapsed];
+//        [self animateLevelDotScore];
+// 
+//    }
 }
 
 
@@ -1908,8 +1923,9 @@
                      animations:^{
                          //slide progressview down
                          progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight*2.0);
-                         progressView.dotsContainer.frame=CGRectMake(0,-60*SHOWNEXTRASTAGES, screenWidth, screenHeight*2.0);
-
+                         TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
+                         float y=sLabel.frame.origin.y;
+                         progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, screenHeight*2.0);
                      }
                      completion:^(BOOL finished){
                          [self.view sendSubviewToBack:progressView];
@@ -2179,7 +2195,6 @@
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
                          progressView.frame=CGRectMake(0, screenHeight-44, progressView.frame.size.width, progressView.frame.size.height);
-                         progressView.dotsContainer.frame=CGRectMake(0,-60*SHOWNEXTRASTAGES, screenWidth, screenHeight*2.0);
                      }
                      completion:^(BOOL finished){
                          [self.view sendSubviewToBack:progressView];
@@ -2240,4 +2255,7 @@
         }
     };
 }
+
+
+
 @end
