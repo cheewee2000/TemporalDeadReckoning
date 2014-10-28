@@ -881,8 +881,9 @@
 }
 
 -(void)resetMainDot{
-    int d=190;
-    mainDot.frame=CGRectMake(screenWidth/2.0-d/2.0,screenHeight-d-88,d,d);
+    int d=screenWidth*.65;
+    mainDot.frame=CGRectMake(0,0,d,d);
+    mainDot.center=CGPointMake(screenWidth/2.0, (screenHeight-44)*.75);
     blob.frame=CGRectMake(0,screenHeight*.5,screenWidth,screenHeight*.5);
     blob.frame=self.view.frame;
 }
@@ -1832,7 +1833,7 @@
         
     }
     else{
-        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+        //AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
         [self displayXorO:NO];
     }
 }
@@ -1851,7 +1852,7 @@
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
                          float w=210;
-                         float y=screenHeight-44-w-30;
+                         float y=(screenHeight-44)*.75-w/2.0;
                          float x=screenWidth/2.0-w/2.0;
                          if([self isAccurate])oView.frame=CGRectMake( x, y, w, w);
                          else xView.frame=CGRectMake(x, y, w, w);
