@@ -627,7 +627,8 @@
                                                 options:UIViewAnimationOptionCurveLinear
                                              animations:^{
                                                  progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
-                                                 progressView.dotsContainer.frame=progressView.frame;
+                                                 progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
+                                                 
                                              }
                                              completion:^(BOOL finished){
                                                  
@@ -982,7 +983,7 @@
                              if(location.y<previousLocation.y-2 || ( progressView.frame.origin.y<screenHeight/2.0 && location.y<previousLocation.y) )
                              {
                                 progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
-                                 progressView.dotsContainer.frame=progressView.frame;
+                                 progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
 
                                  [self.view bringSubviewToFront:progressView];
                              }
@@ -1538,7 +1539,7 @@
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
                          progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
-                         progressView.dotsContainer.frame=progressView.frame;
+                         progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
                      }
                      completion:^(BOOL finished){
                          [self countdown];
