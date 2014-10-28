@@ -18,7 +18,7 @@
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 3
+#define TRIALSINSTAGE 5
 #define NUMHEARTS 3
 #define SHOWNEXTRASTAGES 3
 
@@ -152,8 +152,11 @@
     if([defaults objectForKey:@"currentLevel"] == nil) currentLevel=0;
     else currentLevel = (int)[defaults integerForKey:@"currentLevel"];
     
-    if([defaults objectForKey:@"bestScore"] == nil) bestScore=0;
-    else bestScore = (int)[defaults integerForKey:@"bestScore"];
+    if([defaults objectForKey:@"best"] == nil) best=0;
+    else best = (int)[defaults integerForKey:@"best"];
+    
+    if([defaults objectForKey:@"highScore"] == nil) highScore=0;
+    else highScore = (int)[defaults integerForKey:@"highScore"];
     
     if([defaults objectForKey:@"practicing"] == nil) practicing=false;
     else practicing = (int)[defaults integerForKey:@"practicing"];
@@ -281,9 +284,29 @@
     trophyButton.center=CGPointMake(screenWidth/2.0, screenHeight-60);
     [trophyButton addTarget:self action:@selector(showLeaderboardAndAchievements:) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:trophyButton];
+    
+    
+    medalButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage * medal=[UIImage imageNamed:@"medal"];
+    medal = [medal imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [medalButton setBackgroundImage:medal forState:UIControlStateNormal];
+    [medalButton adjustsImageWhenHighlighted];
+    [medalButton setFrame:CGRectMake(0,0,44,44)];
+    medalButton.center=CGPointMake(screenWidth*1.0/5.0, screenHeight-60);
+    [medalButton addTarget:self action:@selector(showLeaderboardAndAchievements:) forControlEvents:UIControlEventTouchUpInside];
+    [progressView addSubview:medalButton];
+    
+    
 
+    bestLabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0,screenWidth,26)];
+    bestLabel.center=CGPointMake(screenWidth*.5, trophyButton.frame.origin.y+trophyButton.frame.size.height+15);
+    bestLabel.textAlignment=NSTextAlignmentCenter;
+    bestLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
+    [progressView addSubview:bestLabel];
+    
+    
     highScoreLabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0,screenWidth,26)];
-    highScoreLabel.center=CGPointMake(screenWidth*.5, trophyButton.frame.origin.y+trophyButton.frame.size.height+15);
+    highScoreLabel.center=CGPointMake(screenWidth/5.0, medalButton.frame.origin.y+medalButton.frame.size.height+15);
     highScoreLabel.textAlignment=NSTextAlignmentCenter;
     highScoreLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
     [progressView addSubview:highScoreLabel];
@@ -560,12 +583,8 @@
     [labelContainer sendSubviewToBack:hearts[i]];
 }
 -(void)updateHighscore{
-    if(bestScore>0){
-//        highScoreDot.alpha=1;
-//        [highScoreDot setFill:YES];
-        highScoreLabel.text=[NSString stringWithFormat:@"BEST %.01f",bestScore];
-        
-    }
+    if(best>0) bestLabel.text=[NSString stringWithFormat:@"BEST %.01f",best];
+    if(highScore>0)  highScoreLabel.text=[NSString stringWithFormat:@"%.01f POINTS",highScore];
 }
 
 -(int)getCurrentStage{
@@ -1192,7 +1211,7 @@
 -(void)reportScore{
     if(_leaderboardIdentifier){
         GKScore *score = [[GKScore alloc] initWithLeaderboardIdentifier:_leaderboardIdentifier];
-        score.value = bestScore;
+        score.value = best;
         
         [GKScore reportScores:@[score] withCompletionHandler:^(NSError *error) {
             if (error != nil) {
@@ -1270,13 +1289,24 @@
      [defaults setInteger:currentLevel forKey:@"currentLevel"];
     
     if(level>0 && practicing==false){
+        
+        
         float lastSuccessfulGoal=fabs([[[self.ArrayOfValues objectAtIndex:level-1] objectForKey:@"goal"] floatValue]);
-
-        if(lastSuccessfulGoal>=bestScore){
-            bestScore=lastSuccessfulGoal;
-            [defaults setInteger:bestScore forKey:@"bestScore"];
-            [self updateHighscore];
+        
+        if(lastSuccessfulGoal>=best){
+            best=lastSuccessfulGoal;
+            [defaults setInteger:best forKey:@"best"];
         }
+        
+        
+        float currentHS=(int)[defaults integerForKey:@"highScore"];
+        if(highScore>currentHS){
+            currentHS=highScore;
+            [defaults setInteger:highScore forKey:@"highScore"];
+        }
+
+        [self updateHighscore];
+
     }
      [defaults synchronize];
     
@@ -1291,7 +1321,10 @@
                       animations:^{
                           
                           trophyButton.alpha=1;
+                          medalButton.alpha=1;
                           highScoreLabel.alpha=1;
+                          bestLabel.alpha=1;
+
                           restartButton.alpha=1;
                           
                           counterGoalLabel.alpha=0;
@@ -1312,7 +1345,10 @@
                           
                           restartButton.tintColor=[self getBackgroundColor:currentLevel];
                           trophyButton.tintColor=[self getBackgroundColor:currentLevel];
+                          medalButton.tintColor=[self getBackgroundColor:currentLevel];
                           highScoreLabel.textColor=[self getBackgroundColor:currentLevel];
+                          bestLabel.textColor=[self getBackgroundColor:currentLevel];
+
                         }
                       completion:^(BOOL finished){
 
@@ -1384,6 +1420,7 @@
                          
                          if([self isAccurate]){
                              if(life<NUMHEARTS) life=NUMHEARTS;
+                             highScore+=elapsed*timerGoal;
 
                             //add heart for triplestar level
                              float trialAccuracy=fabs(elapsed-timerGoal);
@@ -1476,7 +1513,8 @@
     
     
     NSString * stageProgressString;
-    if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED",[self getLevel:currentLevel-1]];
+    //if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED %0.1f POINTS",[self getLevel:currentLevel-1], elapsed*timerGoal];
+    if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"+%0.1f POINTS", elapsed*timerGoal];
     else if(life>1) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life];
     else if(life>0) stageProgressString=@"ONE TRY LEFT";
     else stageProgressString=@"GAME OVER";
@@ -1506,15 +1544,10 @@
     //ARROW4
 
     
-    
-    
-    //[levelAlert update:@"" rightLabel:@"" color:[self inverseColor:self.view.backgroundColor] animate:NO];
-    
-//    if([self isAccurate])[levelAlert update:@"" rightLabel:@"NEXT LEVEL" color:instructions.color animate:NO];
-//    else if(life==0)[levelAlert update:@"" rightLabel:@"GAME OVER" color:instructions.color animate:NO];
-//    else [levelAlert update:@"" rightLabel:@"TRY AGAIN"   color:instructions.color animate:NO];
+    //[levelAlert update:[NSString stringWithFormat:@"%.1f COOKIES",highScore] rightLabel:@""   color:instructions.color animate:NO];
     [levelAlert update:@"" rightLabel:@""   color:instructions.color animate:NO];
 
+    //next buton
     levelAlert.rightLabel.frame=CGRectMake(levelAlert.rightLabel.frame.origin.x, levelAlert.rightLabel.frame.origin.y, levelAlert.frame.size.width-nextButton.frame.size.width*2.2, levelAlert.rightLabel.frame.size.height);
     levelAlert.rightLabel.textColor=[UIColor blackColor];
     nextButton.tintColor=[self getBackgroundColor:currentLevel];
@@ -1525,7 +1558,8 @@
     [self.view bringSubviewToFront:levelAlert];
 
     
-    
+
+    //blank instruction
     [instructions update:@"" rightLabel:@"" color:counterGoalLabel.textColor animate:NO];
     d+=inc;
     [instructions slideIn:d];
@@ -1533,7 +1567,9 @@
     
 }
 
-
+-(void)getHighScore{
+    
+}
 
 -(void)showGameOverSequence{
     
@@ -2179,7 +2215,10 @@
     //set view offscreen for bounce in
     progressView.frame=CGRectMake(0, screenHeight, progressView.frame.size.width, progressView.frame.size.height);
     trophyButton.alpha=0;
+    medalButton.alpha=0;
     highScoreLabel.alpha=0;
+    bestLabel.alpha=0;
+
     restartButton.alpha=0;
     
     [super viewWillAppear:animated];

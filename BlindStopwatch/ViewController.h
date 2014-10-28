@@ -65,7 +65,8 @@
     NSInteger nPointsVisible;
 
     
-    float bestScore;
+    float best;
+    float highScore;
     int currentLevel;
     
 
@@ -77,6 +78,7 @@
     NSArray *satellites;
     
     Dots * highScoreDot;
+    UILabel *bestLabel;
     UILabel *highScoreLabel;
 
     //UIView * blob;
@@ -100,7 +102,8 @@
     UIButton *playButton;
 
     UIButton *trophyButton;
-    
+    UIButton *medalButton;
+
     int lastStage;
     
     BOOL practicing;
