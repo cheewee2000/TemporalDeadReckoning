@@ -1368,7 +1368,9 @@
                      animations:^{
                          if([self isAccurate]){
                              Dots *dot=[dots objectAtIndex:currentLevel];
-                             oView.frame = CGRectMake( dot.frame.origin.x,dot.frame.origin.y+screenHeight-44-60,dot.frame.size.width,dot.frame.size.height);
+                             CGPoint xy=[dot.superview convertPoint:dot.frame.origin toView:nil];
+
+                             oView.frame = CGRectMake( xy.x,xy.y,dot.frame.size.width,dot.frame.size.height);
                          }
                          else{
                              Dots *heart=[hearts objectAtIndex:life-1];
@@ -1968,7 +1970,7 @@
     if(trialSequence==0)
     {
         [instructions update:@"START" rightLabel:@"PRESS VOLUME BUTTON" color:[self getForegroundColor:currentLevel] animate:NO];
-        instructions.rightLabel.font=[UIFont fontWithName:@"DIN Condensed" size:screenHeight*.025];
+        instructions.rightLabel.font=[UIFont fontWithName:@"DIN Condensed" size:screenHeight*.03];
         [instructions bounce];
         [self performSelector:@selector(instructionBounce) withObject:self afterDelay:5.0];
     }

@@ -7,7 +7,7 @@
 //
 
 #import "TextArrow.h"
-#define SLIDESPEED .12
+#define SLIDESPEED .10
 @implementation TextArrow :UILabel
 
 
