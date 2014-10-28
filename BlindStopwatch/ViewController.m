@@ -601,7 +601,6 @@
                          if(practicing) {
                           self.view.backgroundColor=[UIColor colorWithWhite:.7 alpha:1];
                              restartButton.tintColor=[self getBackgroundColor:currentLevel];
-                             
                          }
                          else{
                              self.view.backgroundColor=[self getBackgroundColor:currentLevel];
@@ -1610,12 +1609,9 @@
     }
     
     //check for stage up to add dots
-    else if ( (currentLevel%TRIALSINSTAGE==0 && [self isAccurate])){
-        [self performSelector:@selector(setupDots) withObject:self afterDelay:1];
-    }
-    else{
-        [self performSelector:@selector(loadLevel) withObject:self afterDelay:1];
-    }
+    else if ( (currentLevel%TRIALSINSTAGE==0 && [self isAccurate])) [self performSelector:@selector(setupDots) withObject:self afterDelay:.1];
+    else [self performSelector:@selector(loadLevel) withObject:self afterDelay:.1];
+    
 
     
 }
