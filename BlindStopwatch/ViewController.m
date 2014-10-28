@@ -146,6 +146,17 @@
     nextButton.userInteractionEnabled=YES;
     [levelAlert addSubview:nextButton];
     
+    shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage * share=[UIImage imageNamed:@"share"];
+    share = [share imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [shareButton setBackgroundImage:share forState:UIControlStateNormal];
+    [shareButton adjustsImageWhenHighlighted];
+    [shareButton setFrame:CGRectMake(0,0,levelAlert.frame.size.height*.85,levelAlert.frame.size.height*.85)];
+    shareButton.center=CGPointMake(shareButton.frame.size.width*.5+10,levelAlert.frame.size.height/2.0);
+    [shareButton addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
+    shareButton.userInteractionEnabled=YES;
+    [levelAlert addSubview:shareButton];
+    
 
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -936,6 +947,7 @@
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     
+    if([progressView.subMessage.text isEqual:@"GAME OVER"])return;
     UITouch *aTouch = [touches anyObject];
     CGPoint location = [aTouch locationInView:self.view];
     CGPoint previousLocation = [aTouch previousLocationInView:self.view];
@@ -963,6 +975,7 @@
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    if([progressView.subMessage.text isEqual:@"GAME OVER"])return;
 
     UITouch *aTouch = [touches anyObject];
     CGPoint location = [aTouch locationInView:self.view];
@@ -1122,6 +1135,71 @@
     [self saveValues];
     
     [defaults synchronize];
+}
+
+//- (void)shareText:(NSString *)text andImage:(UIImage *)image andUrl:(NSURL *)url
+- (void)share
+{
+    NSMutableArray *sharingItems = [NSMutableArray new];
+    //NSURL * url;
+    //NSString *text=[NSString stringWithFormat:@"",];
+    //NSString *text=@"BOOM!";
+
+    UIImage *image =[self screenshot];
+    
+//    if (text) {
+//        [sharingItems addObject:text];
+//    }
+    if (image) {
+        [sharingItems addObject:image];
+    }
+//    if (url) {
+//        [sharingItems addObject:url];
+//    }
+    
+    UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:sharingItems applicationActivities:nil];
+    [self presentViewController:activityController animated:YES completion:nil];
+}
+
+- (UIImage *)screenshot
+{
+    CGSize imageSize = CGSizeZero;
+    
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    if (UIInterfaceOrientationIsPortrait(orientation)) {
+        imageSize = [UIScreen mainScreen].bounds.size;
+    } else {
+        imageSize = CGSizeMake([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+    }
+    
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    for (UIWindow *window in [[UIApplication sharedApplication] windows]) {
+        CGContextSaveGState(context);
+        CGContextTranslateCTM(context, window.center.x, window.center.y);
+        CGContextConcatCTM(context, window.transform);
+        CGContextTranslateCTM(context, -window.bounds.size.width * window.layer.anchorPoint.x, -window.bounds.size.height * window.layer.anchorPoint.y);
+        if (orientation == UIInterfaceOrientationLandscapeLeft) {
+            CGContextRotateCTM(context, M_PI_2);
+            CGContextTranslateCTM(context, 0, -imageSize.width);
+        } else if (orientation == UIInterfaceOrientationLandscapeRight) {
+            CGContextRotateCTM(context, -M_PI_2);
+            CGContextTranslateCTM(context, -imageSize.height, 0);
+        } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
+            CGContextRotateCTM(context, M_PI);
+            CGContextTranslateCTM(context, -imageSize.width, -imageSize.height);
+        }
+        if ([window respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
+            [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:YES];
+        } else {
+            [window.layer renderInContext:context];
+        }
+        CGContextRestoreGState(context);
+    }
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 
 
@@ -1504,6 +1582,7 @@
     levelAlert.rightLabel.frame=CGRectMake(levelAlert.rightLabel.frame.origin.x, levelAlert.rightLabel.frame.origin.y, levelAlert.frame.size.width-nextButton.frame.size.width*2.2, levelAlert.rightLabel.frame.size.height);
     levelAlert.rightLabel.textColor=[UIColor blackColor];
     nextButton.tintColor=[self getBackgroundColor:currentLevel];
+    shareButton.tintColor=[self getBackgroundColor:currentLevel];
 
     margin-=spacing+levelAlert.frame.size.height;
     d+=inc;

@@ -37,9 +37,10 @@
     TextArrow* levelAlert;
     NSMutableArray * levelArrows;
     UIButton *nextButton;
-    
+    UIButton *shareButton;
+
     IBOutlet UILabel *nextLevelLabel;
-    
+
     UILabel *goalPrecision;
     
     UIVisualEffectView *labelContainerBlur;
