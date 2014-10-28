@@ -334,6 +334,21 @@
     [progressView addSubview:restartButton];
     
     
+   restartExpandButton = [[BFPaperButton alloc] initWithFrame:CGRectMake(0, 0, 44,44) raised:NO];
+    restartExpandButton.center=restartButton.center;
+    [restartExpandButton setTitle:@"" forState:UIControlStateNormal];
+    [restartExpandButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [restartExpandButton setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
+    [restartExpandButton addTarget:self action:@selector(restartButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    restartExpandButton.cornerRadius = restartExpandButton.frame.size.width / 2;
+    restartExpandButton.tapCircleDiameter = screenHeight*3.0;
+    restartExpandButton.rippleFromTapLocation=NO;
+    restartExpandButton.rippleBeyondBounds=YES;
+    //restartExpandButton.tapCircleColor = [UIColor colorWithRed:0.3 green:0 blue:1 alpha:0.6];  // Setting this color overrides "Smart Color".
+    [progressView addSubview:restartExpandButton];
+    
+    
+    
     playButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage * play=[UIImage imageNamed:@"next"];
     play = [play imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -448,24 +463,15 @@
     
     if(life==0)[self restart];
 }
--(void)restartPressed{
+
+-(void)restartButtonPressed{
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"RESET" message:@"Start over?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
-    [alert addButtonWithTitle:@"Yes"];
-    [alert show];
-    [alert setTag:1];
-
-}
-
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if ([alertView tag] == 1) {//reset?
-        if (buttonIndex == 1) {//yes
-            [self restart];
-        }
-    }
+    if(!restartExpandButton.growthFinished)return;
+    [self restart];
 }
 
 -(void) restart{
+    
     //set life asap so countdown timer stops
     life=0;
 
@@ -636,11 +642,14 @@
                          if(practicing) {
                           self.view.backgroundColor=[UIColor colorWithWhite:.7 alpha:1];
                              restartButton.tintColor=[self getBackgroundColor:currentLevel];
+                             restartExpandButton.tapCircleColor = [self getBackgroundColor:currentLevel];
+
                          }
                          else{
                              self.view.backgroundColor=[self getBackgroundColor:currentLevel];
                              restartButton.tintColor=[self getBackgroundColor:currentLevel];
-                         }
+                             restartExpandButton.tapCircleColor = [self getBackgroundColor:currentLevel];
+                        }
                          
                          //progressView.backgroundColor=[self getForegroundColor];
                      }
@@ -938,16 +947,21 @@
 {
     UITouch *aTouch = [touches anyObject];
     CGPoint location = [aTouch locationInView:self.view];
-    if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
-        touchDown = location;
-    }
+//    if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
+//        touchDown = location;
+//    }
 
+    if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
+        [self addGrowingCircleAtPoint:restartButton.center];
+
+    }
+    
 }
 
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     
-    if([progressView.subMessage.text isEqual:@"GAME OVER"])return;
+    if([progressView.subMessage.text isEqual:@"GAME OVER"] || life==0)return;
     UITouch *aTouch = [touches anyObject];
     CGPoint location = [aTouch locationInView:self.view];
     CGPoint previousLocation = [aTouch previousLocationInView:self.view];
@@ -975,7 +989,7 @@
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if([progressView.subMessage.text isEqual:@"GAME OVER"])return;
+    if([progressView.subMessage.text isEqual:@"GAME OVER"] || life==0)return;
 
     UITouch *aTouch = [touches anyObject];
     CGPoint location = [aTouch locationInView:self.view];
@@ -983,6 +997,9 @@
 //
     //if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event])
     {
+        [self.view.layer removeAllAnimations];
+
+        
 
         [UIView animateWithDuration:0.4
                               delay:0.0
@@ -990,7 +1007,9 @@
               initialSpringVelocity:1.0
                             options:UIViewAnimationOptionCurveLinear
                          animations:^{
-
+                             restartHoldDot.frame=CGRectMake(0, 0, 5, 5);
+                             restartHoldDot.center=restartButton.center;
+                             
                              //if(progressView.frame.origin.y<screenHeight/2.0)
                              if(location.y<previousLocation.y-2 || ( progressView.frame.origin.y<screenHeight/2.0 && location.y<previousLocation.y) )
                              {
@@ -1014,6 +1033,70 @@
                          }];
     }
 }
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
+    if (flag && [[anim valueForKey:@"name"] isEqual:@"grow"]) {
+        // when the grow animation is complete, we fade the layer
+        CALayer* lyr = [anim valueForKey:@"layer"];
+        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+        animation.fromValue = [lyr valueForKey:@"opacity"];
+        animation.toValue = [NSNumber numberWithFloat:0.f];
+        animation.duration = .5f;
+        animation.delegate = self;
+        lyr.opacity = 0.f;
+        [animation setValue:@"fade" forKey:@"name"];
+        [animation setValue:lyr forKey:@"layer"];
+        [lyr addAnimation:animation forKey:@"opacity"];
+    } else if (flag && [[anim valueForKey:@"name"] isEqual:@"fade"]) {
+        // when the fade animation is complete, we remove the layer
+        CALayer* lyr = [anim valueForKey:@"layer"];
+        [lyr removeFromSuperlayer];
+    }
+    
+}
+
+- (void)addGrowingCircleAtPoint:(CGPoint)point {
+    // create a circle path
+    CGMutablePathRef circlePath = CGPathCreateMutable();
+    CGPathAddArc(circlePath, NULL, 0.f, 0.f, 20.f, 0.f, (float)2.f*M_PI, true);
+    
+    // create a shape layer
+    CAShapeLayer* lyr = [[CAShapeLayer alloc] init];
+    lyr.path = circlePath;
+    
+    // don't leak, please
+    CGPathRelease(circlePath);
+    lyr.delegate = self;
+    
+    // set up the attributes of the shape layer and add it to our view's layer
+    lyr.fillColor = (__bridge CGColorRef)([self getBackgroundColor:currentLevel]);
+    lyr.position = point;
+    lyr.anchorPoint = CGPointMake(.5f, .5f);
+    [self.view.layer addSublayer:lyr];
+    
+    // set up the growing animation
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform"];
+    animation.fromValue = [lyr valueForKey:@"transform"];
+    // this will actually grow the circle into an oval
+    CATransform3D t = CATransform3DMakeScale(6.f, 6.f, 1.f);
+    animation.toValue = [NSValue valueWithCATransform3D:t];
+    animation.duration = 2.f;
+    animation.delegate = self;
+    lyr.transform = t;
+    [animation setValue:@"grow" forKey:@"name"];
+    [animation setValue:lyr forKey:@"layer"];
+    [lyr addAnimation:animation forKey:@"transform"];
+
+    [CATransaction begin]; {
+        [CATransaction setCompletionBlock:^{
+            [self addGrowingCircleAtPoint:point];
+        }];
+        
+        
+    } [CATransaction commit];
+    
+}
+
 
 - (IBAction)scalePiece:(UIPinchGestureRecognizer *)gestureRecognizer
 {

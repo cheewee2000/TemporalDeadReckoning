@@ -32,6 +32,8 @@
 		44C2C9FA19C9E330005ACEB7 /* Level.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C2C9F919C9E330005ACEB7 /* Level.m */; };
 		44C2E02E19BE52D3009CFF88 /* Dots.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C2E02D19BE52D3009CFF88 /* Dots.m */; };
 		44F972CA19BE9E310094FCF4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F972C919BE9E310094FCF4 /* ViewController.m */; };
+		44FC471C1A0053D000DC7A52 /* BFPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 44FC471B1A0053D000DC7A52 /* BFPaperButton.m */; };
+		44FC47201A0054AA00DC7A52 /* UIColor+BFPaperColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 44FC471F1A0054AA00DC7A52 /* UIColor+BFPaperColors.m */; };
 		44FD6D9819C49A6D006C7099 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44FD6D9719C49A6D006C7099 /* Parse.framework */; };
 		44FD6D9A19C49A86006C7099 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44FD6D9919C49A86006C7099 /* CFNetwork.framework */; };
 		44FD6D9C19C49A8B006C7099 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44FD6D9B19C49A8B006C7099 /* CoreLocation.framework */; };
@@ -86,6 +88,10 @@
 		44F77D3A19ECCC3B005DB2C8 /* BlindStopwatch-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BlindStopwatch-Prefix.pch"; sourceTree = "<group>"; };
 		44F972C819BE9E310094FCF4 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		44F972C919BE9E310094FCF4 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		44FC471A1A0053D000DC7A52 /* BFPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFPaperButton.h; sourceTree = "<group>"; };
+		44FC471B1A0053D000DC7A52 /* BFPaperButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFPaperButton.m; sourceTree = "<group>"; };
+		44FC471E1A0054AA00DC7A52 /* UIColor+BFPaperColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+BFPaperColors.h"; sourceTree = "<group>"; };
+		44FC471F1A0054AA00DC7A52 /* UIColor+BFPaperColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+BFPaperColors.m"; sourceTree = "<group>"; };
 		44FD6D9719C49A6D006C7099 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		44FD6D9919C49A86006C7099 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		44FD6D9B19C49A8B006C7099 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -179,6 +185,25 @@
 			path = BlindStopwatch/BEM;
 			sourceTree = SOURCE_ROOT;
 		};
+		44FC471D1A0054AA00DC7A52 /* UIColor+BFPaperColors */ = {
+			isa = PBXGroup;
+			children = (
+				44FC471E1A0054AA00DC7A52 /* UIColor+BFPaperColors.h */,
+				44FC471F1A0054AA00DC7A52 /* UIColor+BFPaperColors.m */,
+			);
+			path = "UIColor+BFPaperColors";
+			sourceTree = "<group>";
+		};
+		44FC47211A00563000DC7A52 /* BFPaperButton */ = {
+			isa = PBXGroup;
+			children = (
+				44FC471A1A0053D000DC7A52 /* BFPaperButton.h */,
+				44FC471B1A0053D000DC7A52 /* BFPaperButton.m */,
+				44FC471D1A0054AA00DC7A52 /* UIColor+BFPaperColors */,
+			);
+			name = BFPaperButton;
+			sourceTree = "<group>";
+		};
 		70C2EB311475EF4F00751AE8 = {
 			isa = PBXGroup;
 			children = (
@@ -225,6 +250,7 @@
 			isa = PBXGroup;
 			children = (
 				443CA72E19C0BFDB003BACD8 /* RBVolume */,
+				44FC47211A00563000DC7A52 /* BFPaperButton */,
 				44F972C819BE9E310094FCF4 /* ViewController.h */,
 				44F972C919BE9E310094FCF4 /* ViewController.m */,
 				440E489B19E064CE00EA7D0C /* LevelProgressView.h */,
@@ -339,6 +365,8 @@
 				44F972CA19BE9E310094FCF4 /* ViewController.m in Sources */,
 				4436041B19E822CE00184D13 /* README.md in Sources */,
 				448E78BD19B936C100BF902A /* main.m in Sources */,
+				44FC471C1A0053D000DC7A52 /* BFPaperButton.m in Sources */,
+				44FC47201A0054AA00DC7A52 /* UIColor+BFPaperColors.m in Sources */,
 				44024E3919C0D7C8000AC66E /* TextArrow.m in Sources */,
 				44C2E02E19BE52D3009CFF88 /* Dots.m in Sources */,
 				448E78B519B936C100BF902A /* AppDelegate.m in Sources */,

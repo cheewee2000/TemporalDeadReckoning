@@ -15,6 +15,7 @@
 #import "Level.h"
 #import "LevelProgressView.h"
 #import <GameKit/GameKit.h>
+#import "BFPaperButton.h"
 
 @class RBVolumeButtons;
 
@@ -100,6 +101,7 @@
     
     int resetCountdown;
     UIButton *restartButton;
+    Dots *restartHoldDot;
     UIButton *playButton;
 
     UIButton *trophyButton;
@@ -110,6 +112,9 @@
     BOOL practicing;
     UIView *blob;
     CGPoint touchDown;
+    
+    BFPaperButton *restartExpandButton;
+    
 }
 
 
