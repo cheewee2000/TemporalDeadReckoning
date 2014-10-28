@@ -664,8 +664,8 @@
                                                         int stage=floorf(i/TRIALSINSTAGE);
                                                         TextArrow *sLabel=[stageLabels objectAtIndex:stage];
                                                         sLabel.alpha=1;
-                                                        [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:i] animate:NO];
-                                                        sLabel.instructionText.textColor=[self getForegroundColor:i];
+                                                        [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:currentLevel] animate:NO];
+                                                        sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
                                                         
                                                         //shift label down
                                                         [UIView animateWithDuration:.8
@@ -696,8 +696,8 @@
                                                         [progressView.dotsContainer addSubview:sLabel];
                                                         
                                                         int stage=floorf(i/TRIALSINSTAGE);
-                                                        [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:i] animate:NO];
-                                                        sLabel.instructionText.textColor=[self getForegroundColor:i];
+                                                        [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:currentLevel] animate:NO];
+                                                        sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
 
                                                         [UIView animateWithDuration:.4
                                                                               delay:0.4+stage*.1
