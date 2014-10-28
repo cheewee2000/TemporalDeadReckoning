@@ -771,10 +771,10 @@
         if(trialAccuracy<=[self getLevelAccuracy:i]/5.0){
             [dot setStars:3];
         }
-        else if(trialAccuracy<=[self getLevelAccuracy:i]*4.0/5.0){
+        else if(trialAccuracy<=[self getLevelAccuracy:i]*2.5/5.0){
             [dot setStars:2];
         }
-        else if(trialAccuracy<=[self getLevelAccuracy:i]*3.0/5.0)[dot setStars:1];
+        else if(trialAccuracy<=[self getLevelAccuracy:i]*3.5/5.0)[dot setStars:1];
     }
     else {
         [dot setFill:NO];
