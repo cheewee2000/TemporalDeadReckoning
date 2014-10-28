@@ -18,7 +18,7 @@
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 5
+#define TRIALSINSTAGE 3
 #define NUMHEARTS 3
 #define SHOWNEXTRASTAGES 3
 
@@ -159,7 +159,7 @@
     else practicing = (int)[defaults integerForKey:@"practicing"];
     
 
-    //currentLevel=35;
+    //currentLevel=22;
     
     //[self loadData:currentLevel];
     //[self loadLevelProgress];
@@ -609,7 +609,7 @@
                          }
                          else{
                              self.view.backgroundColor=[self getBackgroundColor:currentLevel];
-                             restartButton.tintColor=[UIColor blackColor];
+                             restartButton.tintColor=[self getBackgroundColor:currentLevel];
                          }
                          
                          //progressView.backgroundColor=[self getForegroundColor];
@@ -694,8 +694,10 @@
                                                 else{
 
                                                     if(i%TRIALSINSTAGE==0){
+                                                        int stage=floorf(i/TRIALSINSTAGE);
+
                                                         //add stage label
-                                                        TextArrow *sLabel = [[TextArrow alloc] initWithFrame:CGRectMake(0, -20, 70, 16)];
+                                                        TextArrow *sLabel = [[TextArrow alloc] initWithFrame:CGRectMake(0, -60, 70, 16)];
                                                         sLabel.instructionText.textColor = [UIColor blackColor];
                                                         sLabel.drawArrowRight=true;
                                                         sLabel.alpha=1;
@@ -703,7 +705,6 @@
                                                         [stageLabels addObject:sLabel];
                                                         [progressView.dotsContainer addSubview:sLabel];
                                                         
-                                                        int stage=floorf(i/TRIALSINSTAGE);
                                                         [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:currentLevel] animate:NO];
                                                         sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
 
@@ -1340,7 +1341,7 @@
     else if(level<TRIALSINSTAGE*2)l=1.0+level%TRIALSINSTAGE*0.1;
     else if(level<TRIALSINSTAGE*3)l=1.5+level%TRIALSINSTAGE*0.2;
     else if(level<TRIALSINSTAGE*4)l=2.5+level%TRIALSINSTAGE*0.5;
-    else l=level*1.0-15;
+    else l=level*1.0-TRIALSINSTAGE*3+1.0;
 //    else if(level<TRIALSINSTAGE*5)l=5.0+level%TRIALSINSTAGE*1.0;
 //    else l=5.0+level%TRIALSINSTAGE*1.0;
     
@@ -1810,7 +1811,7 @@
              
              [self showXO];
 
-             [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:.5];
+             [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:.1];
              
          }];
 
@@ -1928,6 +1929,8 @@
                          TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
                          float y=sLabel.frame.origin.y;
                          progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, screenHeight*2.0);
+                         restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-60);
+
                      }
                      completion:^(BOOL finished){
                          [self.view sendSubviewToBack:progressView];
@@ -1986,13 +1989,12 @@
                                   //[UIColor colorWithRed:206/255.0 green:0/255.0 blue:78/255.0 alpha:1],
                                   [UIColor colorWithRed:255/255.0 green:217/255.0 blue:15/255.0 alpha:1],
                                   [UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1],
-
                                   [UIColor colorWithRed:253/255.0 green:242/255.0 blue:62/255.0 alpha:1],
-                                  [UIColor colorWithRed:136/255.0 green:136/255.0 blue:136/255.0 alpha:1],
+                                  [UIColor colorWithRed:236/255.0 green:236/255.0 blue:136/255.0 alpha:1],
                                   [UIColor colorWithRed:18/255.0 green:118/255.0 blue:135/255.0 alpha:1],
                                   [UIColor colorWithRed:62/255.0 green:62/255.0 blue:55/255.0 alpha:1],
                                   [UIColor colorWithRed:200/255.0 green:203/255.0 blue:207/255.0 alpha:1],//
-                                  [UIColor colorWithRed:71/255.0 green:86/255.0 blue:72/255.0 alpha:1],
+                                  [UIColor colorWithRed:71/255.0 green:86/255.0 blue:92/255.0 alpha:1],
                                   nil];
     
     int currentStage=floorf(level/TRIALSINSTAGE);
@@ -2007,13 +2009,12 @@
                                   //[UIColor colorWithRed:248/255.0 green:238/255.0 blue:223/255.0 alpha:1],
                                  [UIColor colorWithRed:85/255.0 green:85/255.0 blue:98/255.0 alpha:1],
                                  [UIColor colorWithRed:255/255.0 green:153/255.0 blue:0/255.0 alpha:1],
-
                                   [UIColor colorWithRed:255/255.0 green:61/255.0 blue:132/255.0 alpha:1],
                                   [UIColor colorWithRed:0/255.0 green:163/255.0 blue:238/255.0 alpha:1],
                                   [UIColor colorWithRed:222/255.0 green:195/255.0 blue:133/255.0 alpha:1],
                                   [UIColor colorWithRed:254/255.0 green:253/255.0 blue:211/255.0 alpha:1],
-                                  [UIColor colorWithRed:271/255.0 green:14/255.0 blue:0/255.0 alpha:1],//
-                                  [UIColor colorWithRed:157/255.0 green:21/255.0 blue:0/255.0 alpha:1],
+                                  [UIColor colorWithRed:255/255.0 green:14/255.0 blue:0/255.0 alpha:1],//
+                                  [UIColor colorWithRed:51/255.0 green:251/255.0 blue:0/255.0 alpha:1],
 
                                   nil];
     
