@@ -104,8 +104,8 @@
     UITapGestureRecognizer *tapGestureRecognizer3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
     tapGestureRecognizer3.numberOfTouchesRequired = 1;
     tapGestureRecognizer3.numberOfTapsRequired = 1;
-    [counterGoalLabel addGestureRecognizer:tapGestureRecognizer3];
-    counterGoalLabel.userInteractionEnabled = YES;
+    [self.view addGestureRecognizer:tapGestureRecognizer3];
+    self.view.userInteractionEnabled = YES;
 
     
     //goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, counterGoalLabel.frame.size.height-30, counterGoalLabel.frame.size.width*.5-13, 40)];
@@ -925,6 +925,11 @@
 #pragma mark - Action
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    UITouch *aTouch = [touches anyObject];
+    CGPoint location = [aTouch locationInView:self.view];
+    if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
+        touchDown = location;
+    }
 
 }
 
@@ -935,12 +940,7 @@
     CGPoint location = [aTouch locationInView:self.view];
     CGPoint previousLocation = [aTouch previousLocationInView:self.view];
 
-    //if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
-//    if ([counterGoalLabel pointInside: [self.view convertPoint:location toView: counterGoalLabel] withEvent:event] ||
-//        [instructions pointInside: [self.view convertPoint:location toView: instructions] withEvent:event]) {
-//        return;
-//    }
-  //  if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
+    if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
 
         [self.view bringSubviewToFront:progressView];
         
@@ -955,38 +955,12 @@
                              
                          }];
         
-  //  }
+    }
     
     
 }
 
-//-(void) swiped:(UISwipeGestureRecognizer *)recognizer {
-//    
-//    [UIView animateWithDuration:0.4
-//                          delay:0.0
-//         usingSpringWithDamping:.8
-//          initialSpringVelocity:1.0
-//                        options:UIViewAnimationOptionCurveLinear
-//                     animations:^{
-//                         
-//                         //if(progressView.frame.origin.y<screenHeight/2.0)
-//                         if(recognizer.direction==UISwipeGestureRecognizerDirectionUp)
-//                         {
-//                             progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
-//                             [self.view bringSubviewToFront:progressView];
-//                         }
-//                         else if(recognizer.direction==UISwipeGestureRecognizerDirectionDown){
-//                             progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
-//                             [self.view sendSubviewToBack:progressView];
-//                             [self.view sendSubviewToBack:blob];
-//                         }
-//                     }
-//                     completion:^(BOOL finished){
-//                        
-//                     
-//                     }];
-//
-//}
+
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 
@@ -994,11 +968,9 @@
     CGPoint location = [aTouch locationInView:self.view];
     CGPoint previousLocation = [aTouch previousLocationInView:self.view];
 //
-    //if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
-//    if ([counterGoalLabel pointInside: [self.view convertPoint:location toView: counterGoalLabel] withEvent:event] ||
-//        [instructions pointInside: [self.view convertPoint:location toView: instructions] withEvent:event]) {
-//        return;
-//    }
+    //if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event])
+    {
+
         [UIView animateWithDuration:0.4
                               delay:0.0
              usingSpringWithDamping:.8
@@ -1027,26 +999,7 @@
                          completion:^(BOOL finished){
                              
                          }];
-    //}
-//    //in case touch slipped outside
-//    else{
-//        
-//        [UIView animateWithDuration:0.4
-//                              delay:0.0
-//             usingSpringWithDamping:.8
-//              initialSpringVelocity:1.0
-//                            options:UIViewAnimationOptionCurveLinear
-//                         animations:^{
-//   
-//                                 progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
-//                                 [self.view sendSubviewToBack:progressView];
-//                                 [self.view sendSubviewToBack:blob];
-//                         }
-//                         completion:^(BOOL finished){
-//                             
-//                         }];
-//        
-//    }
+    }
 }
 
 - (IBAction)scalePiece:(UIPinchGestureRecognizer *)gestureRecognizer

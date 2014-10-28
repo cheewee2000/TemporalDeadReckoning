@@ -108,7 +108,7 @@
     
     BOOL practicing;
     UIView *blob;
-    
+    CGPoint touchDown;
 }
 
 
