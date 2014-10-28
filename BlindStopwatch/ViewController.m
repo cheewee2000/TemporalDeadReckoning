@@ -78,7 +78,7 @@
     counterLabel.textColor=[UIColor whiteColor];
     counterLabel.textAlignment=NSTextAlignmentCenter;
     counterLabel.frame=CGRectMake(0,0, screenWidth, screenWidth*.35);
-    counterLabel.center=CGPointMake(screenWidth*.5, instructions.frame.origin.y-counterLabel.frame.size.height*.30);
+    //counterLabel.center=CGPointMake(screenWidth*.5, instructions.frame.origin.y-counterLabel.frame.size.height*.30);
     counterLabel.clipsToBounds=NO;
     [labelContainer addSubview:counterLabel];
     
@@ -88,9 +88,13 @@
     counterGoalLabel.textColor=[UIColor whiteColor];
     counterGoalLabel.textAlignment=NSTextAlignmentCenter;
     counterGoalLabel.frame=CGRectMake(0,0, screenWidth, screenWidth*.35);
-    counterGoalLabel.center=CGPointMake(screenWidth*.5, instructions.frame.origin.y+instructions.frame.size.height+counterGoalLabel.frame.size.height*.55);
+    //counterGoalLabel.center=CGPointMake(screenWidth*.5, instructions.frame.origin.y+instructions.frame.size.height+counterGoalLabel.frame.size.height*.55);
     counterGoalLabel.clipsToBounds=NO;
     [self.view addSubview:counterGoalLabel];
+    
+    counterGoalLabel.center=CGPointMake(screenWidth*.5, instructions.frame.origin.y-counterLabel.frame.size.height*.30);
+    counterLabel.center=CGPointMake(screenWidth*.5, instructions.frame.origin.y+instructions.frame.size.height+counterGoalLabel.frame.size.height*.55);
+
     
     UITapGestureRecognizer *tapGestureRecognizer3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
     tapGestureRecognizer3.numberOfTouchesRequired = 1;
@@ -99,8 +103,9 @@
     counterGoalLabel.userInteractionEnabled = YES;
 
     
-    goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, counterGoalLabel.frame.size.height-30, counterGoalLabel.frame.size.width*.5-13, 40)];
-    goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:33.0];
+    //goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, counterGoalLabel.frame.size.height-30, counterGoalLabel.frame.size.width*.5-13, 40)];
+    goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, -30, counterGoalLabel.frame.size.width*.5-13, 40)];
+    goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:24.0];
     goalPrecision.textAlignment=NSTextAlignmentRight;
     goalPrecision.textColor = [UIColor whiteColor];
     goalPrecision.text = @"";
@@ -1057,7 +1062,7 @@
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveLinear
                              animations:^{
-                                 labelContainerBlur.alpha=1.0;
+                                 //labelContainerBlur.alpha=1.0;
                                  progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
                                  progressView.dotsContainer.frame=CGRectMake(0,-60*SHOWNEXTRASTAGES, screenWidth, screenHeight*2.0);
 
@@ -1303,7 +1308,7 @@
                                              options:UIViewAnimationOptionCurveLinear
                                           animations:^{
                                               counterGoalLabel.alpha=1;
-                                              counterLabel.alpha=1;
+                                              counterLabel.alpha=0;
                                               goalPrecision.alpha=1;
                                           }
                                           completion:^(BOOL finished){
@@ -1655,13 +1660,13 @@
     
     if(trialSequence==1){
 
-        if(elapsed<1){
-            [self updateTimeDisplay:currentTime-startTime];
-            [self performSelector:@selector(updateTime) withObject:self afterDelay:.01];
-        }else{
-            [counterLabel setText:[NSString stringWithFormat:@"%02u:%02u.%03u",arc4random()%99, arc4random()%60, arc4random()%999]];
-            [self performSelector:@selector(updateTime) withObject:self afterDelay:arc4random()%10*0.001];
-        }
+        //if(elapsed<1){
+          //  [self updateTimeDisplay:currentTime-startTime];
+            [self performSelector:@selector(updateTime) withObject:self afterDelay:0.0001];
+//        }else{
+//            [counterLabel setText:[NSString stringWithFormat:@"%02u:%02u.%03u",arc4random()%99, arc4random()%60, arc4random()%999]];
+//            [self performSelector:@selector(updateTime) withObject:self afterDelay:arc4random()%10*0.001];
+//        }
     }
     else{
         [self updateTimeDisplay:elapsed];
@@ -1918,7 +1923,7 @@
                                                 delay:0.0
                                               options:UIViewAnimationOptionCurveLinear
                                            animations:^{
-                                               counterLabel.alpha=1.0;
+                                               counterLabel.alpha=0.0;
                                                instructions.alpha=1.0;
                                                counterGoalLabel.alpha=1.0;
                                            }
