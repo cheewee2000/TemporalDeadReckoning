@@ -166,8 +166,8 @@
     if([defaults objectForKey:@"best"] == nil) best=0;
     else best = (int)[defaults integerForKey:@"best"];
     
-    if([defaults objectForKey:@"highScore"] == nil) highScore=0;
-    else highScore = (int)[defaults integerForKey:@"highScore"];
+    if([defaults objectForKey:@"highScore"] == nil) experiencePoints=0;
+    else experiencePoints = (int)[defaults integerForKey:@"highScore"];
     
     if([defaults objectForKey:@"practicing"] == nil) practicing=false;
     else practicing = (int)[defaults integerForKey:@"practicing"];
@@ -293,7 +293,7 @@
     [trophyButton adjustsImageWhenHighlighted];
     [trophyButton setFrame:CGRectMake(0,0,44,44)];
     trophyButton.center=CGPointMake(screenWidth/2.0, screenHeight-60);
-    [trophyButton addTarget:self action:@selector(showLeaderboardAndAchievements:) forControlEvents:UIControlEventTouchUpInside];
+    [trophyButton addTarget:self action:@selector(showGlobalLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:trophyButton];
     
     
@@ -304,7 +304,7 @@
     [medalButton adjustsImageWhenHighlighted];
     [medalButton setFrame:CGRectMake(0,0,44,44)];
     medalButton.center=CGPointMake(screenWidth*1.0/5.0, screenHeight-60);
-    [medalButton addTarget:self action:@selector(showLeaderboardAndAchievements:) forControlEvents:UIControlEventTouchUpInside];
+    [medalButton addTarget:self action:@selector(showXPLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:medalButton];
     
     
@@ -597,9 +597,9 @@
 }
 -(void)updateHighscore{
     if(best>0) bestLabel.text=[NSString stringWithFormat:@"BEST %.01f",best];
-    if(highScore>0) {
-        if (highScore<10000) highScoreLabel.text=[NSString stringWithFormat:@"XP %.01f",highScore];
-        else highScoreLabel.text=[NSString stringWithFormat:@"%i",(int)highScore];
+    if(experiencePoints>0) {
+        if (experiencePoints<10000) highScoreLabel.text=[NSString stringWithFormat:@"XP %.01f",experiencePoints];
+        else highScoreLabel.text=[NSString stringWithFormat:@"%i",(int)experiencePoints];
     }
         
         
@@ -999,8 +999,7 @@
               initialSpringVelocity:1.0
                             options:UIViewAnimationOptionCurveLinear
                          animations:^{
-                             restartHoldDot.frame=CGRectMake(0, 0, 5, 5);
-                             restartHoldDot.center=restartButton.center;
+
                              
                              //if(progressView.frame.origin.y<screenHeight/2.0)
                              //if(location.y<previousLocation.y-2 || ( progressView.frame.origin.y<screenHeight-44 && location.y<previousLocation.y) )
@@ -1251,12 +1250,23 @@
     [self.ArrayOfValues writeToFile:timeValuesFile atomically:YES];
 }
 
+#pragma mark - GameCenter
 -(void)reportScore{
     if(_leaderboardIdentifier){
-        GKScore *score = [[GKScore alloc] initWithLeaderboardIdentifier:_leaderboardIdentifier];
-        score.value = best;
+        //GKScore *score = [[GKScore alloc] initWithLeaderboardIdentifier:_leaderboardIdentifier];
+        GKScore *score = [[GKScore alloc] initWithLeaderboardIdentifier:@"global"];
+        score.value = best*10;
         
         [GKScore reportScores:@[score] withCompletionHandler:^(NSError *error) {
+            if (error != nil) {
+                NSLog(@"%@", [error localizedDescription]);
+            }
+        }];
+        
+        GKScore *xp = [[GKScore alloc] initWithLeaderboardIdentifier:@"experiencepoints"];
+        xp.value = experiencePoints*10;
+        
+        [GKScore reportScores:@[xp] withCompletionHandler:^(NSError *error) {
             if (error != nil) {
                 NSLog(@"%@", [error localizedDescription]);
             }
@@ -1264,19 +1274,25 @@
     }
 }
 
--(void)showLeaderboardAndAchievements:(BOOL)shouldShowLeaderboard{
+-(void)showGlobalLeaderboard{
     GKGameCenterViewController *gcViewController = [[GKGameCenterViewController alloc] init];
-    
     gcViewController.gameCenterDelegate = self;
-    
-    if (shouldShowLeaderboard) {
-        gcViewController.viewState = GKGameCenterViewControllerStateLeaderboards;
-        gcViewController.leaderboardIdentifier = _leaderboardIdentifier;
-    }
-    else{
-        gcViewController.viewState = GKGameCenterViewControllerStateAchievements;
-    }
-    
+    gcViewController.viewState = GKGameCenterViewControllerStateLeaderboards;
+    gcViewController.leaderboardIdentifier = @"global";
+    [self presentViewController:gcViewController animated:YES completion:nil];
+}
+
+-(void)showXPLeaderboard{
+    GKGameCenterViewController *gcViewController = [[GKGameCenterViewController alloc] init];
+    gcViewController.gameCenterDelegate = self;
+    gcViewController.viewState = GKGameCenterViewControllerStateLeaderboards;
+    gcViewController.leaderboardIdentifier = @"experiencepoints";
+    [self presentViewController:gcViewController animated:YES completion:nil];
+}
+-(void)showAchievements{
+    GKGameCenterViewController *gcViewController = [[GKGameCenterViewController alloc] init];
+    gcViewController.gameCenterDelegate = self;
+    gcViewController.viewState = GKGameCenterViewControllerStateAchievements;
     [self presentViewController:gcViewController animated:YES completion:nil];
 }
 -(void)gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
@@ -1343,9 +1359,9 @@
         
         
         float currentHS=(int)[defaults integerForKey:@"highScore"];
-        if(highScore>currentHS){
-            currentHS=highScore;
-            [defaults setInteger:highScore forKey:@"highScore"];
+        if(experiencePoints>currentHS){
+            currentHS=experiencePoints;
+            [defaults setInteger:experiencePoints forKey:@"highScore"];
         }
 
         [self updateHighscore];
@@ -1467,14 +1483,14 @@
                          
                          if([self isAccurate]){
                              if(life<NUMHEARTS) life=NUMHEARTS;
-                             highScore+=elapsed*timerGoal;
+                             experiencePoints+=elapsed*timerGoal;
 
                             //add heart for triplestar level
                              float trialAccuracy=fabs(elapsed-timerGoal);
-                             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0){
-                                 life++;
-                             }
+                             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0)life++;
                              currentLevel++;
+                            //add heart for clearing stage
+                            if(currentLevel%TRIALSINSTAGE==0) life++;
                          }
                          else{
                              life--;
@@ -1482,10 +1498,10 @@
                          
                          if(life==0){
                              lastStage=[self getCurrentStage];
-                             if(practicing==false) [self reportScore];
                          }
                          
-                         
+                         if(practicing==false) [self reportScore];
+
                          [self performSelector:@selector(updateLife) withObject:self afterDelay:.1];
                          [self performSelector:@selector(updateDots) withObject:self afterDelay:.1];
                          [self performSelector:@selector(showLevelAlerts) withObject:self afterDelay:.5];
@@ -1619,7 +1635,7 @@
     
 }
 
--(void)getHighScore{
+-(void)getExperiencePoints{
     
 }
 

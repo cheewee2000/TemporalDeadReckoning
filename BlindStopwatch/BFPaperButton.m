@@ -59,7 +59,7 @@ static CGFloat const bfPaperButton_raisedShadowXOffset             = 2.f;
 static CGFloat const bfPaperButton_loweredShadowOpacity            = 0.5f;
 static CGFloat const bfPaperButton_raisedShadowOpacity             = 0.5f;
 // -animation durations:
-static CGFloat const bfPaperButton_animationDurationConstant       = 1.5f;
+static CGFloat const bfPaperButton_animationDurationConstant       = 1.0f;
 static CGFloat const bfPaperButton_tapCircleGrowthDurationConstant = bfPaperButton_animationDurationConstant * 2;
 // -the tap-circle's size:
 static CGFloat const bfPaperButton_tapCircleDiameterStartValue     = 5.f;    // for the mask
