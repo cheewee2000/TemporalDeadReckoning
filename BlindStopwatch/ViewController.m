@@ -18,7 +18,7 @@
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 2
+#define TRIALSINSTAGE 5
 #define NUMHEARTS 3
 #define SHOWNEXTRASTAGES 3
 
@@ -597,7 +597,12 @@
 }
 -(void)updateHighscore{
     if(best>0) bestLabel.text=[NSString stringWithFormat:@"BEST %.01f",best];
-    if(highScore>0)  highScoreLabel.text=[NSString stringWithFormat:@"%.01f POINTS",highScore];
+    if(highScore>0) {
+        if (highScore<10000) highScoreLabel.text=[NSString stringWithFormat:@"XP %.01f",highScore];
+        else highScoreLabel.text=[NSString stringWithFormat:@"%i",(int)highScore];
+    }
+        
+        
 }
 
 -(int)getCurrentStage{
@@ -637,7 +642,7 @@
              if(progressView.frame.origin.y==0)d=0.0;//progressview is already showing. don't animate
              
 
-                [UIView animateWithDuration:.4
+                [UIView animateWithDuration:.8
                                       delay:d
                      usingSpringWithDamping:.8
                       initialSpringVelocity:1.0
@@ -651,7 +656,8 @@
                                      int nDotsToShow=TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE;
 
                                      if(nDotsToShow<TRIALSINSTAGE*SHOWNEXTRASTAGES)nDotsToShow=TRIALSINSTAGE*SHOWNEXTRASTAGES;
-                                     
+
+
                                      for (int i = 0; i < nDotsToShow; i++){
                                     float dotDia=12;
                                     float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
@@ -663,17 +669,16 @@
                                     if(i<[dots count]){
                                         
                                         Dots *dot=[dots objectAtIndex:i];
+                                        [self updateDot:i];
 
                                         //shift dots down
                                         [UIView animateWithDuration:.8
-                                                              delay:0.4
+                                                              delay:0.8
                                              usingSpringWithDamping:.5
                                               initialSpringVelocity:1.0
                                                             options:UIViewAnimationOptionCurveLinear
                                                          animations:^{
                                                              dot.frame=CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia);
-                                                             [self updateDot:i];
-
                                                          }
                                                          completion:^(BOOL finished){
                                                          }];
@@ -687,17 +692,27 @@
 
                                             //shift label down
                                             [UIView animateWithDuration:.8
-                                                                  delay:0.4
+                                                                  delay:0.8
                                                  usingSpringWithDamping:.5
                                                   initialSpringVelocity:1.0
                                                                 options:UIViewAnimationOptionCurveLinear
                                                              animations:^{
                                                                  sLabel.frame=CGRectMake(0, y, 70, 15);
-                                                                 [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:currentLevel] animate:NO];
-                                                                 sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
-                                                                 
                                                              }
                                                              completion:^(BOOL finished){
+                                                                 
+                                                                 //change color
+                                                                 [UIView animateWithDuration:0.4
+                                                                                       delay:0.0
+                                                                                     options:UIViewAnimationOptionCurveLinear
+                                                                                  animations:^{
+                                                                                      [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:currentLevel] animate:NO];
+                                                                                      sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
+                                                                                  }
+                                                                                  completion:^(BOOL finished){
+                                                                                  }];
+                                                                 
+                                                                 
                                                              }];
                                         }
 
@@ -722,7 +737,7 @@
                                             sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
 
                                             [UIView animateWithDuration:.4
-                                                                  delay:0.4+stage*.1
+                                                                  delay:0.8+stage*.1
                                                  usingSpringWithDamping:.5
                                                   initialSpringVelocity:1.0
                                                                 options:UIViewAnimationOptionCurveLinear
@@ -749,7 +764,7 @@
             
                                     //animate dot appearance
                                     [UIView animateWithDuration:.2
-                                                          delay:.4+(i-currentLevel)*.1
+                                                          delay:.8+(i-currentLevel)*.05
                                          usingSpringWithDamping:.5
                                           initialSpringVelocity:1.0
                                                         options:UIViewAnimationOptionCurveLinear
@@ -791,8 +806,6 @@
 
 -(void) updateDot:(int)i{
     Dots *dot=[dots objectAtIndex:i];
-    //TextArrow *sl=[stageLabels objectAtIndex:0];
-    //dot.color=restartButton.tintColor;
 
     //goal String
     NSTimeInterval level=[self getLevel:i];
@@ -1347,7 +1360,7 @@
     [self updateDotColors];
 
      //change background color
-     [UIView animateWithDuration:0.4
+     [UIView animateWithDuration:0.2
                            delay:0.0
                          options:UIViewAnimationOptionCurveLinear
                       animations:^{
@@ -1376,6 +1389,8 @@
                           goalPrecision.textColor=[self getForegroundColor:currentLevel];
                           
                           restartButton.tintColor=[self getBackgroundColor:currentLevel];
+                          restartExpandButton.tapCircleColor=[self getBackgroundColor:currentLevel];
+
                           trophyButton.tintColor=[self getBackgroundColor:currentLevel];
                           medalButton.tintColor=[self getBackgroundColor:currentLevel];
                           highScoreLabel.textColor=[self getBackgroundColor:currentLevel];
@@ -1546,7 +1561,9 @@
     
     NSString * stageProgressString;
     //if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED %0.1f POINTS",[self getLevel:currentLevel-1], elapsed*timerGoal];
-    if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"+%0.1f POINTS", elapsed*timerGoal];
+    if([self isAccurate]){ stageProgressString=[NSString stringWithFormat:@"+%0.1f XP", elapsed*timerGoal];
+        
+    }
     else if(life>1) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life];
     else if(life>0) stageProgressString=@"ONE TRY LEFT";
     else stageProgressString=@"GAME OVER";
@@ -1870,21 +1887,21 @@
 
 -(void)animateLevelDotScore{
     
-    [UIView animateWithDuration:0.4
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         //blobBlur.alpha=1;
-                         labelContainerBlur.alpha=0.0;
-                         //[self.view sendSubviewToBack:blob];
-                        }
-         completion:^(BOOL finished){
-             
-             [self showXO];
-
-             [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:.1];
-             
-         }];
+    [self showXO];
+    [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:.1];
+    
+//    [UIView animateWithDuration:0.4
+//                          delay:0.0
+//                        options:UIViewAnimationOptionCurveEaseInOut
+//                     animations:^{
+//                         //blobBlur.alpha=1;
+//                         labelContainerBlur.alpha=0.0;
+//                         //[self.view sendSubviewToBack:blob];
+//                        }
+//         completion:^(BOOL finished){
+//             
+//  
+//         }];
 
 }
 
@@ -1935,16 +1952,16 @@
     oView.alpha=1.0;
     xView.tintColor=[self getBackgroundColor:currentLevel];
     oView.tintColor=[self getBackgroundColor:currentLevel];
+    float w=screenWidth*.60;
+    float y=(screenHeight-44)*.75-w/2.0;
+    float x=screenWidth/2.0-w/2.0;
     
-    [UIView animateWithDuration:0.6
+    [UIView animateWithDuration:0.4
                           delay:0.0
          usingSpringWithDamping:.5
           initialSpringVelocity:.5
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
-                         float w=210;
-                         float y=(screenHeight-44)*.75-w/2.0;
-                         float x=screenWidth/2.0-w/2.0;
                          if([self isAccurate])oView.frame=CGRectMake( x, y, w, w);
                          else xView.frame=CGRectMake(x, y, w, w);
                      }
