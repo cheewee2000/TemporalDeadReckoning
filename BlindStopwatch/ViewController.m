@@ -5,10 +5,10 @@
 #define CGRectSetPos( r, x, y ) CGRectMake( x, y, r.size.width, r.size.height )
 #import "RBVolumeButtons.h"
 
-#include <assert.h>
-#include <mach/mach.h>
-#include <mach/mach_time.h>
-#include <unistd.h>
+//#include <assert.h>
+//#include <mach/mach.h>
+//#include <mach/mach_time.h>
+//#include <unistd.h>
 
 #define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 #define IS_IPHONE (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
@@ -18,7 +18,7 @@
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 5
+#define TRIALSINSTAGE 2
 #define NUMHEARTS 3
 #define SHOWNEXTRASTAGES 3
 
@@ -110,7 +110,7 @@
     
     //goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, counterGoalLabel.frame.size.height-30, counterGoalLabel.frame.size.width*.5-13, 40)];
     goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, -30, counterGoalLabel.frame.size.width*.5-13, 40)];
-    goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:24.0];
+    goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:18.0];
     goalPrecision.textAlignment=NSTextAlignmentRight;
     goalPrecision.textColor = [UIColor whiteColor];
     goalPrecision.text = @"";
@@ -336,17 +336,13 @@
     
    restartExpandButton = [[BFPaperButton alloc] initWithFrame:CGRectMake(0, 0, 44,44) raised:NO];
     restartExpandButton.center=restartButton.center;
-    [restartExpandButton setTitle:@"" forState:UIControlStateNormal];
-    [restartExpandButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [restartExpandButton setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
     [restartExpandButton addTarget:self action:@selector(restartButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     restartExpandButton.cornerRadius = restartExpandButton.frame.size.width / 2;
-    restartExpandButton.tapCircleDiameter = screenHeight*3.0;
+    restartExpandButton.tapCircleDiameter = screenHeight*2.25;
     restartExpandButton.rippleFromTapLocation=NO;
     restartExpandButton.rippleBeyondBounds=YES;
-    //restartExpandButton.tapCircleColor = [UIColor colorWithRed:0.3 green:0 blue:1 alpha:0.6];  // Setting this color overrides "Smart Color".
+    restartExpandButton.usesSmartColor=NO;
     [progressView addSubview:restartExpandButton];
-    
     
     
     playButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -635,27 +631,27 @@
 -(void)setupDots{
     int rowHeight=60;
 
-    [UIView animateWithDuration:0.4
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveLinear
-                     animations:^{
-                         if(practicing) {
-                          self.view.backgroundColor=[UIColor colorWithWhite:.7 alpha:1];
-                             restartButton.tintColor=[self getBackgroundColor:currentLevel];
-                             restartExpandButton.tapCircleColor = [self getBackgroundColor:currentLevel];
+//    [UIView animateWithDuration:0.4
+//                          delay:0.0
+//                        options:UIViewAnimationOptionCurveLinear
+//                     animations:^{
+//                         if(practicing) {
+//                          //self.view.backgroundColor=[UIColor colorWithWhite:.7 alpha:1];
+//                             //restartButton.tintColor=[self getBackgroundColor:currentLevel];
+//                             //restartExpandButton.tapCircleColor = [self getBackgroundColor:currentLevel];
+//
+//                         }
+//                         else{
+//                             //self.view.backgroundColor=[self getBackgroundColor:currentLevel];
+//                             //restartButton.tintColor=[self getBackgroundColor:currentLevel];
+//                             //restartExpandButton.tapCircleColor = [self getBackgroundColor:currentLevel];
+//                        }
+//                         
+//                         //progressView.backgroundColor=[self getForegroundColor];
+//                     }
+//                     completion:^(BOOL finished){
 
-                         }
-                         else{
-                             self.view.backgroundColor=[self getBackgroundColor:currentLevel];
-                             restartButton.tintColor=[self getBackgroundColor:currentLevel];
-                             restartExpandButton.tapCircleColor = [self getBackgroundColor:currentLevel];
-                        }
-                         
-                         //progressView.backgroundColor=[self getForegroundColor];
-                     }
-                     completion:^(BOOL finished){
-
-                        for(int i=0; i<[dots count]; i++) [self updateDot:i];
+                        //for(int i=0; i<[dots count]; i++) [self updateDot:i];
                         
 
                         [self.view bringSubviewToFront:progressView];
@@ -690,9 +686,6 @@
                                                     
                                                     Dots *dot=[dots objectAtIndex:i];
 
-                                                    //add level label
-                                                    [self updateDot:i];
-
                                                     //shift dots down
                                                     [UIView animateWithDuration:.8
                                                                           delay:0.4
@@ -701,6 +694,8 @@
                                                                         options:UIViewAnimationOptionCurveLinear
                                                                      animations:^{
                                                                          dot.frame=CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia);
+                                                                         [self updateDot:i];
+
                                                                      }
                                                                      completion:^(BOOL finished){
                                                                      }];
@@ -711,9 +706,7 @@
                                                         int stage=floorf(i/TRIALSINSTAGE);
                                                         TextArrow *sLabel=[stageLabels objectAtIndex:stage];
                                                         sLabel.alpha=1;
-                                                        [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:currentLevel] animate:NO];
-                                                        sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
-                                                        
+        
                                                         //shift label down
                                                         [UIView animateWithDuration:.8
                                                                               delay:0.4
@@ -722,6 +715,9 @@
                                                                             options:UIViewAnimationOptionCurveLinear
                                                                          animations:^{
                                                                              sLabel.frame=CGRectMake(0, y, 70, 15);
+                                                                             [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:currentLevel] animate:NO];
+                                                                             sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
+                                                                             
                                                                          }
                                                                          completion:^(BOOL finished){
                                                                          }];
@@ -772,6 +768,7 @@
                                                     dot.transform = CGAffineTransformScale(CGAffineTransformIdentity, .001, .001);
                                                     //add level label
                                                     [self updateDot:i];
+                        
                                                 //animate dot appearance
                                                 [UIView animateWithDuration:.2
                                                                       delay:.8+(i-currentLevel)*.05
@@ -780,6 +777,7 @@
                                                                     options:UIViewAnimationOptionCurveLinear
                                                                  animations:^{
                                                                      dot.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+
                                                                  }
                                                                  completion:^(BOOL finished){
 
@@ -791,13 +789,34 @@
                                     [self performSelector:@selector(loadLevel) withObject:self afterDelay:2.5];
 
                             }];
-                   }];
+                   //}];
              
+}
+
+-(void)updateDotColors{
+    for (int i=0; i<[dots count]; i++){
+        Dots *dot=[dots objectAtIndex:i];
+        
+        //shift label down
+        [UIView animateWithDuration:.4
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             dot.color=[self getBackgroundColor:currentLevel];
+                         }
+                         completion:^(BOOL finished){
+                             dot.color=[self getBackgroundColor:currentLevel];
+                             [dot setNeedsDisplay];
+                         }];
+        
+
+    }
 }
 
 -(void) updateDot:(int)i{
     Dots *dot=[dots objectAtIndex:i];
-    dot.color=self.view.backgroundColor;
+    //TextArrow *sl=[stageLabels objectAtIndex:0];
+    //dot.color=restartButton.tintColor;
 
     //goal String
     NSTimeInterval level=[self getLevel:i];
@@ -945,16 +964,7 @@
 #pragma mark - Action
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    UITouch *aTouch = [touches anyObject];
-    CGPoint location = [aTouch locationInView:self.view];
-//    if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
-//        touchDown = location;
-//    }
 
-    if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
-        [self addGrowingCircleAtPoint:restartButton.center];
-
-    }
     
 }
 
@@ -975,10 +985,8 @@
                             options:UIViewAnimationOptionCurveLinear
                          animations:^{
                                 progressView.frame=CGRectOffset(progressView.frame, 0,location.y - previousLocation.y);
-                             
                          }
                          completion:^(BOOL finished){
-                             
                          }];
         
     }
@@ -994,12 +1002,7 @@
     UITouch *aTouch = [touches anyObject];
     CGPoint location = [aTouch locationInView:self.view];
     CGPoint previousLocation = [aTouch previousLocationInView:self.view];
-//
-    //if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event])
-    {
-        [self.view.layer removeAllAnimations];
 
-        
 
         [UIView animateWithDuration:0.4
                               delay:0.0
@@ -1011,11 +1014,11 @@
                              restartHoldDot.center=restartButton.center;
                              
                              //if(progressView.frame.origin.y<screenHeight/2.0)
-                             if(location.y<previousLocation.y-2 || ( progressView.frame.origin.y<screenHeight/2.0 && location.y<previousLocation.y) )
+                             //if(location.y<previousLocation.y-2 || ( progressView.frame.origin.y<screenHeight-44 && location.y<previousLocation.y) )
+                             if( progressView.frame.origin.y<screenHeight-44 && location.y<previousLocation.y )
                              {
                                 progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
                                  progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
-
                                  [self.view bringSubviewToFront:progressView];
                              }
                             else {
@@ -1031,71 +1034,8 @@
                          completion:^(BOOL finished){
                              
                          }];
-    }
 }
 
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
-    if (flag && [[anim valueForKey:@"name"] isEqual:@"grow"]) {
-        // when the grow animation is complete, we fade the layer
-        CALayer* lyr = [anim valueForKey:@"layer"];
-        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-        animation.fromValue = [lyr valueForKey:@"opacity"];
-        animation.toValue = [NSNumber numberWithFloat:0.f];
-        animation.duration = .5f;
-        animation.delegate = self;
-        lyr.opacity = 0.f;
-        [animation setValue:@"fade" forKey:@"name"];
-        [animation setValue:lyr forKey:@"layer"];
-        [lyr addAnimation:animation forKey:@"opacity"];
-    } else if (flag && [[anim valueForKey:@"name"] isEqual:@"fade"]) {
-        // when the fade animation is complete, we remove the layer
-        CALayer* lyr = [anim valueForKey:@"layer"];
-        [lyr removeFromSuperlayer];
-    }
-    
-}
-
-- (void)addGrowingCircleAtPoint:(CGPoint)point {
-    // create a circle path
-    CGMutablePathRef circlePath = CGPathCreateMutable();
-    CGPathAddArc(circlePath, NULL, 0.f, 0.f, 20.f, 0.f, (float)2.f*M_PI, true);
-    
-    // create a shape layer
-    CAShapeLayer* lyr = [[CAShapeLayer alloc] init];
-    lyr.path = circlePath;
-    
-    // don't leak, please
-    CGPathRelease(circlePath);
-    lyr.delegate = self;
-    
-    // set up the attributes of the shape layer and add it to our view's layer
-    lyr.fillColor = (__bridge CGColorRef)([self getBackgroundColor:currentLevel]);
-    lyr.position = point;
-    lyr.anchorPoint = CGPointMake(.5f, .5f);
-    [self.view.layer addSublayer:lyr];
-    
-    // set up the growing animation
-    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform"];
-    animation.fromValue = [lyr valueForKey:@"transform"];
-    // this will actually grow the circle into an oval
-    CATransform3D t = CATransform3DMakeScale(6.f, 6.f, 1.f);
-    animation.toValue = [NSValue valueWithCATransform3D:t];
-    animation.duration = 2.f;
-    animation.delegate = self;
-    lyr.transform = t;
-    [animation setValue:@"grow" forKey:@"name"];
-    [animation setValue:lyr forKey:@"layer"];
-    [lyr addAnimation:animation forKey:@"transform"];
-
-    [CATransaction begin]; {
-        [CATransaction setCompletionBlock:^{
-            [self addGrowingCircleAtPoint:point];
-        }];
-        
-        
-    } [CATransaction commit];
-    
-}
 
 
 - (IBAction)scalePiece:(UIPinchGestureRecognizer *)gestureRecognizer
@@ -1421,13 +1361,15 @@
 
         [self updateHighscore];
 
+
     }
      [defaults synchronize];
     
     
     timerGoal=[self getLevel:level];
 
-    
+    [self updateDotColors];
+
      //change background color
      [UIView animateWithDuration:0.4
                            delay:0.0
@@ -1664,8 +1606,10 @@
     //next buton
     levelAlert.rightLabel.frame=CGRectMake(levelAlert.rightLabel.frame.origin.x, levelAlert.rightLabel.frame.origin.y, levelAlert.frame.size.width-nextButton.frame.size.width*2.2, levelAlert.rightLabel.frame.size.height);
     levelAlert.rightLabel.textColor=[UIColor blackColor];
-    nextButton.tintColor=[self getBackgroundColor:currentLevel];
-    shareButton.tintColor=[self getBackgroundColor:currentLevel];
+    TextArrow *sl=[stageLabels objectAtIndex:0];
+
+    nextButton.tintColor=sl.color;
+    shareButton.tintColor=sl.color;
 
     margin-=spacing+levelAlert.frame.size.height;
     d+=inc;
@@ -2100,7 +2044,7 @@
                                                //[instructions resetFrame];
                                                [instructions update:@"START" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:NO];
                                                [instructions slideIn:0];
-                                               [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.7];
+                                               [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.1];
                                            }];
                           
                          
@@ -2141,7 +2085,7 @@
                                   [UIColor colorWithRed:255/255.0 green:217/255.0 blue:15/255.0 alpha:1],
                                   [UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1],
                                   [UIColor colorWithRed:253/255.0 green:242/255.0 blue:62/255.0 alpha:1],
-                                  [UIColor colorWithRed:236/255.0 green:236/255.0 blue:136/255.0 alpha:1],
+                                  [UIColor colorWithRed:0/255.0 green:163/255.0 blue:238/255.0 alpha:1],
                                   [UIColor colorWithRed:18/255.0 green:118/255.0 blue:135/255.0 alpha:1],
                                   [UIColor colorWithRed:62/255.0 green:62/255.0 blue:55/255.0 alpha:1],
                                   [UIColor colorWithRed:200/255.0 green:203/255.0 blue:207/255.0 alpha:1],//
@@ -2161,7 +2105,8 @@
                                  [UIColor colorWithRed:85/255.0 green:85/255.0 blue:98/255.0 alpha:1],
                                  [UIColor colorWithRed:255/255.0 green:153/255.0 blue:0/255.0 alpha:1],
                                   [UIColor colorWithRed:255/255.0 green:61/255.0 blue:132/255.0 alpha:1],
-                                  [UIColor colorWithRed:0/255.0 green:163/255.0 blue:238/255.0 alpha:1],
+                                 [UIColor colorWithRed:236/255.0 green:236/255.0 blue:136/255.0 alpha:1],
+
                                   [UIColor colorWithRed:222/255.0 green:195/255.0 blue:133/255.0 alpha:1],
                                   [UIColor colorWithRed:254/255.0 green:253/255.0 blue:211/255.0 alpha:1],
                                   [UIColor colorWithRed:255/255.0 green:14/255.0 blue:0/255.0 alpha:1],//
