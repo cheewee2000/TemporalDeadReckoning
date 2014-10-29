@@ -1533,7 +1533,7 @@
     
     NSString * bonusString=@"";
     float trialAccuracy=fabs(elapsed-timerGoal);
-    if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0) bonusString=@"PERFECT! BONUS HEART";
+    if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0) bonusString=@"PERFECT! +❤\U0000FE0E";
     else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/5.0) bonusString=@"NICE!";
     else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/5.0) bonusString=@"GREAT!";
     else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]) bonusString=@"CLOSE ENOUGH";
@@ -1596,7 +1596,7 @@
     //ARROW3
     if([self isAccurate] && currentLevel%TRIALSINSTAGE==0) {
         NSString * stageClearedString;
-        stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED",[self getCurrentStage]];
+        stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED +❤\U0000FE0E",[self getCurrentStage]];
         t= [levelArrows objectAtIndex:arrowN];
         [t update:@"" rightLabel:stageClearedString color:instructions.color animate:NO];
         margin-=spacing+t.frame.size.height;
