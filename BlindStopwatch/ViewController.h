@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import "BEMSimpleLineGraphView.h"
+//#import "BEMSimpleLineGraphView.h"
 #import "Dots.h"
 #import "TextArrow.h"
 #import <Parse/Parse.h>
@@ -126,7 +126,7 @@ void drawLine(CGContextRef context, CGPoint startPoint, CGPoint endPoint, CGColo
 @property (retain) RBVolumeButtons *buttonStealer;
 
 
-@property (weak, nonatomic) IBOutlet BEMSimpleLineGraphView *myGraph;
+//@property (weak, nonatomic) IBOutlet BEMSimpleLineGraphView *myGraph;
 
 @property (strong, nonatomic) NSMutableArray *ArrayOfValues;
 @property (strong, nonatomic) NSMutableArray *ArrayOfDates;
