@@ -19,7 +19,7 @@
         [self bringSubviewToFront:self.dotsContainer];
         
         self.centerMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, self.frame.size.width, 160)];
-        self.centerMessage.center=CGPointMake(self.frame.size.width/2.0, self.frame.size.height/4.0-80);
+        self.centerMessage.center=CGPointMake(self.frame.size.width/2.0, self.frame.size.height/5.0-80);
         self.centerMessage.text=@"";
         self.centerMessage.textAlignment = NSTextAlignmentCenter;
         self.centerMessage.backgroundColor = [UIColor clearColor];
@@ -28,17 +28,27 @@
         [self addSubview:self.centerMessage];
 
         
-        self.subMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, self.frame.size.width, 100)];
-        self.subMessage.center=CGPointMake(self.frame.size.width/2.0, self.centerMessage.center.y+160);
+        self.subMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, self.frame.size.width, 80)];
+        self.subMessage.center=CGPointMake(self.frame.size.width/2.0, self.centerMessage.center.y+90);
         self.subMessage.text=@"";
         self.subMessage.numberOfLines=2;
         self.subMessage.textAlignment = NSTextAlignmentCenter;
         self.subMessage.backgroundColor = [UIColor clearColor];
-        self.subMessage.font = [UIFont fontWithName:@"DIN Condensed" size:40];
+        self.subMessage.font = [UIFont fontWithName:@"DIN Condensed" size:24];
         self.subMessage.textColor=[UIColor whiteColor];
         [self addSubview:self.subMessage];
         [self bringSubviewToFront:self.subMessage];
         
+        self.lowerMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, self.frame.size.width, 80)];
+        self.lowerMessage.center=CGPointMake(self.frame.size.width/2.0, self.subMessage.center.y+90);
+        self.lowerMessage.text=@"";
+        self.lowerMessage.numberOfLines=2;
+        self.lowerMessage.textAlignment = NSTextAlignmentCenter;
+        self.lowerMessage.backgroundColor = [UIColor clearColor];
+        self.lowerMessage.font = [UIFont fontWithName:@"DIN Condensed" size:24];
+        self.subMessage.textColor=[UIColor whiteColor];
+        [self addSubview:self.lowerMessage];
+        [self bringSubviewToFront:self.lowerMessage];
  
         
     }

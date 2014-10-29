@@ -351,7 +351,6 @@
     [playButton setBackgroundImage:play forState:UIControlStateNormal];
     [playButton adjustsImageWhenHighlighted];
     [playButton setFrame:CGRectMake(0,0,44,44)];
-    playButton.center=CGPointMake(screenWidth/2.0, screenHeight/2.0);
     [playButton addTarget:self action:@selector(restartFromLastStage) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:playButton];
     [progressView bringSubviewToFront:playButton];
@@ -469,7 +468,7 @@
 -(void) restart{
     
     //set life asap so countdown timer stops
-    life=0;
+    life=NUMHEARTS;
 
     [UIView animateWithDuration:0.8
                           delay:0.0
@@ -477,6 +476,7 @@
                      animations:^{
                          progressView.centerMessage.alpha=0;
                          progressView.subMessage.alpha=0;
+                         progressView.lowerMessage.alpha=0;
                          playButton.alpha=0.0;
                          
                      }
@@ -551,8 +551,6 @@
 }
 
 -(void) restartFromLastStage{
-    //reset dots
-    life=0;
     
     [UIView animateWithDuration:0.8
                           delay:0.0
@@ -560,15 +558,28 @@
                      animations:^{
                          progressView.centerMessage.alpha=0;
                          progressView.subMessage.alpha=0;
+                         progressView.lowerMessage.alpha=0;
                          playButton.alpha=0.0;
                      }
                      completion:^(BOOL finished){
                      }];
     
+    [UIView animateWithDuration:0.4
+                          delay:0.0
+         usingSpringWithDamping:.8
+          initialSpringVelocity:1.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-60);
+                     }
+                     completion:^(BOOL finished){
+                     }];
     
 
     [self removeDots];
 
+    experiencePoints-=lastStage*10.0;
+    
     
     life=NUMHEARTS;
     currentLevel=lastStage*TRIALSINSTAGE;
@@ -884,7 +895,7 @@
         
             if(heart.frame.origin.y>screenHeight){
 
-                heart.alpha=1.0;
+                heart.alpha=.9;
                 //heart.transform = CGAffineTransformScale(CGAffineTransformIdentity, .01, .01);
 
                     //heart in
@@ -1645,15 +1656,44 @@
     [self.view bringSubviewToFront:progressView];
     [progressView bringSubviewToFront:progressView.subMessage];
 
-    progressView.subMessage.text=[NSString stringWithFormat:@"CONTINUE\nFROM STAGE %i",lastStage+1];
+    if(lastStage==0) {
+        
+        [self showGameOver];
+
+        [UIView animateWithDuration:0.8
+                              delay:0.5
+             usingSpringWithDamping:.8
+              initialSpringVelocity:1.0
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
+                             progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
+                         }
+                         completion:^(BOOL finished){
+                         }];
+        
+        return;
+    }
+    progressView.subMessage.text=[NSString stringWithFormat:@"CONTINUE FROM STAGE %i\nFOR %.01f XP",lastStage+1,lastStage*10.0];
     progressView.subMessage.alpha=1.0;
     progressView.subMessage.textColor=trophyButton.tintColor;
     progressView.centerMessage.textColor=trophyButton.tintColor;
 
+    
+    
     playButton.alpha=1.0;
     playButton.tintColor=trophyButton.tintColor;
+    playButton.center=CGPointMake(screenWidth/2.0, progressView.subMessage.frame.origin.y+progressView.subMessage.frame.size.height+10);
+
     
-    [UIView animateWithDuration:0.4
+    progressView.lowerMessage.frame=CGRectMake(0, playButton.frame.origin.y+playButton.frame.size.height+30, screenWidth, 80);
+    progressView.lowerMessage.text=@"RESTART";
+    progressView.lowerMessage.alpha=1.0;
+    progressView.lowerMessage.textColor=trophyButton.tintColor;
+    progressView.lowerMessage.textColor=trophyButton.tintColor;
+    
+    
+    [UIView animateWithDuration:0.8
                           delay:0.5
          usingSpringWithDamping:.8
           initialSpringVelocity:1.0
@@ -1665,6 +1705,21 @@
                      completion:^(BOOL finished){
                          [self countdown];
                      }];
+
+    
+    //move restart button
+    [UIView animateWithDuration:0.4
+                          delay:0.8
+         usingSpringWithDamping:.8
+          initialSpringVelocity:1.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         restartButton.center=CGPointMake(screenWidth*.5, progressView.lowerMessage.frame.origin.y+progressView.lowerMessage.frame.size.height+10);
+                         
+                     }
+                     completion:^(BOOL finished){
+                     }];
+    
 }
 
 
@@ -1682,39 +1737,47 @@
                                 options:UIViewAnimationOptionCurveLinear
                              animations:^{
                                  progressView.subMessage.alpha=0;
+                                 progressView.lowerMessage.alpha=0;
+
                                  playButton.alpha=0.0;
                              }
                              completion:^(BOOL finished){
-                                 progressView.subMessage.text=@"GAME OVER";
+                                 [self showGameOver];
                                  
-
-                                 [UIView animateWithDuration:0.4
-                                                       delay:0.8
-                                                     options:UIViewAnimationOptionCurveLinear
-                                                  animations:^{
-                                                    progressView.subMessage.alpha=1.0;
-                                                      
-                                                  }
-                                                  completion:^(BOOL finished){
-                                                  }];
-                                 
-                                 [UIView animateWithDuration:0.4
-                                                       delay:0.8
-                                      usingSpringWithDamping:.8
-                                       initialSpringVelocity:1.0
-                                                     options:UIViewAnimationOptionCurveLinear
-                                                  animations:^{
-                                                      restartButton.center=CGPointMake(screenWidth*.5, progressView.subMessage.frame.origin.y+progressView.subMessage.frame.size.height);
-                                                      
-                                                  }
-                                                  completion:^(BOOL finished){
-                                                  }];
                                  
                                  
                                  
                              }];
         }
     }
+}
+
+-(void)showGameOver{
+    progressView.subMessage.text=@"GAME OVER";
+    progressView.subMessage.textColor=trophyButton.tintColor;
+
+    [UIView animateWithDuration:0.4
+                          delay:0.8
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         progressView.subMessage.alpha=1.0;
+                         
+                     }
+                     completion:^(BOOL finished){
+                     }];
+    
+    [UIView animateWithDuration:0.4
+                          delay:0.8
+         usingSpringWithDamping:.8
+          initialSpringVelocity:1.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         restartButton.center=CGPointMake(screenWidth*.5, progressView.subMessage.frame.origin.y+progressView.subMessage.frame.size.height);
+                         
+                     }
+                     completion:^(BOOL finished){
+                     }];
+    
 }
 
 -(void)nextButtonPressed{
@@ -1725,7 +1788,7 @@
     [instructions slideOut:0];
     
     if(life==0){
-        resetCountdown=3;
+        resetCountdown=20;
         currentLevel=0;
         [self performSelector:@selector(showGameOverSequence) withObject:self afterDelay:1];
     }
@@ -2022,7 +2085,7 @@
     [self updateTimeDisplay:0];
 
     
-    [UIView animateWithDuration:0.4
+    [UIView animateWithDuration:0.8
                           delay:0
          usingSpringWithDamping:.8
           initialSpringVelocity:1.0
@@ -2299,7 +2362,7 @@
     [self performSelector:@selector(setupDots) withObject:self afterDelay:.5];
 
     
-    [UIView animateWithDuration:0.4
+    [UIView animateWithDuration:0.8
                           delay:0.4
          usingSpringWithDamping:.8
           initialSpringVelocity:1.0

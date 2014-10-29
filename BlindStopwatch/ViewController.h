@@ -123,6 +123,5 @@ void drawLine(CGContextRef context, CGPoint startPoint, CGPoint endPoint, CGColo
 //- (IBAction)displayStatistics:(id)sender;
 @property BOOL gameCenterEnabled;
 @property NSString *leaderboardIdentifier;
--(void)showLeaderboardAndAchievements:(BOOL)shouldShowLeaderboard;
 
 @end

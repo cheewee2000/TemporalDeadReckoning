@@ -15,6 +15,7 @@
 @property UIView * dotsContainer;
 @property UILabel * centerMessage;
 @property UILabel * subMessage;
+@property UILabel * lowerMessage;
 
 -(void)displayMessage:(NSString*)s;
 
