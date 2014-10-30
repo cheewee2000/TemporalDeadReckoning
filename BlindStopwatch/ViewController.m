@@ -613,7 +613,7 @@
 -(void)updateHighscore{
     if(best>0) bestLabel.text=[NSString stringWithFormat:@"BEST %.01f",best];
     if(experiencePoints>0) {
-        if (experiencePoints<10000) highScoreLabel.text=[NSString stringWithFormat:@"$%.01f",experiencePoints];
+        if (experiencePoints<10000) highScoreLabel.text=[NSString stringWithFormat:@"$%.02f",experiencePoints];
         else highScoreLabel.text=[NSString stringWithFormat:@"%i",(int)experiencePoints];
     }
         
@@ -1117,7 +1117,7 @@
     NSString * stop;
     NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: [self getLevelAccuracy:currentLevel]];
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:@"±mm:ss.SSS"];
+    [df setDateFormat:@"±s.SSS"];
     stop = [df stringFromDate:aDate];
     goalPrecision.text=stop;
 }
@@ -1834,7 +1834,7 @@
     NSTimeInterval nextGoal=[self getLevel:currentLevel+1];
     NSDate* nDate = [NSDate dateWithTimeIntervalSince1970: nextGoal];
     NSDateFormatter* ngf = [[NSDateFormatter alloc] init];
-    [ngf setDateFormat:@"mm:ss.SSS"];
+    [ngf setDateFormat:@"sssss.SSS"];
     NSString* nGoalString = [ngf stringFromDate:nDate];
     [nextLevelLabel setText:[NSString stringWithFormat:@"NEXT LEVEL:%@",nGoalString]];
 }
@@ -1869,11 +1869,11 @@
     NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: fabs(time)];
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
     if(time<60){
-        if(time>=0) [df setDateFormat:@"+mm:ss.SSS"];
-        else [df setDateFormat:@"-mm:ss.SSS"];
+        if(time>=0) [df setDateFormat:@"+s.SSS"];
+        else [df setDateFormat:@"-s.SSS"];
     }else{
-        if(time>=0) [df setDateFormat:@"+mm.ss.SSS"];
-        else [df setDateFormat:@"-mm.ss.SSS"];
+        if(time>=0) [df setDateFormat:@"+s.SSS"];
+        else [df setDateFormat:@"-s.SSS"];
     }
     NSString* counterString = [df stringFromDate:aDate];
     return counterString;
@@ -1886,8 +1886,8 @@
     
     NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: fabs(time)];
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
-    if(time>0) [df setDateFormat:@"mm:ss.SSS"];
-    else [df setDateFormat:@"mm:ss.SSS"];
+    if(time>0) [df setDateFormat:@"sssss.SSS"];
+    else [df setDateFormat:@"sssss.SSS"];
     
     NSString* counterString = [df stringFromDate:aDate];
     [differencelLabel setText:counterString];
@@ -1898,7 +1898,7 @@
 -(void)timerGoalDisplay:(NSTimeInterval)goal{
     NSDate* gDate = [NSDate dateWithTimeIntervalSince1970: goal];
     NSDateFormatter* gf = [[NSDateFormatter alloc] init];
-    [gf setDateFormat:@"mm:ss.SSS"];
+    [gf setDateFormat:@"sssss.SSS"];
     NSString* goalString = [gf stringFromDate:gDate];
     [counterGoalLabel setText:goalString];
 }
@@ -1907,8 +1907,8 @@
     
     NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: fabs(time)];
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
-    if(time>0) [df setDateFormat:@"mm:ss.SSS"];
-    else [df setDateFormat:@"mm:ss.SSS"];
+    if(time>0) [df setDateFormat:@"sssss.SSS"];
+    else [df setDateFormat:@"sssss.SSS"];
     
     NSString* counterString = [df stringFromDate:aDate];
     [counterLabel setText:counterString];
