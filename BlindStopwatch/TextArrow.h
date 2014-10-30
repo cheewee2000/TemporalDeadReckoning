@@ -26,6 +26,7 @@
 -(void)slideUp:(float) delay;
 -(void)slideUpTo:(float)yPos delay:(float) delay;
 -(void)slideDown:(float) delay;
+-(void) setArrowColor:(UIColor *)c;
 
 @property UIColor *color;
 @property UILabel *rightLabel;

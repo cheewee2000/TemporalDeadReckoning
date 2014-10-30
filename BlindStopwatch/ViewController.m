@@ -110,7 +110,7 @@
     
     //goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, counterGoalLabel.frame.size.height-30, counterGoalLabel.frame.size.width*.5-13, 40)];
     goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, -30, counterGoalLabel.frame.size.width*.5-13, 40)];
-    goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:18.0];
+    goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:22.0];
     goalPrecision.textAlignment=NSTextAlignmentRight;
     goalPrecision.textColor = [UIColor whiteColor];
     goalPrecision.text = @"";
@@ -118,8 +118,12 @@
     
     levelArrows=[[NSMutableArray alloc] init];
     for (int i=0; i<NUMLEVELARROWS; i++) {
-        //TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, counterGoalLabel.frame.origin.y+counterGoalLabel.frame.size.height+5+i*40, screenWidth, 30.0)];
-        TextArrow * arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, screenHeight-i*35-44-35, screenWidth, screenHeight*.055)];
+        TextArrow *arrow;
+        if(i==0)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.08)];
+        else if(i==1)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.06)];
+        else if(i==4)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0,0, screenWidth, screenHeight*.07)];
+        else arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.045)];
+
         arrow.drawArrow=false;
         arrow.rightLabel.textColor=[UIColor blackColor];
         [levelArrows addObject:arrow];
@@ -338,7 +342,7 @@
     restartExpandButton.center=restartButton.center;
     [restartExpandButton addTarget:self action:@selector(restartButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     restartExpandButton.cornerRadius = restartExpandButton.frame.size.width / 2;
-    restartExpandButton.tapCircleDiameter = screenHeight*2.25;
+    restartExpandButton.tapCircleDiameter = screenHeight*2.05;
     restartExpandButton.rippleFromTapLocation=NO;
     restartExpandButton.rippleBeyondBounds=YES;
     restartExpandButton.usesSmartColor=NO;
@@ -527,7 +531,7 @@
     
     
     
-    [self performSelector:@selector(setupGame) withObject:self afterDelay:2.5];
+    [self performSelector:@selector(setupGame) withObject:self afterDelay:1.5];
 
 }
 
@@ -609,7 +613,7 @@
 -(void)updateHighscore{
     if(best>0) bestLabel.text=[NSString stringWithFormat:@"BEST %.01f",best];
     if(experiencePoints>0) {
-        if (experiencePoints<10000) highScoreLabel.text=[NSString stringWithFormat:@"XP %.01f",experiencePoints];
+        if (experiencePoints<10000) highScoreLabel.text=[NSString stringWithFormat:@"$%.01f",experiencePoints];
         else highScoreLabel.text=[NSString stringWithFormat:@"%i",(int)experiencePoints];
     }
         
@@ -647,7 +651,6 @@
 -(void)setupDots{
     int rowHeight=60;
 
-
             [self.view bringSubviewToFront:progressView];
              float d=.5;
              if(progressView.frame.origin.y==0)d=0.0;//progressview is already showing. don't animate
@@ -664,6 +667,7 @@
                                      
                                  }
                                  completion:^(BOOL finished){
+
                                      int nDotsToShow=TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE;
 
                                      if(nDotsToShow<TRIALSINSTAGE*SHOWNEXTRASTAGES)nDotsToShow=TRIALSINSTAGE*SHOWNEXTRASTAGES;
@@ -692,8 +696,10 @@
                                                              dot.frame=CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia);
                                                          }
                                                          completion:^(BOOL finished){
+                                                             
                                                          }];
-                                        
+          
+
                                         
                                         //update stage label
                                         if(i%TRIALSINSTAGE==0){
@@ -709,19 +715,12 @@
                                                                 options:UIViewAnimationOptionCurveLinear
                                                              animations:^{
                                                                  sLabel.frame=CGRectMake(0, y, 70, 15);
+//                                                                 sLabel.color=[self getBackgroundColor:currentLevel];
+                                                                 [sLabel setArrowColor:[self getBackgroundColor:currentLevel]];
+                                                                 sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
+
                                                              }
                                                              completion:^(BOOL finished){
-                                                                 
-                                                                 //change color
-                                                                 [UIView animateWithDuration:0.4
-                                                                                       delay:0.0
-                                                                                     options:UIViewAnimationOptionCurveLinear
-                                                                                  animations:^{
-                                                                                      [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:currentLevel] animate:NO];
-                                                                                      sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
-                                                                                  }
-                                                                                  completion:^(BOOL finished){
-                                                                                  }];
                                                                  
                                                                  
                                                              }];
@@ -790,7 +789,10 @@
                                     }
                                 }
                                
-                        [self performSelector:@selector(loadLevel) withObject:self afterDelay:2.0];
+                                     int stage=floorf(currentLevel/TRIALSINSTAGE);
+
+                        if(stage<SHOWNEXTRASTAGES) [self performSelector:@selector(loadLevel) withObject:self afterDelay:0.8];
+                       else  [self performSelector:@selector(loadLevel) withObject:self afterDelay:2.0];
                 }];
     
 }
@@ -895,7 +897,7 @@
         
             if(heart.frame.origin.y>screenHeight){
 
-                heart.alpha=.9;
+                heart.alpha=.8;
                 //heart.transform = CGAffineTransformScale(CGAffineTransformIdentity, .01, .01);
 
                     //heart in
@@ -905,7 +907,7 @@
                       initialSpringVelocity:1.0
                                     options:UIViewAnimationOptionCurveLinear
                                          animations:^{
-                                             heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10), screenHeight-70,15,15);
+                                             heart.frame=CGRectMake(16+(screenWidth-16)/10.0*(i%10)+floor(i/10.0)*2, screenHeight-70-floor(i/10.0)*2,15,15);
                                              //heart.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
                                          }
                                          completion:^(BOOL finished){
@@ -1111,10 +1113,6 @@
 
 
 
--(void)updateInstructionReset{
-    [instructions updateText:@"RESET" animate:YES];
-    
-}
 -(void)setTimerGoalMarginDisplay{
     NSString * stop;
     NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: [self getLevelAccuracy:currentLevel]];
@@ -1387,7 +1385,7 @@
     [self updateDotColors];
 
      //change background color
-     [UIView animateWithDuration:0.2
+     [UIView animateWithDuration:0.4
                            delay:0.0
                          options:UIViewAnimationOptionCurveLinear
                       animations:^{
@@ -1484,8 +1482,10 @@
                              oView.frame = CGRectMake( xy.x,xy.y,dot.frame.size.width,dot.frame.size.height);
                          }
                          else{
-                             Dots *heart=[hearts objectAtIndex:life-1];
-                             xView.frame = CGRectMake( heart.frame.origin.x,heart.frame.origin.y,heart.frame.size.width,heart.frame.size.height);
+                             if(life-1>0){
+                                 Dots *heart=[hearts objectAtIndex:life-1];
+                                 xView.frame = CGRectMake( heart.frame.origin.x,heart.frame.origin.y,heart.frame.size.width,heart.frame.size.height);
+                             }
                          }
                      }
                      completion:^(BOOL finished){
@@ -1498,7 +1498,8 @@
 
                             //add heart for triplestar level
                              float trialAccuracy=fabs(elapsed-timerGoal);
-                             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0)life++;
+                             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/5.0)life+=2;
+                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/5.0)life++;
                              currentLevel++;
                             //add heart for clearing stage
                             if(currentLevel%TRIALSINSTAGE==0) life++;
@@ -1531,7 +1532,7 @@
     float d=0;
     float inc=.05;
     int arrowN=0;
-    int margin=screenHeight-44-35;
+    int margin=screenHeight-44-37;
     int spacing=-1;
     
     for (int i=0; i<NUMLEVELARROWS; i++){
@@ -1539,17 +1540,21 @@
         t.rightLabel.textColor=self.view.backgroundColor;
     }
  
+    float diff=elapsed-timerGoal;
+
     //ARROW1
     TextArrow *t;//= [levelArrows objectAtIndex:arrowN];
     
     NSString * bonusString=@"";
     float trialAccuracy=fabs(elapsed-timerGoal);
-    if(trialAccuracy<=[self getLevelAccuracy:currentLevel]/5.0) bonusString=@"PERFECT! +❤\U0000FE0E";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/5.0) bonusString=@"NICE!";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/5.0) bonusString=@"GREAT!";
+    if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/5.0) bonusString=@"PERFECT! ❤\U0000FE0E⁺²";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/5.0) bonusString=@"GREAT! ❤\U0000FE0E⁺¹";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/5.0) bonusString=@"NIIIICE!";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/5.0) bonusString=@"NICE!";
     else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]) bonusString=@"CLOSE ENOUGH";
-    else if(elapsed-timerGoal<0) bonusString=@"TOO FAST";
-    else if(elapsed-timerGoal>0) bonusString=@"TOO SLOW";
+
+    else if(diff<0) bonusString=@"TOO FAST";
+    else if(diff>0) bonusString=@"TOO SLOW";
     
     t= [levelArrows objectAtIndex:arrowN];
     [t update:@"" rightLabel:bonusString color:instructions.color animate:NO];
@@ -1561,9 +1566,8 @@
     
     
     
-    float diff=elapsed-timerGoal;
     NSString *diffString;
-    diffString=[NSString stringWithFormat:@"OFF BY %@",[self getTimeDiffString:diff]];
+    diffString=[NSString stringWithFormat:@"%@",[self getTimeDiffString:diff]];
     t= [levelArrows objectAtIndex:arrowN];
     [t update:@"" rightLabel:diffString color:instructions.color animate:NO];
     margin-=spacing+t.frame.size.height;
@@ -1588,26 +1592,29 @@
     
     NSString * stageProgressString;
     //if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED %0.1f POINTS",[self getLevel:currentLevel-1], elapsed*timerGoal];
-    if([self isAccurate]){ stageProgressString=[NSString stringWithFormat:@"+%0.1f XP", elapsed*timerGoal];
-        
-    }
+    if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"+$%0.2f", elapsed*timerGoal];
     else if(life>1) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life];
     else if(life>0) stageProgressString=@"ONE TRY LEFT";
-    else stageProgressString=@"GAME OVER";
-    //if(life>0){
+    //else stageProgressString=@"GAME OVER";
+    if(life>0){
         t= [levelArrows objectAtIndex:arrowN];
         [t update:@"" rightLabel:stageProgressString color:instructions.color animate:NO];
         margin-=spacing+t.frame.size.height;
         d+=inc;
         [t slideUpTo:margin delay:d];
         [self.view bringSubviewToFront:t];
-        arrowN++;
-   //}
+    }
+    arrowN++;
+   
     
     //ARROW3
-    if([self isAccurate] && currentLevel%TRIALSINSTAGE==0) {
+    if(([self isAccurate] && currentLevel%TRIALSINSTAGE==0) || life==0) {
         NSString * stageClearedString;
-        stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED +❤\U0000FE0E",[self getCurrentStage]];
+        if(life==0) stageClearedString=@"GAME OVER";
+        else {
+            stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED! ❤\U0000FE0E⁺¹",[self getCurrentStage]];
+        }
+        
         t= [levelArrows objectAtIndex:arrowN];
         [t update:@"" rightLabel:stageClearedString color:instructions.color animate:NO];
         margin-=spacing+t.frame.size.height;
@@ -1674,19 +1681,17 @@
         
         return;
     }
-    progressView.subMessage.text=[NSString stringWithFormat:@"CONTINUE FROM STAGE %i\nFOR %.01f XP",lastStage+1,lastStage*10.0];
+    progressView.subMessage.text=[NSString stringWithFormat:@"SPEND $%.02f \nTO CONTINUE FROM STAGE %i?",lastStage*10.0,lastStage+1];
     progressView.subMessage.alpha=1.0;
     progressView.subMessage.textColor=trophyButton.tintColor;
     progressView.centerMessage.textColor=trophyButton.tintColor;
 
-    
-    
     playButton.alpha=1.0;
     playButton.tintColor=trophyButton.tintColor;
     playButton.center=CGPointMake(screenWidth/2.0, progressView.subMessage.frame.origin.y+progressView.subMessage.frame.size.height+10);
 
     
-    progressView.lowerMessage.frame=CGRectMake(0, playButton.frame.origin.y+playButton.frame.size.height+30, screenWidth, 80);
+    progressView.lowerMessage.frame=CGRectMake(0, playButton.frame.origin.y+playButton.frame.size.height+30, progressView.lowerMessage.frame.size.width, progressView.lowerMessage.frame.size.height);
     progressView.lowerMessage.text=@"RESTART";
     progressView.lowerMessage.alpha=1.0;
     progressView.lowerMessage.textColor=trophyButton.tintColor;
@@ -1714,7 +1719,7 @@
           initialSpringVelocity:1.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
-                         restartButton.center=CGPointMake(screenWidth*.5, progressView.lowerMessage.frame.origin.y+progressView.lowerMessage.frame.size.height+10);
+                         restartButton.center=CGPointMake(screenWidth*.5, progressView.lowerMessage.frame.origin.y+progressView.lowerMessage.frame.size.height+20);
                          
                      }
                      completion:^(BOOL finished){
@@ -2158,10 +2163,11 @@
                                   [UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1],
                                   [UIColor colorWithRed:253/255.0 green:242/255.0 blue:62/255.0 alpha:1],
                                   [UIColor colorWithRed:0/255.0 green:163/255.0 blue:238/255.0 alpha:1],
-                                  [UIColor colorWithRed:18/255.0 green:118/255.0 blue:135/255.0 alpha:1],
-                                  [UIColor colorWithRed:62/255.0 green:62/255.0 blue:55/255.0 alpha:1],
+                                  
+                                  [UIColor colorWithRed:18/255.0 green:118/255.0 blue:165/255.0 alpha:1],
+                                  [UIColor colorWithRed:82/255.0 green:82/255.0 blue:75/255.0 alpha:1],
                                   [UIColor colorWithRed:200/255.0 green:203/255.0 blue:207/255.0 alpha:1],//
-                                  [UIColor colorWithRed:71/255.0 green:86/255.0 blue:92/255.0 alpha:1],
+                                  [UIColor colorWithRed:91/255.0 green:96/255.0 blue:122/255.0 alpha:1],
                                   nil];
     
     int currentStage=floorf(level/TRIALSINSTAGE);
@@ -2179,10 +2185,10 @@
                                   [UIColor colorWithRed:255/255.0 green:61/255.0 blue:132/255.0 alpha:1],
                                  [UIColor colorWithRed:236/255.0 green:236/255.0 blue:136/255.0 alpha:1],
 
-                                  [UIColor colorWithRed:222/255.0 green:195/255.0 blue:133/255.0 alpha:1],
+                                  [UIColor colorWithRed:222/255.0 green:195/255.0 blue:153/255.0 alpha:1],
                                   [UIColor colorWithRed:254/255.0 green:253/255.0 blue:211/255.0 alpha:1],
                                   [UIColor colorWithRed:255/255.0 green:14/255.0 blue:0/255.0 alpha:1],//
-                                  [UIColor colorWithRed:51/255.0 green:251/255.0 blue:0/255.0 alpha:1],
+                                  [UIColor colorWithRed:71/255.0 green:241/255.0 blue:0/255.0 alpha:1],
 
                                   nil];
     

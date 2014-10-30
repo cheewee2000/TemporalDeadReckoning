@@ -294,7 +294,11 @@
     
     [self setNeedsDisplay];
 }
-
+-(void) setArrowColor:(UIColor *)c
+{
+    self.color=c;
+    [self setNeedsDisplay];
+}
 
 -(void)bounce{
     [UIView animateWithDuration:SLIDESPEED

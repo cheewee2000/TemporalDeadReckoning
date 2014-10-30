@@ -39,10 +39,10 @@
         [self addSubview:self.subMessage];
         [self bringSubviewToFront:self.subMessage];
         
-        self.lowerMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, self.frame.size.width, 80)];
+        self.lowerMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, self.frame.size.width, 40)];
         self.lowerMessage.center=CGPointMake(self.frame.size.width/2.0, self.subMessage.center.y+90);
         self.lowerMessage.text=@"";
-        self.lowerMessage.numberOfLines=2;
+        self.lowerMessage.numberOfLines=1;
         self.lowerMessage.textAlignment = NSTextAlignmentCenter;
         self.lowerMessage.backgroundColor = [UIColor clearColor];
         self.lowerMessage.font = [UIFont fontWithName:@"DIN Condensed" size:24];
