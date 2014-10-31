@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
-//#import "BEMSimpleLineGraphView.h"
+#import "BEMSimpleLineGraphView.h"
 #import "Dots.h"
 #import "TextArrow.h"
 #import <Parse/Parse.h>
@@ -19,8 +19,7 @@
 
 @class RBVolumeButtons;
 
-@interface ViewController : UIViewController <GKGameCenterControllerDelegate, UIAlertViewDelegate>  //<BEMSimpleLineGraphDataSource, BEMSimpleLineGraphDelegate>
-//@interface ViewController : UIViewController <JBLineChartViewDelegate, JBLineChartViewDataSource>
+@interface ViewController : UIViewController <GKGameCenterControllerDelegate, UIAlertViewDelegate, BEMSimpleLineGraphDataSource, BEMSimpleLineGraphDelegate>
 
 {
     int screenWidth,screenHeight;
@@ -100,7 +99,7 @@
 //    UILabel *accuracy;
 //    UILabel *precision;
     
-
+    //NSMutableArray * levelData;
     
     
 }
@@ -110,18 +109,20 @@ void drawLine(CGContextRef context, CGPoint startPoint, CGPoint endPoint, CGColo
 @property (weak, nonatomic) IBOutlet UILabel *screenLabel;
 @property (assign, nonatomic) NSInteger indexNumber;
 @property (retain) RBVolumeButtons *buttonStealer;
-//@property (weak, nonatomic) IBOutlet BEMSimpleLineGraphView *myGraph;
 @property (strong, nonatomic) NSMutableArray *ArrayOfValues;
 @property (strong, nonatomic) NSMutableArray *ArrayOfDates;
 @property (strong, nonatomic) NSMutableDictionary *TimeData;
 @property (strong, nonatomic) IBOutlet UILabel *labelValues;
 @property (strong, nonatomic) IBOutlet UILabel *labelDates;
+
+//- (IBAction)displayStatistics:(id)sender;
+@property BOOL gameCenterEnabled;
+@property NSString *leaderboardIdentifier;
+
+@property (strong, nonatomic) IBOutlet BEMSimpleLineGraphView *myGraph;
 //- (IBAction)refresh:(id)sender;
 //- (IBAction)addOrRemoveLineFromGraph:(id)sender;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *graphColorChoice;
 @property (weak, nonatomic) IBOutlet UIStepper *graphObjectIncrement;
-//- (IBAction)displayStatistics:(id)sender;
-@property BOOL gameCenterEnabled;
-@property NSString *leaderboardIdentifier;
 
 @end

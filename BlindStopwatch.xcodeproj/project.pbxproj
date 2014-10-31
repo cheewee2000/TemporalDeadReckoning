@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		44024E3919C0D7C8000AC66E /* TextArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 44024E3819C0D7C8000AC66E /* TextArrow.m */; };
+		440CF80B1A0327FD000296ED /* BEMCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 440CF8061A0327FD000296ED /* BEMCircle.m */; };
+		440CF80C1A0327FD000296ED /* BEMLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 440CF8081A0327FD000296ED /* BEMLine.m */; };
+		440CF80D1A0327FD000296ED /* BEMSimpleLineGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 440CF80A1A0327FD000296ED /* BEMSimpleLineGraphView.m */; };
 		440E489D19E064CE00EA7D0C /* LevelProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 440E489C19E064CE00EA7D0C /* LevelProgressView.m */; };
 		4436041A19E822CE00184D13 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4436041419E822CE00184D13 /* libTestFlight.a */; };
 		4436041B19E822CE00184D13 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 4436041519E822CE00184D13 /* README.md */; };
@@ -48,6 +51,12 @@
 /* Begin PBXFileReference section */
 		44024E3719C0D7C8000AC66E /* TextArrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextArrow.h; sourceTree = "<group>"; };
 		44024E3819C0D7C8000AC66E /* TextArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextArrow.m; sourceTree = "<group>"; };
+		440CF8051A0327FD000296ED /* BEMCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BEMCircle.h; sourceTree = "<group>"; };
+		440CF8061A0327FD000296ED /* BEMCircle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEMCircle.m; sourceTree = "<group>"; };
+		440CF8071A0327FD000296ED /* BEMLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BEMLine.h; sourceTree = "<group>"; };
+		440CF8081A0327FD000296ED /* BEMLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEMLine.m; sourceTree = "<group>"; };
+		440CF8091A0327FD000296ED /* BEMSimpleLineGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BEMSimpleLineGraphView.h; sourceTree = "<group>"; };
+		440CF80A1A0327FD000296ED /* BEMSimpleLineGraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEMSimpleLineGraphView.m; sourceTree = "<group>"; };
 		440E489B19E064CE00EA7D0C /* LevelProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelProgressView.h; sourceTree = "<group>"; };
 		440E489C19E064CE00EA7D0C /* LevelProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LevelProgressView.m; sourceTree = "<group>"; };
 		4436041419E822CE00184D13 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
@@ -129,6 +138,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		440CF8041A0327FD000296ED /* BEM */ = {
+			isa = PBXGroup;
+			children = (
+				440CF8051A0327FD000296ED /* BEMCircle.h */,
+				440CF8061A0327FD000296ED /* BEMCircle.m */,
+				440CF8071A0327FD000296ED /* BEMLine.h */,
+				440CF8081A0327FD000296ED /* BEMLine.m */,
+				440CF8091A0327FD000296ED /* BEMSimpleLineGraphView.h */,
+				440CF80A1A0327FD000296ED /* BEMSimpleLineGraphView.m */,
+			);
+			path = BEM;
+			sourceTree = "<group>";
+		};
 		4436041319E822CE00184D13 /* TestFlightSDK3.0.2 */ = {
 			isa = PBXGroup;
 			children = (
@@ -227,6 +249,7 @@
 			children = (
 				443CA72E19C0BFDB003BACD8 /* RBVolume */,
 				44FC47211A00563000DC7A52 /* BFPaperButton */,
+				440CF8041A0327FD000296ED /* BEM */,
 				44F972C819BE9E310094FCF4 /* ViewController.h */,
 				44F972C919BE9E310094FCF4 /* ViewController.m */,
 				440E489B19E064CE00EA7D0C /* LevelProgressView.h */,
@@ -333,9 +356,12 @@
 			files = (
 				440E489D19E064CE00EA7D0C /* LevelProgressView.m in Sources */,
 				44C2C9FA19C9E330005ACEB7 /* Level.m in Sources */,
+				440CF80D1A0327FD000296ED /* BEMSimpleLineGraphView.m in Sources */,
 				44F972CA19BE9E310094FCF4 /* ViewController.m in Sources */,
 				4436041B19E822CE00184D13 /* README.md in Sources */,
+				440CF80C1A0327FD000296ED /* BEMLine.m in Sources */,
 				448E78BD19B936C100BF902A /* main.m in Sources */,
+				440CF80B1A0327FD000296ED /* BEMCircle.m in Sources */,
 				44FC471C1A0053D000DC7A52 /* BFPaperButton.m in Sources */,
 				44FC47201A0054AA00DC7A52 /* UIColor+BFPaperColors.m in Sources */,
 				44024E3919C0D7C8000AC66E /* TextArrow.m in Sources */,

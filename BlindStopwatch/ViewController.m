@@ -120,8 +120,8 @@
     for (int i=0; i<NUMLEVELARROWS; i++) {
         TextArrow *arrow;
         if(i==0)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.08)];
-        else if(i==1)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.06)];
-        else if(i==4)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0,0, screenWidth, screenHeight*.07)];
+        else if(i==1)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0,0, screenWidth, screenHeight*.07)];
+        else if(i==2)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.06)];
         else arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.045)];
 
         arrow.drawArrow=false;
@@ -193,92 +193,8 @@
     };
     [self.buttonStealer startStealingVolumeButtonEvents];
 
-    /*
-    nPointsVisible=20;
-    self.myGraph.colorTop =[UIColor clearColor];
-    self.myGraph.colorBottom =[UIColor clearColor];
-    self.myGraph.colorLine = [UIColor blackColor];
-    self.myGraph.colorXaxisLabel = [UIColor blackColor];
-    self.myGraph.colorYaxisLabel = [UIColor blackColor];
-    self.myGraph.widthLine = 2.0;
-    self.myGraph.colorPoint=[UIColor blackColor];
-    self.myGraph.animationGraphStyle = BEMLineAnimationDraw;
-    self.myGraph.enableTouchReport = YES;
-    self.myGraph.enablePopUpReport = YES;
-    self.myGraph.autoScaleYAxis = YES;
+    
 
-    self.myGraph.animationGraphEntranceTime = 0.8;
-    //myGraph.alphaTop=.2;
-    //myGraph.enableBezierCurve = YES;
-    //myGraph.alwaysDisplayDots = YES;
-    //myGraph.enableReferenceAxisLines = YES;
-    //myGraph.enableYAxisLabel = YES;
-    //myGraph.alwaysDisplayPopUpLabels = YES;
-    
-    self.myGraph.userInteractionEnabled=YES;
-    self.myGraph.multipleTouchEnabled=YES;
-    
-//    UIPinchGestureRecognizer *pinch =[[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(scalePiece:)];
-//    [pinch setDelegate:self];
-//    [self.myGraph addGestureRecognizer:pinch];
-    */
-    
-    //stats
-    /*
-     UIFont * LF=[UIFont fontWithName:@"HelveticaNeue" size:32];
-    UIFont * SMF=[UIFont fontWithName:@"HelveticaNeue" size:8];
-    
-    lastResults=[[UILabel alloc] initWithFrame:CGRectMake(0, 8, 50, 50)];
-    lastResults.font = LF;
-    lastResults.textColor =  [UIColor blackColor];
-    [stats addSubview:lastResults];
-    
-    accuracy=[[UILabel alloc] initWithFrame:CGRectMake(stats.frame.size.width*.33, 8, 40, 50)];
-    accuracy.font = LF;
-    accuracy.textColor =  [UIColor blackColor];
-    [stats addSubview:accuracy];
-    
-    precision=[[UILabel alloc] initWithFrame:CGRectMake(stats.frame.size.width*.66, 8, 50, 50)];
-    precision.font = LF;
-    precision.textColor =  [UIColor blackColor];
-    precision.adjustsFontSizeToFitWidth=YES;
-    [stats addSubview:precision];
- 
-    
-    //UNITS
-    UILabel* precisionUnit=[[UILabel alloc] initWithFrame:CGRectMake(precision.frame.origin.x+precision.frame.size.width, 0, 80, 50)];
-    precisionUnit.text=@"ms";
-    precisionUnit.font = SMF;
-    [stats addSubview:precisionUnit];
-
-    UILabel* accuracyUnit=[[UILabel alloc] initWithFrame:CGRectMake(accuracy.frame.origin.x+accuracy.frame.size.width, 0, 80, 50)];
-    accuracyUnit.text=@"%";
-    accuracyUnit.font = SMF;
-    [stats addSubview:accuracyUnit];
-    
-    
-    //LABELS
-    float y=stats.frame.size.height-15;
-    
-    UILabel* lastResultLabel=[[UILabel alloc] initWithFrame:CGRectMake(lastResults.frame.origin.x, y, stats.frame.size.width*.33-12, 20)];
-    lastResultLabel.text=@"LAST RESULTS";
-    [lastResultLabel setTextAlignment:NSTextAlignmentRight];
-    lastResultLabel.font = SMF;
-    [stats addSubview:lastResultLabel];
-    
-    UILabel* accuracyLabel=[[UILabel alloc] initWithFrame:CGRectMake(accuracy.frame.origin.x, y, stats.frame.size.width*.33-12, 20)];
-    accuracyLabel.text=@"ACCURACY";
-    [accuracyLabel setTextAlignment:NSTextAlignmentRight];
-    accuracyLabel.font = SMF;
-    [stats addSubview:accuracyLabel];
-    
-    UILabel* precisionLabel=[[UILabel alloc] initWithFrame:CGRectMake(precision.frame.origin.x, y, stats.frame.size.width*.33-12, 20)];
-    precisionLabel.text=@"PRECISION";
-    [precisionLabel setTextAlignment:NSTextAlignmentRight];
-    precisionLabel.font = SMF;
-    [stats addSubview:precisionLabel];
-       */
-    
     
     
 
@@ -372,6 +288,101 @@
     
     
     
+    ///*
+    nPointsVisible=20;
+    self.myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
+    self.myGraph.delegate = self;
+    self.myGraph.dataSource = self;
+    self.myGraph.colorTop =[UIColor clearColor];
+    self.myGraph.colorBottom =[UIColor clearColor];
+    self.myGraph.colorLine = [UIColor blackColor];
+    self.myGraph.colorXaxisLabel = [UIColor blackColor];
+    self.myGraph.colorYaxisLabel = [UIColor blackColor];
+    self.myGraph.widthLine = 2.0;
+    self.myGraph.colorPoint=[UIColor blackColor];
+    self.myGraph.animationGraphStyle = BEMLineAnimationDraw;
+    self.myGraph.enableTouchReport = YES;
+    self.myGraph.enablePopUpReport = YES;
+    self.myGraph.autoScaleYAxis = YES;
+    
+    self.myGraph.animationGraphEntranceTime = 0.8;
+    self.myGraph.frame=CGRectMake(0, screenHeight, screenWidth, 200);
+    //myGraph.alphaTop=.2;
+    //myGraph.enableBezierCurve = YES;
+    //myGraph.alwaysDisplayDots = YES;
+    //myGraph.enableReferenceAxisLines = YES;
+    //myGraph.enableYAxisLabel = YES;
+    //myGraph.alwaysDisplayPopUpLabels = YES;
+    
+    //self.myGraph.userInteractionEnabled=YES;
+    //self.myGraph.multipleTouchEnabled=YES;
+    
+    [progressView addSubview:self.myGraph];
+    
+    //    UIPinchGestureRecognizer *pinch =[[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(scalePiece:)];
+    //    [pinch setDelegate:self];
+    //    [self.myGraph addGestureRecognizer:pinch];
+    //*/
+    
+    //stats
+    /*
+     UIFont * LF=[UIFont fontWithName:@"HelveticaNeue" size:32];
+     UIFont * SMF=[UIFont fontWithName:@"HelveticaNeue" size:8];
+     
+     lastResults=[[UILabel alloc] initWithFrame:CGRectMake(0, 8, 50, 50)];
+     lastResults.font = LF;
+     lastResults.textColor =  [UIColor blackColor];
+     [stats addSubview:lastResults];
+     
+     accuracy=[[UILabel alloc] initWithFrame:CGRectMake(stats.frame.size.width*.33, 8, 40, 50)];
+     accuracy.font = LF;
+     accuracy.textColor =  [UIColor blackColor];
+     [stats addSubview:accuracy];
+     
+     precision=[[UILabel alloc] initWithFrame:CGRectMake(stats.frame.size.width*.66, 8, 50, 50)];
+     precision.font = LF;
+     precision.textColor =  [UIColor blackColor];
+     precision.adjustsFontSizeToFitWidth=YES;
+     [stats addSubview:precision];
+     
+     
+     //UNITS
+     UILabel* precisionUnit=[[UILabel alloc] initWithFrame:CGRectMake(precision.frame.origin.x+precision.frame.size.width, 0, 80, 50)];
+     precisionUnit.text=@"ms";
+     precisionUnit.font = SMF;
+     [stats addSubview:precisionUnit];
+     
+     UILabel* accuracyUnit=[[UILabel alloc] initWithFrame:CGRectMake(accuracy.frame.origin.x+accuracy.frame.size.width, 0, 80, 50)];
+     accuracyUnit.text=@"%";
+     accuracyUnit.font = SMF;
+     [stats addSubview:accuracyUnit];
+     
+     
+     //LABELS
+     float y=stats.frame.size.height-15;
+     
+     UILabel* lastResultLabel=[[UILabel alloc] initWithFrame:CGRectMake(lastResults.frame.origin.x, y, stats.frame.size.width*.33-12, 20)];
+     lastResultLabel.text=@"LAST RESULTS";
+     [lastResultLabel setTextAlignment:NSTextAlignmentRight];
+     lastResultLabel.font = SMF;
+     [stats addSubview:lastResultLabel];
+     
+     UILabel* accuracyLabel=[[UILabel alloc] initWithFrame:CGRectMake(accuracy.frame.origin.x, y, stats.frame.size.width*.33-12, 20)];
+     accuracyLabel.text=@"ACCURACY";
+     [accuracyLabel setTextAlignment:NSTextAlignmentRight];
+     accuracyLabel.font = SMF;
+     [stats addSubview:accuracyLabel];
+     
+     UILabel* precisionLabel=[[UILabel alloc] initWithFrame:CGRectMake(precision.frame.origin.x, y, stats.frame.size.width*.33-12, 20)];
+     precisionLabel.text=@"PRECISION";
+     [precisionLabel setTextAlignment:NSTextAlignmentRight];
+     precisionLabel.font = SMF;
+     [stats addSubview:precisionLabel];
+     */
+    
+    
+    
+    
     //life hearsts
     if([defaults objectForKey:@"life"] == nil) life=NUMHEARTS;
     else life = (int)[defaults integerForKey:@"life"];
@@ -461,6 +472,8 @@
     
     
     if(life==0)[self restart];
+    
+
 }
 
 -(void)restartButtonPressed{
@@ -1118,7 +1131,7 @@
     NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: [self getLevelAccuracy:currentLevel]];
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
     [df setDateFormat:@"±s.SSS"];
-    stop = [df stringFromDate:aDate];
+    stop =[NSString stringWithFormat:@"%@ SEC", [df stringFromDate:aDate]];
     goalPrecision.text=stop;
 }
 
@@ -1128,7 +1141,8 @@
     [myDictionary setObject:[NSNumber numberWithFloat:(elapsed-timerGoal)] forKey:@"accuracy"];
     [myDictionary setObject:[NSNumber numberWithFloat:timerGoal] forKey:@"goal"];
     [myDictionary setObject:[NSDate date] forKey:@"date"];
-    [self.ArrayOfValues insertObject:myDictionary atIndex:currentLevel];
+    //[self.ArrayOfValues  insertObject:myDictionary atIndex:currentLevel];
+    [self.ArrayOfValues addObject:myDictionary];
     
     //save to parse
     PFObject *pObject = [PFObject objectWithClassName:@"results"];
@@ -1149,8 +1163,8 @@
     
     
     //update graph
-    //self.myGraph.animationGraphEntranceTime = 0.8;
-    //[self.myGraph reloadGraph];
+    self.myGraph.animationGraphEntranceTime = 0.8;
+    [self.myGraph reloadGraph];
     
     [self saveValues];
     
@@ -1235,7 +1249,7 @@
     NSString *documentsDirectory = [paths objectAtIndex:0];
     
     //timeValuesFile = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"timeData%i.dat",(int)level]];
-    timeValuesFile = [documentsDirectory stringByAppendingPathComponent:@"trialData1.dat"];
+    timeValuesFile = [documentsDirectory stringByAppendingPathComponent:@"trialData3.dat"];
 
     //Load the array
     self.ArrayOfValues = [[NSMutableArray alloc] initWithContentsOfFile: timeValuesFile];
@@ -1244,13 +1258,14 @@
     {
         //Array file didn't exist... create a new one
         self.ArrayOfValues = [[NSMutableArray alloc] init];
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i <nPointsVisible ; i++) {
             NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
             [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"accuracy"];
             [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"goal"];
             [myDictionary setObject:[NSDate date] forKey:@"date"];
             [self.ArrayOfValues addObject:myDictionary];
         }
+        [self saveValues];
     }
 }
 
@@ -1331,9 +1346,6 @@
 //            
 //            NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
 //            [myDictionary  setObject:[NSNumber numberWithInt:0] forKey:@"accuracy"];
-////            for(int j=0; j<10; j++){
-////                [myDictionary setObject:[NSNumber numberWithInt:0] forKey:[NSString stringWithFormat:@"progress-accuracy-%i",j]];
-////            }
 //            [levelData addObject:myDictionary];
 // 
 //        }
@@ -1341,7 +1353,7 @@
 //    }
 //    
 //}
-
+//
 //-(void)saveLevelProgress{
 //    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 //    NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -1355,6 +1367,7 @@
     
      NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
      [defaults setInteger:currentLevel forKey:@"currentLevel"];
+    
     
     if(level>0 && practicing==false){
         
@@ -1498,8 +1511,9 @@
 
                             //add heart for triplestar level
                              float trialAccuracy=fabs(elapsed-timerGoal);
-                             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/5.0)life+=2;
-                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/5.0)life++;
+                             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/10.0)life+=3;
+                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/10.0)life+=2;
+                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/10.0)life++;
                              currentLevel++;
                             //add heart for clearing stage
                             if(currentLevel%TRIALSINSTAGE==0) life++;
@@ -1542,20 +1556,53 @@
  
     float diff=elapsed-timerGoal;
 
-    //ARROW1
     TextArrow *t;//= [levelArrows objectAtIndex:arrowN];
+    
+    //ARROW1
+
+    if(([self isAccurate] && currentLevel%TRIALSINSTAGE==0) || life==0) {
+        NSString * stageClearedString;
+        if(life==0) stageClearedString=@"GAME OVER";
+        else {
+            stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED! ❤\U0000FE0E⁺¹",[self getCurrentStage]];
+        }
+        
+        t= [levelArrows objectAtIndex:arrowN];
+        [t update:@"" rightLabel:stageClearedString color:instructions.color animate:NO];
+        margin-=spacing+t.frame.size.height;
+        d+=inc;
+        [t slideUpTo:margin delay:d];
+        [self.view bringSubviewToFront:t];
+    }
+    arrowN++;
+
     
     NSString * bonusString=@"";
     float trialAccuracy=fabs(elapsed-timerGoal);
-    if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/5.0) bonusString=@"PERFECT! ❤\U0000FE0E⁺²";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/5.0) bonusString=@"GREAT! ❤\U0000FE0E⁺¹";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/5.0) bonusString=@"NIIIICE!";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/5.0) bonusString=@"NICE!";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]) bonusString=@"CLOSE ENOUGH";
-
-    else if(diff<0) bonusString=@"TOO FAST";
-    else if(diff>0) bonusString=@"TOO SLOW";
+    if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/10.0)      bonusString=@"PERFECT! ❤\U0000FE0E⁺³";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/10.0) bonusString=@"BOOOOOM! ❤\U0000FE0E⁺²";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/10.0) bonusString=@"WOOT! ❤\U0000FE0E⁺¹";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/10.0) bonusString=@"MONEY! ❤\U0000FE0E⁺¹";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*5/10.0) bonusString=@"GREAT!";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*6/10.0) bonusString=@"NICE!";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*7/10.0) bonusString=@"DONE!";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*8/10.0) bonusString=@"SWEET!";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*9/10.0) bonusString=@"CLOSE ENOUGH";
+    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel])        bonusString=@"MEH";
     
+    else if(diff<-1)  bonusString=@"WAY TOO FAST!";
+    else if(diff<-.5) bonusString=@"PATIENCE! GO SLOWER.";
+    else if(diff<-.4) bonusString=@"SLOW DOWN";
+    else if(diff<-.3) bonusString=@"BREATH. SLOW DOWN.";
+    else if(diff<-.2) bonusString=@"SLOW DOWN A BIT";
+    else if(diff<0)   bonusString=@"TOO FAST";
+    
+    else if(diff>1)  bonusString=@"WAY TOO SLOW!";
+    else if(diff>.5) bonusString=@"SPEED UP!";
+    else if(diff>.4) bonusString=@"GO FASTER!";
+    else if(diff>.3) bonusString=@"TOO SLOW!";
+    else if(diff>.2) bonusString=@"A BIT TOO SLOW";
+    else if(diff>0)  bonusString=@"GO A BIT FASTER";
     t= [levelArrows objectAtIndex:arrowN];
     [t update:@"" rightLabel:bonusString color:instructions.color animate:NO];
     margin-=spacing+t.frame.size.height;
@@ -1567,7 +1614,7 @@
     
     
     NSString *diffString;
-    diffString=[NSString stringWithFormat:@"%@",[self getTimeDiffString:diff]];
+    diffString=[NSString stringWithFormat:@"%@ SECONDS",[self getTimeDiffString:diff]];
     t= [levelArrows objectAtIndex:arrowN];
     [t update:@"" rightLabel:diffString color:instructions.color animate:NO];
     margin-=spacing+t.frame.size.height;
@@ -1606,27 +1653,7 @@
     }
     arrowN++;
    
-    
-    //ARROW3
-    if(([self isAccurate] && currentLevel%TRIALSINSTAGE==0) || life==0) {
-        NSString * stageClearedString;
-        if(life==0) stageClearedString=@"GAME OVER";
-        else {
-            stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED! ❤\U0000FE0E⁺¹",[self getCurrentStage]];
-        }
-        
-        t= [levelArrows objectAtIndex:arrowN];
-        [t update:@"" rightLabel:stageClearedString color:instructions.color animate:NO];
-        margin-=spacing+t.frame.size.height;
-        d+=inc;
-        [t slideUpTo:margin delay:d];
-        [self.view bringSubviewToFront:t];
-        arrowN++;
-    }
-    
-    //ARROW4
 
-    
     //[levelAlert update:[NSString stringWithFormat:@"%.1f COOKIES",highScore] rightLabel:@""   color:instructions.color animate:NO];
     [levelAlert update:@"" rightLabel:@""   color:instructions.color animate:NO];
 
@@ -2236,15 +2263,17 @@
 
 
 #pragma mark - SimpleLineGraph Data Source
-/*
+///*
 - (NSInteger)numberOfPointsInLineGraph:(BEMSimpleLineGraphView *)graph {
     return nPointsVisible;
 }
 
 - (CGFloat)lineGraph:(BEMSimpleLineGraphView *)graph valueForPointAtIndex:(NSInteger)index {
     if([self.ArrayOfValues count]==0)return 0.0;
-    index=[self.ArrayOfValues count]-nPointsVisible+index; //show last nPoints
-    return ([[[self.ArrayOfValues objectAtIndex:index] objectForKey:@"accuracy"] floatValue]*1000);
+    NSInteger i=[self.ArrayOfValues count]-nPointsVisible+index; //show last nPoints
+    //index=[self.ArrayOfValues count]+nPointsVisible-index; //show last nPoints
+//index=index
+    return ([[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"accuracy"] floatValue]*1000);
 }
 
 
@@ -2300,7 +2329,7 @@
 
 - (void)lineGraphDidFinishLoading:(BEMSimpleLineGraphView *)graph {
     
-    [self updateStats];
+    //[self updateStats];
     [self.myGraph drawPrecisionOverlay:timerGoal];
     
     //last dot
@@ -2321,7 +2350,7 @@
     
     
 }
-*/
+//*/
 
 
 
@@ -2365,6 +2394,8 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [self loadData];
+    [self.myGraph reloadGraph];
+
     [self performSelector:@selector(setupDots) withObject:self afterDelay:.5];
 
     
