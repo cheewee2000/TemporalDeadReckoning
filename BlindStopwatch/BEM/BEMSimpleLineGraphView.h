@@ -32,7 +32,7 @@
 
 
 
-- (void)drawPrecisionOverlay:(int) timerGoal;
+- (void)drawPrecisionOverlay:(float) margin;
 -(void)drawLastDot;
 @property (nonatomic) BEMCircle *lastDot;
 @property (nonatomic) UILabel *lastPointLabel;

@@ -1111,18 +1111,22 @@
 
 -(void)drawLastStats{
     
-    UIView *labelBackground = [[UIView alloc] initWithFrame:CGRectMake(self.frame.size.width, 0, 15, self.frame.size.height)];
-    labelBackground.backgroundColor = [UIColor whiteColor];
+    UIView *labelBackground = [[UIView alloc] initWithFrame:CGRectMake(self.frame.size.width, 0, 22, self.frame.size.height)];
+    labelBackground.backgroundColor =[UIColor clearColor];// [UIColor colorWithWhite:1 alpha:.1];
 
     [self addSubview:labelBackground];
     
-    int w=150;
+    int w=60;
     int h=15;
-    self.lastPointLabel = [[UILabel alloc] initWithFrame:CGRectMake(-1*w/2+h/2, w, w, h)];
+    self.lastPointLabel = [[UILabel alloc] initWithFrame:CGRectMake(-1*w/2.0+h/2.0+7, self.lastDot.center.y-w/2.0, w, h)];
+    //self.lastPointLabel = [[UILabel alloc] initWithFrame:CGRectMake(12, self.lastDot.center.y, w, h)];
+    //self.lastPointLabel.center=self.lastDot.center;
+    
     self.lastPointLabel.numberOfLines = 1;
     self.lastPointLabel.backgroundColor = [UIColor clearColor];
-    self.lastPointLabel.textColor = [UIColor blackColor];
+    self.lastPointLabel.textColor = self.colorPoint;
     self.lastPointLabel.text=@"";
+    self.lastPointLabel.textAlignment=NSTextAlignmentCenter;
     self.lastPointLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:10];
 
 
@@ -1135,8 +1139,11 @@
 }
 - (void)drawZero {
     float yPos= [self yPositionForDotValue:0.0f];
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, yPos, self.frame.size.width, 1)];
-    lineView.backgroundColor = [UIColor colorWithWhite:0 alpha:.3];
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, yPos, self.frame.size.width+22, 1)];
+    //lineView.backgroundColor = [UIColor colorWithWhite:0 alpha:.3];
+    lineView.backgroundColor = self.colorPoint;
+    lineView.alpha=.3;
+
     [self addSubview:lineView];
     
     
@@ -1155,7 +1162,7 @@
     
     int x= self.frame.size.width;
     int y= [self yPositionForDotValue:[self.dataSource lineGraph:self valueForPointAtIndex:numberOfPoints-1]];
-    
+    self.lastPointLabel.center =CGPointMake(self.lastPointLabel.center.x, y);
     
     self.lastDot = [[BEMCircle alloc] initWithFrame:CGRectMake(0, 0, self.sizePoint, self.sizePoint)];
     self.lastDot.center = CGPointMake(x,y);
@@ -1165,9 +1172,9 @@
     
 }
 
-- (void)drawPrecisionOverlay:(int) timerGoal{
+- (void)drawPrecisionOverlay:(float) margin{
     //float yPos= [self yPositionForDotValue:0.0f];
-    float range=timerGoal*1000*.1;
+    float range=margin;
     float th=[self yPositionForDotValue:range];
     float tb=fabs([self yPositionForDotValue:-range]);
 
@@ -1179,18 +1186,24 @@
 //    bottom.backgroundColor = [UIColor colorWithWhite:1 alpha:.45];
 //    [self addSubview:bottom];
     
-    UIView *top = [[UIView alloc] initWithFrame:CGRectMake(0, th, self.frame.size.width, 1)];
-    top.backgroundColor = [UIColor colorWithWhite:0 alpha:.1];
+    UIView *top = [[UIView alloc] initWithFrame:CGRectMake(0, th, self.frame.size.width+22, 1)];
+    //top.backgroundColor = [UIColor colorWithWhite:0 alpha:.1];
+    top.backgroundColor = self.colorPoint;
+    top.alpha=.1;
+    
     [self addSubview:top];
     
-    UIView *bottom = [[UIView alloc] initWithFrame:CGRectMake(0, tb, self.frame.size.width, 1)];
-    bottom.backgroundColor = [UIColor colorWithWhite:0 alpha:.1];
+    UIView *bottom = [[UIView alloc] initWithFrame:CGRectMake(0, tb, self.frame.size.width+22, 1)];
+    //bottom.backgroundColor = [UIColor colorWithWhite:0 alpha:.1];
+    bottom.backgroundColor = self.colorPoint;
+    bottom.alpha=.1;
+    
     [self addSubview:bottom];
     
     
     
     UILabel * label=[[UILabel alloc] initWithFrame:CGRectMake(8, th-16, 120, 12)];
-    [label setText:[NSString stringWithFormat:@"±%ims",(int)range]];
+    [label setText:[NSString stringWithFormat:@"±%.03f SEC",range]];
     
     label.backgroundColor = [UIColor clearColor];
     label.textAlignment = NSTextAlignmentLeft;

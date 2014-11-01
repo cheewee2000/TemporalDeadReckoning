@@ -109,7 +109,9 @@ void drawLine(CGContextRef context, CGPoint startPoint, CGPoint endPoint, CGColo
 @property (weak, nonatomic) IBOutlet UILabel *screenLabel;
 @property (assign, nonatomic) NSInteger indexNumber;
 @property (retain) RBVolumeButtons *buttonStealer;
-@property (strong, nonatomic) NSMutableArray *ArrayOfValues;
+@property (strong, nonatomic) NSMutableArray *trialData;
+@property (strong, nonatomic) NSMutableArray *levelData;
+
 @property (strong, nonatomic) NSMutableArray *ArrayOfDates;
 @property (strong, nonatomic) NSMutableDictionary *TimeData;
 @property (strong, nonatomic) IBOutlet UILabel *labelValues;

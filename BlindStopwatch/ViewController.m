@@ -289,30 +289,30 @@
     
     
     ///*
-    nPointsVisible=20;
-    self.myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
+    nPointsVisible=40;
+    self.myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, screenHeight, screenWidth-22, screenHeight*.5)];
     self.myGraph.delegate = self;
     self.myGraph.dataSource = self;
     self.myGraph.colorTop =[UIColor clearColor];
     self.myGraph.colorBottom =[UIColor clearColor];
+
     self.myGraph.colorLine = [UIColor blackColor];
     self.myGraph.colorXaxisLabel = [UIColor blackColor];
     self.myGraph.colorYaxisLabel = [UIColor blackColor];
-    self.myGraph.widthLine = 2.0;
     self.myGraph.colorPoint=[UIColor blackColor];
+    self.myGraph.widthLine = 2.0;
     self.myGraph.animationGraphStyle = BEMLineAnimationDraw;
     self.myGraph.enableTouchReport = YES;
     self.myGraph.enablePopUpReport = YES;
     self.myGraph.autoScaleYAxis = YES;
     
     self.myGraph.animationGraphEntranceTime = 0.8;
-    self.myGraph.frame=CGRectMake(0, screenHeight, screenWidth, 200);
     //myGraph.alphaTop=.2;
     //myGraph.enableBezierCurve = YES;
     //myGraph.alwaysDisplayDots = YES;
-    //myGraph.enableReferenceAxisLines = YES;
-    //myGraph.enableYAxisLabel = YES;
-    //myGraph.alwaysDisplayPopUpLabels = YES;
+    //self.myGraph.enableReferenceAxisLines = YES;
+    //self.myGraph.enableYAxisLabel = YES;
+    //self.myGraph.alwaysDisplayPopUpLabels = YES;
     
     //self.myGraph.userInteractionEnabled=YES;
     //self.myGraph.multipleTouchEnabled=YES;
@@ -831,6 +831,7 @@
 }
 
 -(void) updateDot:(int)i{
+    
     Dots *dot=[dots objectAtIndex:i];
 
     //goal String
@@ -846,17 +847,13 @@
     if(i<currentLevel){
         [dot setFill:YES];
         
-        float trialAccuracy=fabs([[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"accuracy"] floatValue]);
+        float trialAccuracy=fabs([[[self.levelData objectAtIndex:i] objectForKey:@"accuracy"] floatValue]);
         //float trialGoal=fabs([[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"goal"] floatValue]);
         //float accuracyPercent=100.0-trialAccuracy/trialGoal*100.0;
        
-        if(trialAccuracy<=[self getLevelAccuracy:i]/5.0){
-            [dot setStars:3];
-        }
-        else if(trialAccuracy<=[self getLevelAccuracy:i]*2.5/5.0){
-            [dot setStars:2];
-        }
-        else if(trialAccuracy<=[self getLevelAccuracy:i]*3.5/5.0)[dot setStars:1];
+        if(trialAccuracy<=[self getLevelAccuracy:i]*1.0/5.0) [dot setStars:3];
+        else if(trialAccuracy<=[self getLevelAccuracy:i]*2.0/5.0) [dot setStars:2];
+        else if(trialAccuracy<=[self getLevelAccuracy:i]*3.0/5.0)[dot setStars:1];
     }
     else {
         [dot setFill:NO];
@@ -868,6 +865,7 @@
 
     for (int i=0; i<[dots count]; i++)[self updateDot:i];
   
+
     //hide xo view`
     [UIView animateWithDuration:.4
                           delay:0.0
@@ -1052,26 +1050,26 @@
 
 
 
-- (IBAction)scalePiece:(UIPinchGestureRecognizer *)gestureRecognizer
-{
-    if ([gestureRecognizer state] == UIGestureRecognizerStateBegan || [gestureRecognizer state] == UIGestureRecognizerStateChanged) {
-        
-        nPointsVisible*=1.0/([gestureRecognizer scale]*[gestureRecognizer scale]);
-        
-        [gestureRecognizer setScale:1.0];
-        
-        if(nPointsVisible>=[self.ArrayOfValues count]-1){
-            nPointsVisible=[self.ArrayOfValues count]-1;
-            return;
-        }
-        else if(nPointsVisible<=10){
-            nPointsVisible=10;
-            return;
-        }
-        //self.myGraph.animationGraphEntranceTime = 0.0;
-        //[self.myGraph reloadGraph];
-    }
-}
+//- (IBAction)scalePiece:(UIPinchGestureRecognizer *)gestureRecognizer
+//{
+//    if ([gestureRecognizer state] == UIGestureRecognizerStateBegan || [gestureRecognizer state] == UIGestureRecognizerStateChanged) {
+//        
+//        nPointsVisible*=1.0/([gestureRecognizer scale]*[gestureRecognizer scale]);
+//        
+//        [gestureRecognizer setScale:1.0];
+//        
+//        if(nPointsVisible>=[self.trialData count]-1){
+//            nPointsVisible=[self.trialData count]-1;
+//            return;
+//        }
+//        else if(nPointsVisible<=10){
+//            nPointsVisible=10;
+//            return;
+//        }
+//        //self.myGraph.animationGraphEntranceTime = 0.0;
+//        //[self.myGraph reloadGraph];
+//    }
+//}
 
 
 
@@ -1116,6 +1114,7 @@
             [self updateTimeDisplay:elapsed];
             [self animateLevelDotScore];
             counterLabel.alpha=1.0;
+
     }
     //NEXT
     else if(trialSequence==2 && levelAlert.frame.origin.y<screenHeight){
@@ -1136,13 +1135,23 @@
 }
 
 -(void)saveTrialData{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setInteger:currentLevel forKey:@"currentLevel"];
+    
+    
     //save to disk
     NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
-    [myDictionary setObject:[NSNumber numberWithFloat:(elapsed-timerGoal)] forKey:@"accuracy"];
+    float diff=elapsed-timerGoal;
+    [myDictionary setObject:[NSNumber numberWithFloat:diff] forKey:@"accuracy"];
     [myDictionary setObject:[NSNumber numberWithFloat:timerGoal] forKey:@"goal"];
     [myDictionary setObject:[NSDate date] forKey:@"date"];
     //[self.ArrayOfValues  insertObject:myDictionary atIndex:currentLevel];
-    [self.ArrayOfValues addObject:myDictionary];
+    //dave data into continuous array
+    [self.trialData addObject:myDictionary];
+    
+    //save data into clean array
+    [self.levelData  insertObject:myDictionary atIndex:currentLevel];
+    [self saveLevelProgress];
     
     //save to parse
     PFObject *pObject = [PFObject objectWithClassName:@"results"];
@@ -1152,7 +1161,7 @@
     //pObject[@"timezone"]=[NSTimeZone localTimeZone];
 
     NSString*uuid;
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    //NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if([defaults stringForKey:@"uuid"] == nil){
         uuid=CFBridgingRelease(CFUUIDCreateString(NULL, CFUUIDCreate(NULL)));
         [defaults setObject:uuid forKey:@"uuid"];
@@ -1239,31 +1248,30 @@
 
 #pragma mark DATA
 //-(void)loadData:(float) level{
--(void)loadData{
+-(void)loadTrialData{
     
     //load values
-    self.ArrayOfValues = [[NSMutableArray alloc] init];
+    self.trialData = [[NSMutableArray alloc] init];
     
     //Creating a file path under iOS:
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    
     //timeValuesFile = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"timeData%i.dat",(int)level]];
     timeValuesFile = [documentsDirectory stringByAppendingPathComponent:@"trialData3.dat"];
 
     //Load the array
-    self.ArrayOfValues = [[NSMutableArray alloc] initWithContentsOfFile: timeValuesFile];
+    self.trialData = [[NSMutableArray alloc] initWithContentsOfFile: timeValuesFile];
     
-    if(self.ArrayOfValues == nil)
+    if(self.trialData == nil)
     {
         //Array file didn't exist... create a new one
-        self.ArrayOfValues = [[NSMutableArray alloc] init];
+        self.trialData = [[NSMutableArray alloc] init];
         for (int i = 0; i <nPointsVisible ; i++) {
             NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
             [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"accuracy"];
             [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"goal"];
             [myDictionary setObject:[NSDate date] forKey:@"date"];
-            [self.ArrayOfValues addObject:myDictionary];
+            [self.trialData addObject:myDictionary];
         }
         [self saveValues];
     }
@@ -1271,7 +1279,7 @@
 
 
 -(void)saveValues{
-    [self.ArrayOfValues writeToFile:timeValuesFile atomically:YES];
+    [self.trialData writeToFile:timeValuesFile atomically:YES];
 }
 
 #pragma mark - GameCenter
@@ -1325,54 +1333,50 @@
 }
 
 #pragma mark LEVELS
-//-(void)loadLevelProgress{
-//    //load values
-//    levelData = [[NSMutableArray alloc] init];
-//    
-//    //Creating a file path under iOS:
-//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//    NSString *documentsDirectory = [paths objectAtIndex:0];
-//    
-//    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelProgressDictionary.dat"];
-//    
-//    //Load the array
-//    levelData = [[NSMutableArray alloc] initWithContentsOfFile: File];
-//    
-//    if(levelData == nil)
-//    {
-//        //Array file didn't exist... create a new one
-//        levelData = [[NSMutableArray alloc] init];
-//        for (int i = 0; i < [dots count]; i++) {
-//            
-//            NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
-//            [myDictionary  setObject:[NSNumber numberWithInt:0] forKey:@"accuracy"];
-//            [levelData addObject:myDictionary];
-// 
-//        }
-//        [self saveLevelProgress];
-//    }
-//    
-//}
-//
-//-(void)saveLevelProgress{
-//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//    NSString *documentsDirectory = [paths objectAtIndex:0];
-//    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelProgressDictionary.dat"];    
-//    [levelData writeToFile:File atomically:YES];
-//}
+-(void)loadLevelProgress{
+    //load values
+    self.levelData = [[NSMutableArray alloc] init];
+    
+    //Creating a file path under iOS:
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelData.dat"];
+    
+    //Load the array
+    self.levelData = [[NSMutableArray alloc] initWithContentsOfFile: File];
+    
+    if(self.levelData == nil)
+    {
+        //Array file didn't exist... create a new one
+        self.levelData = [[NSMutableArray alloc] init];
+        for (int i = 0; i < [dots count]; i++) {
+            
+            NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
+            [myDictionary  setObject:[NSNumber numberWithInt:0] forKey:@"accuracy"];
+            [self.levelData addObject:myDictionary];
+ 
+        }
+        [self saveLevelProgress];
+    }
+    
+}
+
+-(void)saveLevelProgress{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelData.dat"];
+    [self.levelData writeToFile:File atomically:YES];
+}
 
 
 -(void)setLevel:(int)level{
     
-    
-     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-     [defaults setInteger:currentLevel forKey:@"currentLevel"];
-    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     if(level>0 && practicing==false){
         
         
-        float lastSuccessfulGoal=fabs([[[self.ArrayOfValues objectAtIndex:level-1] objectForKey:@"goal"] floatValue]);
+        float lastSuccessfulGoal=fabs([[[self.trialData objectAtIndex:level-1] objectForKey:@"goal"] floatValue]);
         
         if(lastSuccessfulGoal>=best){
             best=lastSuccessfulGoal;
@@ -1434,9 +1438,15 @@
                           highScoreLabel.textColor=[self getBackgroundColor:currentLevel];
                           bestLabel.textColor=[self getBackgroundColor:currentLevel];
 
+                          self.myGraph.colorLine = [self getBackgroundColor:currentLevel];
+                          self.myGraph.colorXaxisLabel = [self getBackgroundColor:currentLevel];
+                          self.myGraph.colorYaxisLabel = [self getBackgroundColor:currentLevel];
+                          self.myGraph.colorPoint=[self getBackgroundColor:currentLevel];
                         }
                       completion:^(BOOL finished){
 
+                          [self.myGraph reloadGraph];
+                          
                           [self updateTimeDisplay:0];
                           [self setTimerGoalMarginDisplay];
 
@@ -1526,6 +1536,8 @@
                              lastStage=[self getCurrentStage];
                          }
                          
+                         [self saveTrialData];
+
                          if(practicing==false) [self reportScore];
 
                          [self performSelector:@selector(updateLife) withObject:self afterDelay:.1];
@@ -1841,7 +1853,9 @@
     }
     
     [self setLevel:currentLevel];
-    [self loadData];
+    [self loadTrialData];
+    [self loadLevelProgress];
+    
     //[self.myGraph reloadGraph];
 }
 
@@ -1997,7 +2011,7 @@
 
 
 -(void)animateLevelDotScore{
-    
+
     [self showXO];
     [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:.1];
     
@@ -2077,6 +2091,7 @@
                          else xView.frame=CGRectMake(x, y, w, w);
                      }
                      completion:^(BOOL finished){
+
 //                         if(![self isAccurate])AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
                      }];
     
@@ -2107,7 +2122,6 @@
                     }];
     
     
-    [self saveTrialData];
     [self checkLevelUp];
 }
 
@@ -2269,11 +2283,11 @@
 }
 
 - (CGFloat)lineGraph:(BEMSimpleLineGraphView *)graph valueForPointAtIndex:(NSInteger)index {
-    if([self.ArrayOfValues count]==0)return 0.0;
-    NSInteger i=[self.ArrayOfValues count]-nPointsVisible+index; //show last nPoints
+    if([self.trialData count]==0)return 0.0;
+    NSInteger i=[self.trialData count]-nPointsVisible+index; //show last nPoints
     //index=[self.ArrayOfValues count]+nPointsVisible-index; //show last nPoints
 //index=index
-    return ([[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"accuracy"] floatValue]*1000);
+    return ([[[self.trialData objectAtIndex:i] objectForKey:@"accuracy"] floatValue]);
 }
 
 
@@ -2289,7 +2303,7 @@
 }
 
 - (NSInteger)numberOfGapsBetweenLabelsOnLineGraph:(BEMSimpleLineGraphView *)graph {
-    return [self.ArrayOfValues count];
+    return [self.trialData count];
 }
 
 - (NSString *)lineGraph:(BEMSimpleLineGraphView *)graph labelOnXAxisForIndex:(NSInteger)index {
@@ -2307,7 +2321,7 @@
 }
 
 - (void)lineGraph:(BEMSimpleLineGraphView *)graph didTouchGraphWithClosestIndex:(NSInteger)index {
-    self.labelValues.text = [NSString stringWithFormat:@"%02f", [[[self.ArrayOfValues objectAtIndex:index] objectForKey:@"accuracy"] floatValue]  ];
+    self.labelValues.text = [NSString stringWithFormat:@"%02f", [[[self.trialData objectAtIndex:index] objectForKey:@"accuracy"] floatValue]  ];
 }
 
 - (void)lineGraph:(BEMSimpleLineGraphView *)graph didReleaseTouchFromGraphWithClosestIndex:(CGFloat)index {
@@ -2330,7 +2344,7 @@
 - (void)lineGraphDidFinishLoading:(BEMSimpleLineGraphView *)graph {
     
     //[self updateStats];
-    [self.myGraph drawPrecisionOverlay:timerGoal];
+    [self.myGraph drawPrecisionOverlay:[self getLevelAccuracy:currentLevel]];
     
     //last dot
     self.myGraph.lastDot.alpha=0.0;
@@ -2340,13 +2354,12 @@
     
     
     //last label
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"YYYY.MM.dd HH:mm"];
-    NSString *stringFromDate = [formatter stringFromDate:[[self.ArrayOfValues lastObject] objectForKey:@"date"]];
-    
-    self.myGraph.lastPointLabel.text=[NSString stringWithFormat:@"%@  |  %ims",stringFromDate,(int)([[[self.ArrayOfValues lastObject] objectForKey:@"accuracy"] floatValue]*1000)];
+    //NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    //[formatter setDateFormat:@"YYYY.MM.dd HH:mm"];
+    //NSString *stringFromDate = [formatter stringFromDate:[[self.ArrayOfValues lastObject] objectForKey:@"date"]];
+    //self.myGraph.lastPointLabel.text=[NSString stringWithFormat:@"%@  |  %ims",stringFromDate,(int)([[[self.ArrayOfValues lastObject] objectForKey:@"accuracy"] floatValue]*1000)];
 
-    
+      self.myGraph.lastPointLabel.text=[NSString stringWithFormat:@"%.03f SEC",([[[self.trialData lastObject] objectForKey:@"accuracy"] floatValue])];
     
     
 }
@@ -2393,8 +2406,8 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [self loadData];
-    [self.myGraph reloadGraph];
+    [self loadTrialData];
+    [self loadLevelProgress];
 
     [self performSelector:@selector(setupDots) withObject:self afterDelay:.5];
 
@@ -2410,7 +2423,8 @@
                      completion:^(BOOL finished){
                          [self.view sendSubviewToBack:progressView];
                          [self.view sendSubviewToBack:blob];
-                         
+                         [self.myGraph reloadGraph];
+
                      }];
 
 //    if(trialSequence==0)[instructions updateText:@"START" animate:YES];
