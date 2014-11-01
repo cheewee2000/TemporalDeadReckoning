@@ -1142,7 +1142,7 @@
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, yPos, self.frame.size.width+22, 1)];
     //lineView.backgroundColor = [UIColor colorWithWhite:0 alpha:.3];
     lineView.backgroundColor = self.colorPoint;
-    lineView.alpha=.3;
+    lineView.alpha=.5;
 
     [self addSubview:lineView];
     
@@ -1189,14 +1189,14 @@
     UIView *top = [[UIView alloc] initWithFrame:CGRectMake(0, th, self.frame.size.width+22, 1)];
     //top.backgroundColor = [UIColor colorWithWhite:0 alpha:.1];
     top.backgroundColor = self.colorPoint;
-    top.alpha=.1;
+    top.alpha=.3;
     
     [self addSubview:top];
     
     UIView *bottom = [[UIView alloc] initWithFrame:CGRectMake(0, tb, self.frame.size.width+22, 1)];
     //bottom.backgroundColor = [UIColor colorWithWhite:0 alpha:.1];
     bottom.backgroundColor = self.colorPoint;
-    bottom.alpha=.1;
+    bottom.alpha=.3;
     
     [self addSubview:bottom];
     

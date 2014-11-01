@@ -1013,7 +1013,8 @@
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if([progressView.subMessage.text isEqual:@"GAME OVER"] || life==0)return;
-
+    if([[event allTouches]count]>1)return;
+    
     UITouch *aTouch = [touches anyObject];
     CGPoint location = [aTouch locationInView:self.view];
     CGPoint previousLocation = [aTouch previousLocationInView:self.view];
@@ -1026,10 +1027,7 @@
                             options:UIViewAnimationOptionCurveLinear
                          animations:^{
 
-                             
-                             //if(progressView.frame.origin.y<screenHeight/2.0)
-                             //if(location.y<previousLocation.y-2 || ( progressView.frame.origin.y<screenHeight-44 && location.y<previousLocation.y) )
-                             if( progressView.frame.origin.y<screenHeight-44 && location.y<previousLocation.y )
+                             if( (progressView.frame.origin.y<screenHeight-44 && location.y<previousLocation.y) || progressView.frame.origin.y<screenHeight*.25)
                              {
                                 progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
                                  progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
@@ -1373,6 +1371,7 @@
 -(void)setLevel:(int)level{
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setInteger:currentLevel forKey:@"currentLevel"];
     
     if(level>0 && practicing==false){
         
