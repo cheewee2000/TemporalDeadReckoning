@@ -119,9 +119,9 @@
     levelArrows=[[NSMutableArray alloc] init];
     for (int i=0; i<NUMLEVELARROWS; i++) {
         TextArrow *arrow;
-        if(i==0)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.08)];
-        else if(i==1)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0,0, screenWidth, screenHeight*.07)];
-        else if(i==2)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.06)];
+        if(i==0)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.075)];
+        else if(i==1)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0,0, screenWidth, screenHeight*.065)];
+        else if(i==2)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.055)];
         else arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.045)];
 
         arrow.drawArrow=false;
@@ -945,6 +945,8 @@
     }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setInteger:life forKey:@"life"];
+    [defaults synchronize];
+
 }
 
 
@@ -1531,7 +1533,7 @@
                              currentLevel++;
                              NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                              [defaults setInteger:currentLevel forKey:@"currentLevel"];
-                             
+                             [defaults synchronize];
                              
                             //add heart for clearing stage
                             if(currentLevel%TRIALSINSTAGE==0) life++;
