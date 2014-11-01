@@ -1136,7 +1136,6 @@
 
 -(void)saveTrialData{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setInteger:currentLevel forKey:@"currentLevel"];
     
     
     //save to disk
@@ -1515,6 +1514,9 @@
                        
                          [self xoViewOffScreen];
                          
+                         [self saveTrialData];
+
+                         
                          if([self isAccurate]){
                              if(life<NUMHEARTS) life=NUMHEARTS;
                              experiencePoints+=elapsed*timerGoal;
@@ -1525,6 +1527,10 @@
                              else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/10.0)life+=2;
                              else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/10.0)life++;
                              currentLevel++;
+                             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                             [defaults setInteger:currentLevel forKey:@"currentLevel"];
+                             
+                             
                             //add heart for clearing stage
                             if(currentLevel%TRIALSINSTAGE==0) life++;
                          }
@@ -1536,7 +1542,6 @@
                              lastStage=[self getCurrentStage];
                          }
                          
-                         [self saveTrialData];
 
                          if(practicing==false) [self reportScore];
 
@@ -2285,9 +2290,13 @@
 - (CGFloat)lineGraph:(BEMSimpleLineGraphView *)graph valueForPointAtIndex:(NSInteger)index {
     if([self.trialData count]==0)return 0.0;
     NSInteger i=[self.trialData count]-nPointsVisible+index; //show last nPoints
-    //index=[self.ArrayOfValues count]+nPointsVisible-index; //show last nPoints
-//index=index
-    return ([[[self.trialData objectAtIndex:i] objectForKey:@"accuracy"] floatValue]);
+
+    float accuracy=[[[self.trialData objectAtIndex:i] objectForKey:@"accuracy"] floatValue];
+    //cap graph
+    if(accuracy>1)accuracy=1;
+    else if (accuracy<-1)accuracy=-1;
+    
+    return accuracy;
 }
 
 
