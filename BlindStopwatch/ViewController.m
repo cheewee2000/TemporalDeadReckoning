@@ -1514,9 +1514,9 @@
                        
                          [self xoViewOffScreen];
                          
+                         //save trial data now
                          [self saveTrialData];
 
-                         
                          if([self isAccurate]){
                              if(life<NUMHEARTS) life=NUMHEARTS;
                              experiencePoints+=elapsed*timerGoal;
@@ -1526,6 +1526,8 @@
                              if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/10.0)life+=3;
                              else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/10.0)life+=2;
                              else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/10.0)life++;
+                             
+                             //save current level now
                              currentLevel++;
                              NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                              [defaults setInteger:currentLevel forKey:@"currentLevel"];
@@ -1538,11 +1540,7 @@
                              life--;
                          }
                          
-                         if(life==0){
-                             lastStage=[self getCurrentStage];
-                         }
-                         
-
+                         if(life==0) lastStage=[self getCurrentStage];
                          if(practicing==false) [self reportScore];
 
                          [self performSelector:@selector(updateLife) withObject:self afterDelay:.1];
