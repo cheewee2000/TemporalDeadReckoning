@@ -119,7 +119,7 @@
     levelArrows=[[NSMutableArray alloc] init];
     for (int i=0; i<NUMLEVELARROWS; i++) {
         TextArrow *arrow;
-        if(i==0)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.075)];
+        if(i==0)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.065)];
         else if(i==1)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0,0, screenWidth, screenHeight*.065)];
         else if(i==2)arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.055)];
         else arrow=[[TextArrow alloc ] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight*.045)];
@@ -908,12 +908,12 @@
         
             if(heart.frame.origin.y>screenHeight){
 
-                heart.alpha=.8;
+                heart.alpha=.7;
                 //heart.transform = CGAffineTransformScale(CGAffineTransformIdentity, .01, .01);
 
                     //heart in
-                [UIView animateWithDuration:.4
-                                      delay:0.05 * i
+                [UIView animateWithDuration:.6
+                                      delay:0.1 * i
                      usingSpringWithDamping:0.5
                       initialSpringVelocity:1.0
                                     options:UIViewAnimationOptionCurveLinear
@@ -1288,7 +1288,7 @@
     if(_leaderboardIdentifier){
         //GKScore *score = [[GKScore alloc] initWithLeaderboardIdentifier:_leaderboardIdentifier];
         GKScore *score = [[GKScore alloc] initWithLeaderboardIdentifier:@"global"];
-        score.value = best*10;
+        score.value = best*10.0;
         
         [GKScore reportScores:@[score] withCompletionHandler:^(NSError *error) {
             if (error != nil) {
@@ -1297,7 +1297,7 @@
         }];
         
         GKScore *xp = [[GKScore alloc] initWithLeaderboardIdentifier:@"experiencepoints"];
-        xp.value = experiencePoints*10;
+        xp.value = experiencePoints*100.0;
         
         [GKScore reportScores:@[xp] withCompletionHandler:^(NSError *error) {
             if (error != nil) {
@@ -1377,7 +1377,7 @@
     if(level>0 && practicing==false){
         
         
-        float lastSuccessfulGoal=fabs([[[self.trialData objectAtIndex:level-1] objectForKey:@"goal"] floatValue]);
+        float lastSuccessfulGoal=fabs([[[self.levelData objectAtIndex:level-1] objectForKey:@"goal"] floatValue]);
         
         if(lastSuccessfulGoal>=best){
             best=lastSuccessfulGoal;
