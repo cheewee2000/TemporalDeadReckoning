@@ -1593,39 +1593,40 @@
     }
     arrowN++;
 
-    
-    NSString * bonusString=@"";
-    float trialAccuracy=fabs(elapsed-timerGoal);
-    if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/10.0)      bonusString=@"PERFECT! ❤\U0000FE0E⁺³";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/10.0) bonusString=@"BOOOOOM! ❤\U0000FE0E⁺²";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/10.0) bonusString=@"WOOT! ❤\U0000FE0E⁺¹";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/10.0) bonusString=@"MONEY! ❤\U0000FE0E⁺¹";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*5/10.0) bonusString=@"GREAT!";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*6/10.0) bonusString=@"NICE!";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*7/10.0) bonusString=@"DONE!";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*8/10.0) bonusString=@"SWEET!";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*9/10.0) bonusString=@"CLOSE ENOUGH";
-    else if(trialAccuracy<=[self getLevelAccuracy:currentLevel])        bonusString=@"MEH";
-    
-    else if(diff<-1)  bonusString=@"WAY TOO FAST!";
-    else if(diff<-.5) bonusString=@"PATIENCE! GO SLOWER.";
-    else if(diff<-.4) bonusString=@"SLOW DOWN";
-    else if(diff<-.3) bonusString=@"BREATH. SLOW DOWN.";
-    else if(diff<-.2) bonusString=@"SLOW DOWN A BIT";
-    else if(diff<0)   bonusString=@"TOO FAST";
-    
-    else if(diff>1)  bonusString=@"WAY TOO SLOW!";
-    else if(diff>.5) bonusString=@"SPEED UP!";
-    else if(diff>.4) bonusString=@"GO FASTER!";
-    else if(diff>.3) bonusString=@"TOO SLOW!";
-    else if(diff>.2) bonusString=@"A BIT TOO SLOW";
-    else if(diff>0)  bonusString=@"GO A BIT FASTER";
-    t= [levelArrows objectAtIndex:arrowN];
-    [t update:@"" rightLabel:bonusString color:instructions.color animate:NO];
-    margin-=spacing+t.frame.size.height;
-    d+=inc;
-    [t slideUpTo:margin delay:d];
-    [self.view bringSubviewToFront:t];
+    if(life>0){
+        NSString * bonusString=@"";
+        float trialAccuracy=fabs(elapsed-timerGoal);
+        if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/10.0)      bonusString=@"PERFECT! ❤\U0000FE0E⁺³";
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/10.0) bonusString=@"BOOOOOM! ❤\U0000FE0E⁺²";
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/10.0) bonusString=@"WOOT! ❤\U0000FE0E⁺¹";
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/10.0) bonusString=@"MONEY! ❤\U0000FE0E⁺¹";
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*5/10.0) bonusString=@"GREAT!";
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*6/10.0) bonusString=@"NICE!";
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*7/10.0) bonusString=@"DONE!";
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*8/10.0) bonusString=@"SWEET!";
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*9/10.0) bonusString=@"CLOSE ENOUGH";
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel])        bonusString=@"MEH";
+        
+        else if(diff<-1)  bonusString=@"WAY TOO FAST!";
+        else if(diff<-.5) bonusString=@"PATIENCE! GO SLOWER.";
+        else if(diff<-.4) bonusString=@"SLOW DOWN";
+        else if(diff<-.3) bonusString=@"BREATH. SLOW DOWN.";
+        else if(diff<-.2) bonusString=@"SLOW DOWN A BIT";
+        else if(diff<0)   bonusString=@"TOO FAST";
+        
+        else if(diff>1)  bonusString=@"WAY TOO SLOW!";
+        else if(diff>.5) bonusString=@"SPEED UP!";
+        else if(diff>.4) bonusString=@"GO FASTER!";
+        else if(diff>.3) bonusString=@"TOO SLOW!";
+        else if(diff>.2) bonusString=@"A BIT TOO SLOW";
+        else if(diff>0)  bonusString=@"GO A BIT FASTER";
+        t= [levelArrows objectAtIndex:arrowN];
+        [t update:@"" rightLabel:bonusString color:instructions.color animate:NO];
+        margin-=spacing+t.frame.size.height;
+        d+=inc;
+        [t slideUpTo:margin delay:d];
+        [self.view bringSubviewToFront:t];
+    }
     arrowN++;
     
     
@@ -1658,7 +1659,7 @@
     //if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED %0.1f POINTS",[self getLevel:currentLevel-1], elapsed*timerGoal];
     if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"+$%0.2f", elapsed*timerGoal];
     else if(life>1) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life];
-    else if(life>0) stageProgressString=@"ONE TRY LEFT";
+    else if(life>0) stageProgressString=@"LAST TRY!";
     //else stageProgressString=@"GAME OVER";
     if(life>0){
         t= [levelArrows objectAtIndex:arrowN];
@@ -2210,7 +2211,7 @@
                                   [UIColor colorWithRed:253/255.0 green:242/255.0 blue:62/255.0 alpha:1],
                                   [UIColor colorWithRed:0/255.0 green:163/255.0 blue:238/255.0 alpha:1],
                                   
-                                  [UIColor colorWithRed:18/255.0 green:118/255.0 blue:165/255.0 alpha:1],
+                                  [UIColor colorWithRed:18/255.0 green:68/255.0 blue:85/255.0 alpha:1],
                                   [UIColor colorWithRed:82/255.0 green:82/255.0 blue:75/255.0 alpha:1],
                                   [UIColor colorWithRed:200/255.0 green:203/255.0 blue:207/255.0 alpha:1],//
                                   [UIColor colorWithRed:91/255.0 green:96/255.0 blue:122/255.0 alpha:1],
