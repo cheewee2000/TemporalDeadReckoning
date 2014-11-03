@@ -18,9 +18,10 @@
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 4
+#define TRIALSINSTAGE 1
 #define NUMHEARTS 3
 #define SHOWNEXTRASTAGES 3
+
 
 @interface ViewController () {
     
@@ -205,6 +206,8 @@
     [self.view addSubview:progressView];
     progressView.backgroundColor=[self getForegroundColor:currentLevel];
 
+    buttonYPos=screenHeight-66;
+    
     
     trophyButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage * trophy=[UIImage imageNamed:@"trophy"];
@@ -212,7 +215,7 @@
     [trophyButton setBackgroundImage:trophy forState:UIControlStateNormal];
     [trophyButton adjustsImageWhenHighlighted];
     [trophyButton setFrame:CGRectMake(0,0,44,44)];
-    trophyButton.center=CGPointMake(screenWidth/2.0, screenHeight-66);
+    trophyButton.center=CGPointMake(screenWidth/2.0, buttonYPos);
     [trophyButton addTarget:self action:@selector(showGlobalLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:trophyButton];
     
@@ -229,7 +232,7 @@
     [medalButton setBackgroundImage:medal forState:UIControlStateNormal];
     [medalButton adjustsImageWhenHighlighted];
     [medalButton setFrame:CGRectMake(0,0,44,44)];
-    medalButton.center=CGPointMake(screenWidth*1.0/5.0, screenHeight-66);
+    medalButton.center=CGPointMake(screenWidth*1.0/5.0, buttonYPos);
     [medalButton addTarget:self action:@selector(showXPLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:medalButton];
     medalButton.layer.shadowOpacity = progressView.shadowO;
@@ -268,7 +271,7 @@
     [restartButton setBackgroundImage:restart forState:UIControlStateNormal];
     [restartButton adjustsImageWhenHighlighted];
     [restartButton setFrame:CGRectMake(0,0,44,44)];
-    restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-66);
+    restartButton.center=CGPointMake(screenWidth*4/5.0, buttonYPos);
     [restartButton addTarget:self action:@selector(restart) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:restartButton];
     restartButton.layer.shadowOpacity = progressView.shadowO;
@@ -333,7 +336,7 @@
     self.myGraph.enablePopUpReport = YES;
     self.myGraph.autoScaleYAxis = YES;
     
-    self.myGraph.animationGraphEntranceTime = 0.8;
+    self.myGraph.animationGraphEntranceTime = 1.5;
     //myGraph.alphaTop=.2;
     //myGraph.enableBezierCurve = YES;
     //myGraph.alwaysDisplayDots = YES;
@@ -533,7 +536,7 @@
           initialSpringVelocity:1.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
-                         restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-66);
+                         restartButton.center=CGPointMake(screenWidth*4/5.0, buttonYPos);
                      }
                      completion:^(BOOL finished){
                      }];
@@ -614,7 +617,7 @@
           initialSpringVelocity:1.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
-                         restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-66);
+                         restartButton.center=CGPointMake(screenWidth*4/5.0, buttonYPos);
                      }
                      completion:^(BOOL finished){
                      }];
@@ -691,150 +694,164 @@
 -(void)setupDots{
     int rowHeight=60;
 
-            [self.view bringSubviewToFront:progressView];
-             float d=.5;
-             if(progressView.frame.origin.y==0)d=0.0;//progressview is already showing. don't animate
-             
+    [self.view bringSubviewToFront:progressView];
+    float d=.5;
+    if(progressView.frame.origin.y==0)d=0.0;//progressview is already showing. don't animate
 
-                [UIView animateWithDuration:.8
-                                      delay:d
-                     usingSpringWithDamping:.8
-                      initialSpringVelocity:1.0
-                                    options:UIViewAnimationOptionCurveLinear
-                                 animations:^{
-                                     progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
-                                     progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
-                                     
-                                 }
-                                 completion:^(BOOL finished){
+    [UIView animateWithDuration:.8
+                          delay:d
+         usingSpringWithDamping:.8
+          initialSpringVelocity:1.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         progressView.frame=CGRectMake(0, -screenHeight*.5, screenWidth, screenHeight*2.0);
+                         progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
+                     }
+                    completion:^(BOOL finished){
+                                 
+                        [self.myGraph reloadGraph];
+                     
 
-                                     int nDotsToShow=TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE;
+                        [UIView animateWithDuration:.8
+                                              delay:2.5
+                             usingSpringWithDamping:.8
+                              initialSpringVelocity:1.0
+                                            options:UIViewAnimationOptionCurveLinear
+                                         animations:^{
+                                             progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
+                                             progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
+                                             
+                                         }
+                                         completion:^(BOOL finished){
 
-                                     if(nDotsToShow<TRIALSINSTAGE*SHOWNEXTRASTAGES)nDotsToShow=TRIALSINSTAGE*SHOWNEXTRASTAGES;
+                                             int nDotsToShow=TRIALSINSTAGE+[self getCurrentStage]*TRIALSINSTAGE;
+
+                                             if(nDotsToShow<TRIALSINSTAGE*SHOWNEXTRASTAGES)nDotsToShow=TRIALSINSTAGE*SHOWNEXTRASTAGES;
 
 
-                                     for (int i = 0; i < nDotsToShow; i++){
-                                    float dotDia=12;
-                                    float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
-                                    //float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*([self getCurrentStage]+SHOWNEXTRASTAGES);
-                                         float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*floor(nDotsToShow/TRIALSINSTAGE-1);
+                                             for (int i = 0; i < nDotsToShow; i++){
+                                            float dotDia=12;
+                                            float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
+                                            //float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*([self getCurrentStage]+SHOWNEXTRASTAGES);
+                                                 float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*floor(nDotsToShow/TRIALSINSTAGE-1);
 
-                                    
-                                    //update existing dots
-                                    if(i<[dots count]){
-                                        
-                                        Dots *dot=[dots objectAtIndex:i];
-                                        [self updateDot:i];
+                                            
+                                            //update existing dots
+                                            if(i<[dots count]){
+                                                
+                                                Dots *dot=[dots objectAtIndex:i];
+                                                [self updateDot:i];
 
-                                        //shift dots down
-                                        [UIView animateWithDuration:.8
-                                                              delay:0.8
-                                             usingSpringWithDamping:.5
-                                              initialSpringVelocity:1.0
-                                                            options:UIViewAnimationOptionCurveLinear
-                                                         animations:^{
-                                                             dot.frame=CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia);
-                                                         }
-                                                         completion:^(BOOL finished){
-                                                             
-                                                         }];
-          
+                                                //shift dots down
+                                                [UIView animateWithDuration:.8
+                                                                      delay:0.8
+                                                     usingSpringWithDamping:.5
+                                                      initialSpringVelocity:1.0
+                                                                    options:UIViewAnimationOptionCurveLinear
+                                                                 animations:^{
+                                                                     dot.frame=CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia);
+                                                                 }
+                                                                 completion:^(BOOL finished){
+                                                                     
+                                                                 }];
+                  
 
-                                        
-                                        //update stage label
-                                        if(i%TRIALSINSTAGE==0){
-                                            int stage=floorf(i/TRIALSINSTAGE);
-                                            TextArrow *sLabel=[stageLabels objectAtIndex:stage];
-                                            sLabel.alpha=1;
+                                                
+                                                //update stage label
+                                                if(i%TRIALSINSTAGE==0){
+                                                    int stage=floorf(i/TRIALSINSTAGE);
+                                                    TextArrow *sLabel=[stageLabels objectAtIndex:stage];
+                                                    sLabel.alpha=1;
 
-                                            //shift label down
-                                            [UIView animateWithDuration:.8
-                                                                  delay:0.8
+                                                    //shift label down
+                                                    [UIView animateWithDuration:.8
+                                                                          delay:0.8
+                                                         usingSpringWithDamping:.5
+                                                          initialSpringVelocity:1.0
+                                                                        options:UIViewAnimationOptionCurveLinear
+                                                                     animations:^{
+                                                                         sLabel.frame=CGRectMake(0, y, 70, 15);
+        //                                                                 sLabel.color=[self getBackgroundColor:currentLevel];
+                                                                         [sLabel setArrowColor:[self getBackgroundColor:currentLevel]];
+                                                                         sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
+
+                                                                     }
+                                                                     completion:^(BOOL finished){
+                                                                         
+                                                                         
+                                                                     }];
+                                                }
+
+
+                                            }
+                                            //add new stagelabel
+                                            else{
+
+                                                if(i%TRIALSINSTAGE==0){
+                                                    int stage=floorf(i/TRIALSINSTAGE);
+
+                                                    //add stage label
+                                                    TextArrow *sLabel = [[TextArrow alloc] initWithFrame:CGRectMake(0, -60, 70, 16)];
+                                                    sLabel.instructionText.textColor = [UIColor blackColor];
+                                                    sLabel.drawArrowRight=true;
+                                                    sLabel.alpha=1;
+
+                                                    [stageLabels addObject:sLabel];
+                                                    [progressView.dotsContainer addSubview:sLabel];
+                                                    
+                                                    [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:currentLevel] animate:NO];
+                                                    sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
+
+                                                    [UIView animateWithDuration:.4
+                                                                          delay:0.8+stage*.1
+                                                         usingSpringWithDamping:.5
+                                                          initialSpringVelocity:1.0
+                                                                        options:UIViewAnimationOptionCurveLinear
+                                                                     animations:^{
+                                                                         sLabel.frame=CGRectMake(0, y, 70, 15);
+                                                                     }
+                                                                     completion:^(BOOL finished){
+                                                                     }];
+                                                    
+                                                }
+                                                
+                                                //add dot
+                                                Dots *dot = [[Dots alloc] initWithFrame:CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia)];
+                                                dot.alpha = 1;
+                                                dot.backgroundColor = [UIColor clearColor];
+                                                [dot setColor:self.view.backgroundColor];
+                                                
+                                                [dots addObject:dot];
+                                                [progressView.dotsContainer addSubview:dots[i]];
+                                                
+                                                dot.transform = CGAffineTransformScale(CGAffineTransformIdentity, .001, .001);
+                                                //add level label
+                                                [self updateDot:i];
+                    
+                                            //animate dot appearance
+                                            [UIView animateWithDuration:.2
+                                                                  delay:.8+(i-currentLevel)*.05
                                                  usingSpringWithDamping:.5
                                                   initialSpringVelocity:1.0
                                                                 options:UIViewAnimationOptionCurveLinear
                                                              animations:^{
-                                                                 sLabel.frame=CGRectMake(0, y, 70, 15);
-//                                                                 sLabel.color=[self getBackgroundColor:currentLevel];
-                                                                 [sLabel setArrowColor:[self getBackgroundColor:currentLevel]];
-                                                                 sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
+                                                                 dot.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
 
                                                              }
                                                              completion:^(BOOL finished){
-                                                                 
-                                                                 
-                                                             }];
-                                        }
 
-
-                                    }
-                                    //add new stagelabel
-                                    else{
-
-                                        if(i%TRIALSINSTAGE==0){
-                                            int stage=floorf(i/TRIALSINSTAGE);
-
-                                            //add stage label
-                                            TextArrow *sLabel = [[TextArrow alloc] initWithFrame:CGRectMake(0, -60, 70, 16)];
-                                            sLabel.instructionText.textColor = [UIColor blackColor];
-                                            sLabel.drawArrowRight=true;
-                                            sLabel.alpha=1;
-
-                                            [stageLabels addObject:sLabel];
-                                            [progressView.dotsContainer addSubview:sLabel];
-                                            
-                                            [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:currentLevel] animate:NO];
-                                            sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
-
-                                            [UIView animateWithDuration:.4
-                                                                  delay:0.8+stage*.1
-                                                 usingSpringWithDamping:.5
-                                                  initialSpringVelocity:1.0
-                                                                options:UIViewAnimationOptionCurveLinear
-                                                             animations:^{
-                                                                 sLabel.frame=CGRectMake(0, y, 70, 15);
-                                                             }
-                                                             completion:^(BOOL finished){
                                                              }];
                                             
+                                            }
                                         }
-                                        
-                                        //add dot
-                                        Dots *dot = [[Dots alloc] initWithFrame:CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia)];
-                                        dot.alpha = 1;
-                                        dot.backgroundColor = [UIColor clearColor];
-                                        [dot setColor:self.view.backgroundColor];
-                                        
-                                        [dots addObject:dot];
-                                        [progressView.dotsContainer addSubview:dots[i]];
-                                        
-                                        dot.transform = CGAffineTransformScale(CGAffineTransformIdentity, .001, .001);
-                                        //add level label
-                                        [self updateDot:i];
+                                       
+                                             int stage=floorf(currentLevel/TRIALSINSTAGE);
+
+                                if(stage<SHOWNEXTRASTAGES) [self performSelector:@selector(loadLevel) withObject:self afterDelay:0.8];
+                               else  [self performSelector:@selector(loadLevel) withObject:self afterDelay:2.0];
+                        }];
             
-                                    //animate dot appearance
-                                    [UIView animateWithDuration:.2
-                                                          delay:.8+(i-currentLevel)*.05
-                                         usingSpringWithDamping:.5
-                                          initialSpringVelocity:1.0
-                                                        options:UIViewAnimationOptionCurveLinear
-                                                     animations:^{
-                                                         dot.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-
-                                                     }
-                                                     completion:^(BOOL finished){
-
-                                                     }];
-                                    
-                                    }
-                                }
-                               
-                                     int stage=floorf(currentLevel/TRIALSINSTAGE);
-
-                        if(stage<SHOWNEXTRASTAGES) [self performSelector:@selector(loadLevel) withObject:self afterDelay:0.8];
-                       else  [self performSelector:@selector(loadLevel) withObject:self afterDelay:2.0];
-                }];
-    
+                                         }];
 }
 
 -(void)updateDotColors{
@@ -1073,11 +1090,22 @@
                                     [self.view sendSubviewToBack:progressView];
                                     [self.view sendSubviewToBack:blob];
                                 }
-                             }else{
-                                //constrain to bottom of graph
+                                 
+                             }
+                             //scrolling towards graph view
+                             else{
+                                 //constrain to bottom of graph
                                  if(progressView.frame.origin.y<-screenHeight*.5){
                                      progressView.frame=CGRectMake(0, -screenHeight*.5, screenWidth, screenHeight*2.0);
                                  }
+                                 
+                                 else if(progressView.frame.origin.y<0 && progressView.frame.origin.y>-self.myGraph.frame.size.height){
+                                     if(location.y<previousLocation.y)progressView.frame=CGRectMake(0, -screenHeight*.5, screenWidth, screenHeight*2.0);
+                                     else if(location.y>previousLocation.y)progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
+
+                                 }
+                                 
+
                              }
                          }
                          completion:^(BOOL finished){
@@ -1230,7 +1258,7 @@
     
     
     //update graph
-    self.myGraph.animationGraphEntranceTime = 0.8;
+    //self.myGraph.animationGraphEntranceTime = 0.8;
     [self.myGraph reloadGraph];
     
     [self saveValues];
@@ -1515,7 +1543,7 @@
                         }
                       completion:^(BOOL finished){
 
-                          [self.myGraph reloadGraph];
+                          [self.myGraph reloadGraph];//to reload color
                           
                           [self updateTimeDisplay:0];
                           [self setTimerGoalMarginDisplay];
@@ -2237,7 +2265,7 @@
                          TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
                          float y=sLabel.frame.origin.y;
                          progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, screenHeight*2.0);
-                         restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-66);
+                         restartButton.center=CGPointMake(screenWidth*4/5.0, buttonYPos);
 
                      }
                      completion:^(BOOL finished){
@@ -2523,7 +2551,7 @@
                      completion:^(BOOL finished){
                          [self.view sendSubviewToBack:progressView];
                          [self.view sendSubviewToBack:blob];
-                         [self.myGraph reloadGraph];
+                         //[self.myGraph reloadGraph];
 
                      }];
 

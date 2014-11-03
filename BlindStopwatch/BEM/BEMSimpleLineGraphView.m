@@ -1189,14 +1189,14 @@
     UIView *top = [[UIView alloc] initWithFrame:CGRectMake(0, th, self.frame.size.width+22, 1)];
     //top.backgroundColor = [UIColor colorWithWhite:0 alpha:.1];
     top.backgroundColor = self.colorPoint;
-    top.alpha=.3;
+    top.alpha=.2;
     
     [self addSubview:top];
     
     UIView *bottom = [[UIView alloc] initWithFrame:CGRectMake(0, tb, self.frame.size.width+22, 1)];
     //bottom.backgroundColor = [UIColor colorWithWhite:0 alpha:.1];
     bottom.backgroundColor = self.colorPoint;
-    bottom.alpha=.3;
+    bottom.alpha=.2;
     
     [self addSubview:bottom];
     

@@ -56,6 +56,8 @@
     UILabel *highScoreLabel;
     NSMutableArray *dots;
     
+    float buttonYPos;
+    
     BFPaperButton *restartExpandButton;
     UIButton *restartButton;
     UIButton *playButton;
