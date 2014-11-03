@@ -948,7 +948,8 @@
 
 - (void)setUpPopUpLabelAbovePoint:(BEMCircle *)closestPoint {
     [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.popUpView.alpha = 0.7;
+        self.popUpLabel.textColor=self.colorLine;
+        self.popUpView.alpha = 0.0;
         self.popUpLabel.alpha = 1;
     } completion:nil];
     
@@ -959,9 +960,12 @@
     
     if ([self.delegate respondsToSelector:@selector(popUpSuffixForlineGraph:)])
         //self.popUpLabel.text = [NSString stringWithFormat:@"%li%@", (long)[[dataPoints objectAtIndex:((NSInteger)closestDot.tag - 100)] integerValue], [self.delegate popUpSuffixForlineGraph:self]];
-        self.popUpLabel.text = [NSString stringWithFormat:@"%li%@", (long)[[dataPoints objectAtIndex:((NSInteger)closestDot.tag - 100)] integerValue], [self.delegate popUpSuffixForlineGraph:self]];
+        //self.popUpLabel.text = [NSString stringWithFormat:@"%li%@", (long)[[dataPoints objectAtIndex:((NSInteger)closestDot.tag - 100)] integerValue], [self.delegate popUpSuffixForlineGraph:self]];
+        self.popUpLabel.text = [NSString stringWithFormat:@"%.03f%@", (float)[[dataPoints objectAtIndex:((NSInteger)closestDot.tag - 100)] floatValue], [self.delegate popUpSuffixForlineGraph:self]];
     else
-        self.popUpLabel.text = [NSString stringWithFormat:@"%li", (long)[[dataPoints objectAtIndex:((NSInteger)closestDot.tag - 100)] integerValue]];
+    //    self.popUpLabel.text = [NSString stringWithFormat:@"%li", (long)[[dataPoints objectAtIndex:((NSInteger)closestDot.tag - 100)] integerValue]];
+        self.popUpLabel.text = [NSString stringWithFormat:@"%.03f", (float)[[dataPoints objectAtIndex:((NSInteger)closestDot.tag - 100)] floatValue]];
+    
     if (self.popUpView.frame.origin.x <= 0) {
         self.xCenterLabel = self.popUpView.frame.size.width/2;
         self.popUpView.center = CGPointMake(self.xCenterLabel, self.yCenterLabel);

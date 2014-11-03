@@ -18,7 +18,7 @@
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 1
+#define TRIALSINSTAGE 5
 #define NUMHEARTS 3
 #define SHOWNEXTRASTAGES 3
 
@@ -355,61 +355,71 @@
     //*/
     
     //stats
-    /*
-     UIFont * LF=[UIFont fontWithName:@"HelveticaNeue" size:32];
-     UIFont * SMF=[UIFont fontWithName:@"HelveticaNeue" size:8];
-     
-     lastResults=[[UILabel alloc] initWithFrame:CGRectMake(0, 8, 50, 50)];
+    stats = [[UIView alloc] initWithFrame:CGRectMake(0, self.myGraph.frame.origin.y+self.myGraph.frame.size.height, screenWidth, screenHeight*.1)];
+     UIFont * LF=[UIFont fontWithName:@"DIN Condensed" size:48];
+    
+    int h=50;
+     lastResults=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, h)];
+    lastResults.center=CGPointMake(stats.frame.size.width*1/5.0, lastResults.center.y);
      lastResults.font = LF;
      lastResults.textColor =  [UIColor blackColor];
+    lastResults.textAlignment=NSTextAlignmentCenter;
      [stats addSubview:lastResults];
-     
-     accuracy=[[UILabel alloc] initWithFrame:CGRectMake(stats.frame.size.width*.33, 8, 40, 50)];
+    
+     accuracy=[[UILabel alloc] initWithFrame:CGRectMake(stats.frame.size.width*.5, 0, 40, h)];
+    accuracy.center=CGPointMake(stats.frame.size.width*4/5.0, accuracy.center.y);
+
      accuracy.font = LF;
      accuracy.textColor =  [UIColor blackColor];
+     accuracy.textAlignment=NSTextAlignmentCenter;
      [stats addSubview:accuracy];
      
-     precision=[[UILabel alloc] initWithFrame:CGRectMake(stats.frame.size.width*.66, 8, 50, 50)];
+     precision=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, h)];
+    precision.center=CGPointMake(stats.frame.size.width*2.5/5.0, precision.center.y);
      precision.font = LF;
      precision.textColor =  [UIColor blackColor];
+    precision.textAlignment=NSTextAlignmentCenter;
      precision.adjustsFontSizeToFitWidth=YES;
      [stats addSubview:precision];
      
      
      //UNITS
-     UILabel* precisionUnit=[[UILabel alloc] initWithFrame:CGRectMake(precision.frame.origin.x+precision.frame.size.width, 0, 80, 50)];
-     precisionUnit.text=@"ms";
+    UIFont * SMF=[UIFont fontWithName:@"HelveticaNeue" size:10];
+    precisionUnit=[[UILabel alloc] initWithFrame:CGRectMake(precision.frame.origin.x+precision.frame.size.width, 0, 80, 20)];
+     precisionUnit.text=@"SEC";
      precisionUnit.font = SMF;
      [stats addSubview:precisionUnit];
      
-     UILabel* accuracyUnit=[[UILabel alloc] initWithFrame:CGRectMake(accuracy.frame.origin.x+accuracy.frame.size.width, 0, 80, 50)];
+     accuracyUnit=[[UILabel alloc] initWithFrame:CGRectMake(accuracy.frame.origin.x+accuracy.frame.size.width, 0, 80, 20)];
      accuracyUnit.text=@"%";
      accuracyUnit.font = SMF;
      [stats addSubview:accuracyUnit];
      
-     
      //LABELS
-     float y=stats.frame.size.height-15;
-     
-     UILabel* lastResultLabel=[[UILabel alloc] initWithFrame:CGRectMake(lastResults.frame.origin.x, y, stats.frame.size.width*.33-12, 20)];
-     lastResultLabel.text=@"LAST RESULTS";
-     [lastResultLabel setTextAlignment:NSTextAlignmentRight];
-     lastResultLabel.font = SMF;
+     float y=precision.frame.size.height-15;
+     lastResultLabel=[[UILabel alloc] initWithFrame:CGRectMake(0, y, stats.frame.size.width*.33-12, 20)];
+    lastResultLabel.center=CGPointMake(stats.frame.size.width*1/5.0, lastResultLabel.center.y);
+     lastResultLabel.text=@"TRIALS";
+    lastResultLabel.textAlignment=NSTextAlignmentCenter;
+    lastResultLabel.font = SMF;
      [stats addSubview:lastResultLabel];
-     
-     UILabel* accuracyLabel=[[UILabel alloc] initWithFrame:CGRectMake(accuracy.frame.origin.x, y, stats.frame.size.width*.33-12, 20)];
+    
+     accuracyLabel=[[UILabel alloc] initWithFrame:CGRectMake(0, y, stats.frame.size.width*.33-12, 20)];
+    accuracyLabel.center=CGPointMake(stats.frame.size.width*4/5.0, accuracyLabel.center.y);
      accuracyLabel.text=@"ACCURACY";
-     [accuracyLabel setTextAlignment:NSTextAlignmentRight];
-     accuracyLabel.font = SMF;
+    accuracyLabel.textAlignment=NSTextAlignmentCenter;
+    accuracyLabel.font = SMF;
      [stats addSubview:accuracyLabel];
      
-     UILabel* precisionLabel=[[UILabel alloc] initWithFrame:CGRectMake(precision.frame.origin.x, y, stats.frame.size.width*.33-12, 20)];
+     precisionLabel=[[UILabel alloc] initWithFrame:CGRectMake(0, y, stats.frame.size.width*.33-12, 20)];
+    precisionLabel.center=CGPointMake(stats.frame.size.width*2.5/5.0, precisionLabel.center.y);
+
      precisionLabel.text=@"PRECISION";
-     [precisionLabel setTextAlignment:NSTextAlignmentRight];
-     precisionLabel.font = SMF;
+    precisionLabel.textAlignment=NSTextAlignmentCenter;
+    precisionLabel.font = SMF;
      [stats addSubview:precisionLabel];
-     */
     
+    [progressView addSubview:stats];
     
     
     
@@ -1030,16 +1040,14 @@
 
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    
+    if(progressView.frame.origin.y<-screenHeight*.5-screenHeight*.1)return;
     if([progressView.subMessage.text isEqual:@"GAME OVER"] || life==0)return;
     UITouch *aTouch = [touches anyObject];
     CGPoint location = [aTouch locationInView:self.view];
     CGPoint previousLocation = [aTouch previousLocationInView:self.view];
 
     if ([progressView pointInside: [self.view convertPoint:location toView: progressView] withEvent:event]) {
-
         [self.view bringSubviewToFront:progressView];
-        
         [UIView animateWithDuration:0.1
                               delay:0.0
                             options:UIViewAnimationOptionCurveLinear
@@ -1048,8 +1056,8 @@
                          }
                          completion:^(BOOL finished){
                          }];
-        
     }
+    
     
     
 }
@@ -1540,6 +1548,18 @@
                           self.myGraph.colorXaxisLabel = [self getBackgroundColor:currentLevel];
                           self.myGraph.colorYaxisLabel = [self getBackgroundColor:currentLevel];
                           self.myGraph.colorPoint=[self getBackgroundColor:currentLevel];
+                          
+                          precision.textColor=[self getBackgroundColor:currentLevel];
+                          accuracy.textColor=[self getBackgroundColor:currentLevel];
+                          lastResults.textColor=[self getBackgroundColor:currentLevel];
+                          
+                          precisionUnit.textColor=[self getBackgroundColor:currentLevel];
+                          accuracyUnit.textColor=[self getBackgroundColor:currentLevel];
+                          
+                          precisionLabel.textColor=[self getBackgroundColor:currentLevel];
+                          accuracyLabel.textColor=[self getBackgroundColor:currentLevel];
+                          lastResultLabel.textColor=[self getBackgroundColor:currentLevel];
+                          
                         }
                       completion:^(BOOL finished){
 
@@ -2079,30 +2099,26 @@
 }
 
 -(void)updateStats{
-    /*
      //results
      lastResults.text=[NSString stringWithFormat:@"%02d",(int)nPointsVisible];
      
      //accuracy
      int averageAccuracy=0;
      for( int i=0; i<nPointsVisible; i++){
-     int index=(int)[self.ArrayOfValues count]-(int)nPointsVisible+i; //show last nPoints
-     float absResult=fabs([[[self.ArrayOfValues objectAtIndex:index] objectForKey:@"accuracy"] floatValue]);
+     int index=(int)[self.trialData count]-(int)nPointsVisible+i; //show last nPoints
+     float absResult=fabs([[[self.trialData objectAtIndex:index] objectForKey:@"accuracy"] floatValue]);
      averageAccuracy+=abs((absResult-timerGoal)/timerGoal*100);
      }
      
      averageAccuracy=averageAccuracy/nPointsVisible;
-     
-     
-     //float accuracyP=100.0-fabs(([[self.myGraph calculatePointValueAverage] floatValue])/1000.0)/(float)timerGoal*100.0;
+    
+    //float accuracyP=100.0-fabs(([[self.myGraph calculatePointValueAverage] floatValue])/1000.0)/(float)timerGoal*100.0;
      accuracy.text = [NSString stringWithFormat:@"%02i", (int)averageAccuracy];
-     
-     
+    
      //precision
      float uncertainty=[[self.myGraph calculatePointValueMedian] floatValue]-[[self.myGraph calculateMinimumPointValue] floatValue]+[[self.myGraph calculateMaximumPointValue] floatValue]-[[self.myGraph calculatePointValueMedian] floatValue];
-     precision.text=[NSString stringWithFormat:@"%d",(int)uncertainty];
-     */
     
+     precision.text=[NSString stringWithFormat:@"%.03f",(float)uncertainty];
 }
 
 
@@ -2409,13 +2425,11 @@
 - (CGFloat)lineGraph:(BEMSimpleLineGraphView *)graph valueForPointAtIndex:(NSInteger)index {
     if([self.trialData count]==0)return 0.0;
     NSInteger i=[self.trialData count]-nPointsVisible+index; //show last nPoints
-
-    float accuracy=[[[self.trialData objectAtIndex:i] objectForKey:@"accuracy"] floatValue];
+    float naccuracy=[[[self.trialData objectAtIndex:i] objectForKey:@"accuracy"] floatValue];
     //cap graph
-    if(accuracy>1)accuracy=1;
-    else if (accuracy<-1)accuracy=-1;
-    
-    return accuracy;
+    if(naccuracy>1)naccuracy=1;
+    else if (naccuracy<-1)naccuracy=-1;
+    return naccuracy;
 }
 
 
@@ -2423,7 +2437,7 @@
 
 #pragma mark - SimpleLineGraph Delegate
 - (NSString *)popUpSuffixForlineGraph:(BEMSimpleLineGraphView *)graph {
-    return @"ms";
+    return @"";
 }
 
 - (NSInteger)numberOfYAxisLabelsOnLineGraph:(BEMSimpleLineGraphView *)graph {
@@ -2449,7 +2463,7 @@
 }
 
 - (void)lineGraph:(BEMSimpleLineGraphView *)graph didTouchGraphWithClosestIndex:(NSInteger)index {
-    self.labelValues.text = [NSString stringWithFormat:@"%02f", [[[self.trialData objectAtIndex:index] objectForKey:@"accuracy"] floatValue]  ];
+    //self.labelValues.text = [NSString stringWithFormat:@"%02f", [[[self.trialData objectAtIndex:index] objectForKey:@"accuracy"] floatValue]  ];    
 }
 
 - (void)lineGraph:(BEMSimpleLineGraphView *)graph didReleaseTouchFromGraphWithClosestIndex:(CGFloat)index {
@@ -2471,7 +2485,7 @@
 
 - (void)lineGraphDidFinishLoading:(BEMSimpleLineGraphView *)graph {
     
-    //[self updateStats];
+    [self updateStats];
     [self.myGraph drawPrecisionOverlay:[self getLevelAccuracy:currentLevel]];
     
     //last dot

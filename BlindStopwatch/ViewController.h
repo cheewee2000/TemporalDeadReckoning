@@ -97,10 +97,15 @@
     
     UIVisualEffectView *blobBlur;
 
-//    IBOutlet UIView *stats;
-//    UILabel *lastResults;
-//    UILabel *accuracy;
-//    UILabel *precision;
+    UIView *stats;
+    UILabel *lastResults;
+    UILabel *accuracy;
+    UILabel *precision;
+    UILabel* precisionUnit;
+    UILabel* accuracyUnit;
+    UILabel* lastResultLabel;
+    UILabel* accuracyLabel;
+    UILabel* precisionLabel;
     
     //NSMutableArray * levelData;
     
