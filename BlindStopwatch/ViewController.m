@@ -990,7 +990,7 @@
         float h=mainDot.frame.size.height*(arc4random()%8/10.0);
         
         CGRect orbit=CGRectMake(mainDot.frame.origin.x+satD*.15, mainDot.center.y-h/2.0, mainDot.frame.size.width-satD*.5, h);
-        [sat animateAlongPath:orbit rotate:i/10.0*M_PI_2*2.0 speed:dir*((4.0+arc4random()%40)/200.0)];
+        [sat animateAlongPath:orbit rotate:i/10.0*M_PI_2*2.0 speed:dir*((.05+arc4random()%1000)/4000.0)];
 
     }
 }
@@ -1117,15 +1117,30 @@
     if(progressView.frame.origin.y==0)return;
     //START
     if(trialSequence==0){
-            
+        startTime=[NSDate timeIntervalSinceReferenceDate];
+ 
         trialSequence=1;
 
-        startTime=[NSDate timeIntervalSinceReferenceDate];
         //[self updateTime];
         [instructions update:@"STOP" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:YES];
         
-            [self setTimerGoalMarginDisplay];
+        [self setTimerGoalMarginDisplay];
         
+        
+        [UIView animateWithDuration:0.05
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveEaseIn
+                         animations:^{
+                             mainDot.transform = CGAffineTransformScale(CGAffineTransformIdentity, .15, .15);
+                             for (int i=0;i<[satellites count];i++){
+                                 Dots *sat= [satellites objectAtIndex:i];
+                                 sat.transform = CGAffineTransformScale(CGAffineTransformIdentity, .5, .5);
+                             }
+                         }
+                         completion:^(BOOL finished){
+                             
+                         }];
+
             //[self.view bringSubviewToFront:blobBlur];
             [UIView animateWithDuration:0.6
                                   delay:0.0
@@ -1137,6 +1152,7 @@
                                  float y=sLabel.frame.origin.y;
                                  progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, screenHeight*2.0);
                                  //blobBlur.alpha=0;
+
                              }
                              completion:^(BOOL finished){
 
@@ -1146,12 +1162,17 @@
     }
     //STOP
     else if(trialSequence==1){
+        NSTimeInterval currentTime=[NSDate timeIntervalSinceReferenceDate];
+        elapsed = currentTime-startTime;
             trialSequence=2;
-            NSTimeInterval currentTime=[NSDate timeIntervalSinceReferenceDate];
-            elapsed = currentTime-startTime;
             [self updateTimeDisplay:elapsed];
             [self animateLevelDotScore];
             counterLabel.alpha=1.0;
+        mainDot.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+        for (int i=0;i<[satellites count];i++){
+            Dots *sat= [satellites objectAtIndex:i];
+            sat.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+        }
 
     }
     //NEXT

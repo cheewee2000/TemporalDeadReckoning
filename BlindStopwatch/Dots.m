@@ -171,7 +171,7 @@
 
         if(star.alpha<1){
             star.alpha=1;
-            star.transform = CGAffineTransformScale(CGAffineTransformIdentity, .00001, .000001);
+            star.transform = CGAffineTransformScale(CGAffineTransformIdentity, .001, .001);
         [UIView animateWithDuration:0.4
                               delay:0.2*i
              usingSpringWithDamping:.5
