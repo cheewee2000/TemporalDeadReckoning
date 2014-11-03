@@ -980,8 +980,8 @@
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 
-    
 }
+
 
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -1013,8 +1013,10 @@
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if([progressView.subMessage.text isEqual:@"GAME OVER"] || life==0)return;
-    if([[event allTouches]count]>1)return;
-    
+    //if([[event allTouches]count]>1)return;
+    //if ([touches count] == [[event touchesForView:self.view] count])
+
+
     UITouch *aTouch = [touches anyObject];
     CGPoint location = [aTouch locationInView:self.view];
     CGPoint previousLocation = [aTouch previousLocationInView:self.view];
@@ -1026,26 +1028,34 @@
               initialSpringVelocity:1.0
                             options:UIViewAnimationOptionCurveLinear
                          animations:^{
-
-                             if( (progressView.frame.origin.y<screenHeight-44 && location.y<previousLocation.y) || progressView.frame.origin.y<screenHeight*.25)
+                             if(progressView.frame.origin.y>=0)
                              {
-                                progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
-                                 progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
-                                 [self.view bringSubviewToFront:progressView];
-                             }
-                            else {
-                                progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
-                                TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
-                                float y=sLabel.frame.origin.y;
-                                progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, screenHeight*2.0);
+                                 if( (progressView.frame.origin.y<screenHeight-44 && location.y<previousLocation.y) || progressView.frame.origin.y<screenHeight*.25)
+                                 {
+                                    progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
+                                     progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
+                                     [self.view bringSubviewToFront:progressView];
+                                 }
+                                else {
+                                    progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
+                                    TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
+                                    float y=sLabel.frame.origin.y;
+                                    progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, screenHeight*2.0);
 
-                                [self.view sendSubviewToBack:progressView];
-                                [self.view sendSubviewToBack:blob];
-                            }
+                                    [self.view sendSubviewToBack:progressView];
+                                    [self.view sendSubviewToBack:blob];
+                                }
+                             }else{
+                                //constrain to bottom of graph
+                                 if(progressView.frame.origin.y<-screenHeight*.5){
+                                     progressView.frame=CGRectMake(0, -screenHeight*.5, screenWidth, screenHeight*2.0);
+                                 }
+                             }
                          }
                          completion:^(BOOL finished){
                              
                          }];
+    
 }
 
 
