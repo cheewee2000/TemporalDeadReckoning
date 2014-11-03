@@ -68,9 +68,10 @@
     else if(self.drawArrow){
         CGContextMoveToPoint (ctx, CGRectGetMinX(rect), CGRectGetMidY(rect));  // mid left
         CGContextAddLineToPoint(ctx, CGRectGetMinX(rect)+CGRectGetMaxY(rect)/2, CGRectGetMaxY(rect));  // bottom left
-        CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMaxY(rect));  // bottom left
-        CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMinY(rect));  // top left
-        CGContextAddLineToPoint(ctx, CGRectGetMinX(rect)+CGRectGetMaxY(rect)/2, CGRectGetMinY(rect));  // mid right
+        CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMaxY(rect));  // bottom right
+        CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect)-CGRectGetMaxY(rect)/2, CGRectGetMidY(rect));  // mid right
+        CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMinY(rect));  // top right
+        CGContextAddLineToPoint(ctx, CGRectGetMinX(rect)+CGRectGetMaxY(rect)/2, CGRectGetMinY(rect));  // top left
     }else{
         CGContextMoveToPoint (ctx, CGRectGetMinX(rect), CGRectGetMinY(rect));
         CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMinY(rect));

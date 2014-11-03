@@ -18,7 +18,7 @@
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 5
+#define TRIALSINSTAGE 1
 #define NUMHEARTS 3
 #define SHOWNEXTRASTAGES 3
 
@@ -70,6 +70,7 @@
 //    [instructions addGestureRecognizer:tapGestureRecognizer];
 //    instructions.userInteractionEnabled = YES;
 
+    [self loadLevelProgress];
 
     
     labelContainer=[[UIView alloc] initWithFrame:self.view.frame];
@@ -180,7 +181,6 @@
     //currentLevel=22;
     
     //[self loadData:currentLevel];
-    //[self loadLevelProgress];
     
     //buttonstealer
     id progressDelegate = self;
@@ -212,9 +212,15 @@
     [trophyButton setBackgroundImage:trophy forState:UIControlStateNormal];
     [trophyButton adjustsImageWhenHighlighted];
     [trophyButton setFrame:CGRectMake(0,0,44,44)];
-    trophyButton.center=CGPointMake(screenWidth/2.0, screenHeight-60);
+    trophyButton.center=CGPointMake(screenWidth/2.0, screenHeight-66);
     [trophyButton addTarget:self action:@selector(showGlobalLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:trophyButton];
+    
+    trophyButton.layer.shadowOpacity = progressView.shadowO;
+    trophyButton.layer.shadowRadius = progressView.shadowR;
+    trophyButton.layer.shadowColor = [UIColor blackColor].CGColor;
+    trophyButton.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+    
     
     
     medalButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -223,10 +229,13 @@
     [medalButton setBackgroundImage:medal forState:UIControlStateNormal];
     [medalButton adjustsImageWhenHighlighted];
     [medalButton setFrame:CGRectMake(0,0,44,44)];
-    medalButton.center=CGPointMake(screenWidth*1.0/5.0, screenHeight-60);
+    medalButton.center=CGPointMake(screenWidth*1.0/5.0, screenHeight-66);
     [medalButton addTarget:self action:@selector(showXPLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:medalButton];
-    
+    medalButton.layer.shadowOpacity = progressView.shadowO;
+    medalButton.layer.shadowRadius = progressView.shadowR;
+    medalButton.layer.shadowColor = [UIColor blackColor].CGColor;
+    medalButton.layer.shadowOffset = CGSizeMake(0.0, 1.0);
     
 
     bestLabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0,screenWidth,26)];
@@ -234,7 +243,12 @@
     bestLabel.textAlignment=NSTextAlignmentCenter;
     bestLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
     [progressView addSubview:bestLabel];
+    bestLabel.layer.shadowOpacity = progressView.shadowO;
+    bestLabel.layer.shadowRadius = progressView.shadowR;
+    bestLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+    bestLabel.layer.shadowOffset = CGSizeMake(0.0, 1.0);
     
+
     
     highScoreLabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0,screenWidth,26)];
     highScoreLabel.center=CGPointMake(screenWidth/5.0, medalButton.frame.origin.y+medalButton.frame.size.height+15);
@@ -242,6 +256,11 @@
     highScoreLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
     [progressView addSubview:highScoreLabel];
     [self updateHighscore];
+    highScoreLabel.layer.shadowOpacity = progressView.shadowO;
+    highScoreLabel.layer.shadowRadius = progressView.shadowR;
+    highScoreLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+    highScoreLabel.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+    
 
     restartButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage * restart=[UIImage imageNamed:@"restart"];
@@ -249,9 +268,13 @@
     [restartButton setBackgroundImage:restart forState:UIControlStateNormal];
     [restartButton adjustsImageWhenHighlighted];
     [restartButton setFrame:CGRectMake(0,0,44,44)];
-    restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-60);
+    restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-66);
     [restartButton addTarget:self action:@selector(restart) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:restartButton];
+    restartButton.layer.shadowOpacity = progressView.shadowO;
+    restartButton.layer.shadowRadius = progressView.shadowR;
+    restartButton.layer.shadowColor = [UIColor blackColor].CGColor;
+    restartButton.layer.shadowOffset = CGSizeMake(0.0, 1.0);
     
     
    restartExpandButton = [[BFPaperButton alloc] initWithFrame:CGRectMake(0, 0, 44,44) raised:NO];
@@ -275,7 +298,11 @@
     [progressView addSubview:playButton];
     [progressView bringSubviewToFront:playButton];
     playButton.alpha=0;
-
+    playButton.layer.shadowOpacity = progressView.shadowO;
+    playButton.layer.shadowRadius = progressView.shadowR;
+    playButton.layer.shadowColor = [UIColor blackColor].CGColor;
+    playButton.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+    
 
     
     //Dots
@@ -506,7 +533,7 @@
           initialSpringVelocity:1.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
-                         restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-60);
+                         restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-66);
                      }
                      completion:^(BOOL finished){
                      }];
@@ -587,7 +614,7 @@
           initialSpringVelocity:1.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
-                         restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-60);
+                         restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-66);
                      }
                      completion:^(BOOL finished){
                      }];
@@ -846,14 +873,15 @@
     
     if(i<currentLevel){
         [dot setFill:YES];
-        
-        float trialAccuracy=fabs([[[self.levelData objectAtIndex:i] objectForKey:@"accuracy"] floatValue]);
-        //float trialGoal=fabs([[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"goal"] floatValue]);
-        //float accuracyPercent=100.0-trialAccuracy/trialGoal*100.0;
-       
-        if(trialAccuracy<=[self getLevelAccuracy:i]*1.0/5.0) [dot setStars:3];
-        else if(trialAccuracy<=[self getLevelAccuracy:i]*2.0/5.0) [dot setStars:2];
-        else if(trialAccuracy<=[self getLevelAccuracy:i]*3.0/5.0)[dot setStars:1];
+        if(i<[self.levelData count]){
+            float trialAccuracy=fabs([[[self.levelData objectAtIndex:i] objectForKey:@"accuracy"] floatValue]);
+            //float trialGoal=fabs([[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"goal"] floatValue]);
+            //float accuracyPercent=100.0-trialAccuracy/trialGoal*100.0;
+           
+            if(trialAccuracy<=[self getLevelAccuracy:i]*1.0/5.0) [dot setStars:3];
+            else if(trialAccuracy<=[self getLevelAccuracy:i]*2.0/5.0) [dot setStars:2];
+            else if(trialAccuracy<=[self getLevelAccuracy:i]*3.0/5.0)[dot setStars:1];
+        }
     }
     else {
         [dot setFill:NO];
@@ -907,8 +935,8 @@
 
         
             if(heart.frame.origin.y>screenHeight){
-
-                heart.alpha=.7;
+                if([hearts count]>10) heart.alpha=.7;
+                else heart.alpha=1;
                 //heart.transform = CGAffineTransformScale(CGAffineTransformIdentity, .01, .01);
 
                     //heart in
@@ -1030,7 +1058,7 @@
                          animations:^{
                              if(progressView.frame.origin.y>=0)
                              {
-                                 if( (progressView.frame.origin.y<screenHeight-44 && location.y<previousLocation.y) || progressView.frame.origin.y<screenHeight*.25)
+                                 if( (progressView.frame.origin.y<screenHeight-44 && location.y<previousLocation.y) || progressView.frame.origin.y<screenHeight*.125)
                                  {
                                     progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
                                      progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
@@ -1358,7 +1386,7 @@
     {
         //Array file didn't exist... create a new one
         self.levelData = [[NSMutableArray alloc] init];
-        for (int i = 0; i < [dots count]; i++) {
+        for (int i = 0; i < nPointsVisible; i++) {
             
             NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
             [myDictionary  setObject:[NSNumber numberWithInt:0] forKey:@"accuracy"];
@@ -1421,12 +1449,30 @@
                           medalButton.alpha=1;
                           highScoreLabel.alpha=1;
                           bestLabel.alpha=1;
-
                           restartButton.alpha=1;
                           
                           counterGoalLabel.alpha=0;
                           counterLabel.alpha=0;
                           goalPrecision.alpha=0;
+                          
+                          
+                          CGFloat hue, saturation, brightness, alpha ;
+                          BOOL ok = [ [self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
+                          if ( !ok ) {
+                              // handle error 
+                          }
+                          brightness+=.15;
+                          //saturation+=.1;
+
+                          UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha ] ;
+
+                          restartButton.tintColor=sColor;
+                          restartExpandButton.tapCircleColor=sColor;
+                          trophyButton.tintColor=sColor;
+                          medalButton.tintColor=sColor;
+                          highScoreLabel.textColor=sColor;
+                          bestLabel.textColor=sColor;
+
                           
                           if(practicing) self.view.backgroundColor=[UIColor colorWithWhite:.7 alpha:1.0];
                           else self.view.backgroundColor=[self getBackgroundColor:currentLevel];
@@ -1440,13 +1486,6 @@
                           counterGoalLabel.textColor=[self getForegroundColor:currentLevel];
                           goalPrecision.textColor=[self getForegroundColor:currentLevel];
                           
-                          restartButton.tintColor=[self getBackgroundColor:currentLevel];
-                          restartExpandButton.tapCircleColor=[self getBackgroundColor:currentLevel];
-
-                          trophyButton.tintColor=[self getBackgroundColor:currentLevel];
-                          medalButton.tintColor=[self getBackgroundColor:currentLevel];
-                          highScoreLabel.textColor=[self getBackgroundColor:currentLevel];
-                          bestLabel.textColor=[self getBackgroundColor:currentLevel];
 
                           self.myGraph.colorLine = [self getBackgroundColor:currentLevel];
                           self.myGraph.colorXaxisLabel = [self getBackgroundColor:currentLevel];
@@ -1738,6 +1777,7 @@
     progressView.subMessage.text=[NSString stringWithFormat:@"SPEND $%.02f \nTO CONTINUE FROM STAGE %i?",lastStage*10.0,lastStage+1];
     progressView.subMessage.alpha=1.0;
     progressView.subMessage.textColor=trophyButton.tintColor;
+
     progressView.centerMessage.textColor=trophyButton.tintColor;
 
     playButton.alpha=1.0;
@@ -1747,11 +1787,14 @@
     
     progressView.lowerMessage.frame=CGRectMake(0, playButton.frame.origin.y+playButton.frame.size.height+30, progressView.lowerMessage.frame.size.width, progressView.lowerMessage.frame.size.height);
     progressView.lowerMessage.text=@"RESTART";
+
     progressView.lowerMessage.alpha=1.0;
     progressView.lowerMessage.textColor=trophyButton.tintColor;
     progressView.lowerMessage.textColor=trophyButton.tintColor;
     
-    
+//    [progressView addShadow:progressView.subMessage];
+//    [progressView addShadow:progressView.lowerMessage];
+
     [UIView animateWithDuration:0.8
                           delay:0.5
          usingSpringWithDamping:.8
@@ -1813,6 +1856,10 @@
 
 -(void)showGameOver{
     progressView.subMessage.text=@"GAME OVER";
+    //[progressView addShadow:progressView.subMessage];
+    
+    
+    
     progressView.subMessage.textColor=trophyButton.tintColor;
 
     [UIView animateWithDuration:0.4
@@ -2157,7 +2204,7 @@
                          TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
                          float y=sLabel.frame.origin.y;
                          progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, screenHeight*2.0);
-                         restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-60);
+                         restartButton.center=CGPointMake(screenWidth*4/5.0, screenHeight-66);
 
                      }
                      completion:^(BOOL finished){
@@ -2200,8 +2247,9 @@
 
     if(trialSequence==0)
     {
-        [instructions update:@"START" rightLabel:@"PRESS VOLUME BUTTON" color:[self getForegroundColor:currentLevel] animate:NO];
+        [instructions update:@"START" rightLabel:@"PRESS VOLUME BUTTON TO START. . . ." color:[self getForegroundColor:currentLevel] animate:NO];
         instructions.rightLabel.font=[UIFont fontWithName:@"DIN Condensed" size:screenHeight*.03];
+ 
         [instructions bounce];
         [self performSelector:@selector(instructionBounce) withObject:self afterDelay:5.0];
     }

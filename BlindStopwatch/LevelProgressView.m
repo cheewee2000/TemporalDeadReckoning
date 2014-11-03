@@ -13,6 +13,9 @@
     self = [super initWithFrame:theFrame];
     if (self) {
         
+         _shadowR=2.5;
+        _shadowO=.5;
+        
         self.dotsContainer=[[UIView alloc] init];
         self.dotsContainer.frame=CGRectMake(0, 0, self.frame.size.width, self.frame.size.height*2);
         [self addSubview:self.dotsContainer];
@@ -25,6 +28,13 @@
         self.centerMessage.backgroundColor = [UIColor clearColor];
         self.centerMessage.font = [UIFont fontWithName:@"DIN Condensed" size:140];
         self.centerMessage.textColor=[UIColor whiteColor];
+        
+        
+        self.centerMessage.layer.shadowOpacity = _shadowO;
+        self.centerMessage.layer.shadowRadius = _shadowR;
+        self.centerMessage.layer.shadowColor = [UIColor blackColor].CGColor;
+        self.centerMessage.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+        
         [self addSubview:self.centerMessage];
 
         
@@ -39,6 +49,14 @@
         [self addSubview:self.subMessage];
         [self bringSubviewToFront:self.subMessage];
         
+        
+        self.subMessage.layer.shadowOpacity = _shadowO;
+        self.subMessage.layer.shadowRadius = _shadowR;
+        self.subMessage.layer.shadowColor = [UIColor blackColor].CGColor;
+        self.subMessage.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+        
+        
+        
         self.lowerMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, self.frame.size.width, 40)];
         self.lowerMessage.center=CGPointMake(self.frame.size.width/2.0, self.subMessage.center.y+90);
         self.lowerMessage.text=@"";
@@ -50,6 +68,12 @@
         [self addSubview:self.lowerMessage];
         [self bringSubviewToFront:self.lowerMessage];
  
+        
+        self.lowerMessage.layer.shadowOpacity = _shadowO;
+        self.lowerMessage.layer.shadowRadius = _shadowR;
+        self.lowerMessage.layer.shadowColor = [UIColor blackColor].CGColor;
+        self.lowerMessage.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+        
         
     }
     return self;

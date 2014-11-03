@@ -16,7 +16,8 @@
 @property UILabel * centerMessage;
 @property UILabel * subMessage;
 @property UILabel * lowerMessage;
-
+@property float shadowR;
+@property float shadowO;
 -(void)displayMessage:(NSString*)s;
 
 @end
