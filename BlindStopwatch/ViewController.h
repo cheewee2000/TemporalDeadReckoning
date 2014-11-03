@@ -46,6 +46,7 @@
     float start;
     CGPoint offset;
     BOOL practicing;
+    int nHeartsReplenished;
     
     
     //progressView

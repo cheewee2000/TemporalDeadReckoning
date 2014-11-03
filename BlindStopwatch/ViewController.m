@@ -18,7 +18,7 @@
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 1
+#define TRIALSINSTAGE 4
 #define NUMHEARTS 3
 #define SHOWNEXTRASTAGES 3
 
@@ -990,7 +990,7 @@
         float h=mainDot.frame.size.height*(arc4random()%8/10.0);
         
         CGRect orbit=CGRectMake(mainDot.frame.origin.x+satD*.15, mainDot.center.y-h/2.0, mainDot.frame.size.width-satD*.5, h);
-        [sat animateAlongPath:orbit rotate:i/10.0*M_PI_2*2.0 speed:dir*((.05+arc4random()%1000)/4000.0)];
+        [sat animateAlongPath:orbit rotate:i/10.0*M_PI_2*2.0 speed:dir*((.01+arc4random()%1000)/4000.0)];
 
     }
 }
@@ -1582,14 +1582,18 @@
                          }
                      }
                      completion:^(BOOL finished){
-                       
+                         nHeartsReplenished=0;
+                         
                          [self xoViewOffScreen];
                          
                          //save trial data now
                          [self saveTrialData];
 
                          if([self isAccurate]){
-                             if(life<NUMHEARTS) life=NUMHEARTS;
+                             if(life<NUMHEARTS){
+                                 nHeartsReplenished=NUMHEARTS-life;
+                                 life=NUMHEARTS;
+                             }
                              experiencePoints+=elapsed*timerGoal;
 
                             //add heart for triplestar level
@@ -1646,22 +1650,6 @@
     
     //ARROW1
 
-    if(([self isAccurate] && currentLevel%TRIALSINSTAGE==0) || life==0) {
-        NSString * stageClearedString;
-        if(life==0) stageClearedString=@"GAME OVER";
-        else {
-            stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED! ❤\U0000FE0E⁺¹",[self getCurrentStage]];
-        }
-        
-        t= [levelArrows objectAtIndex:arrowN];
-        [t update:@"" rightLabel:stageClearedString color:instructions.color animate:NO];
-        margin-=spacing+t.frame.size.height;
-        d+=inc;
-        [t slideUpTo:margin delay:d];
-        [self.view bringSubviewToFront:t];
-    }
-    arrowN++;
-
     if(life>0){
         NSString * bonusString=@"";
         float trialAccuracy=fabs(elapsed-timerGoal);
@@ -1697,6 +1685,30 @@
         [self.view bringSubviewToFront:t];
     }
     arrowN++;
+    
+    
+    if(([self isAccurate] && currentLevel%TRIALSINSTAGE==0) || life==0 || nHeartsReplenished>0) {
+        NSString * stageClearedString;
+        if(life==0) stageClearedString=@"GAME OVER";
+        
+        else if([self isAccurate] && currentLevel%TRIALSINSTAGE==0){
+            stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED! ❤\U0000FE0E⁺¹",[self getCurrentStage]];
+        }
+        else if(nHeartsReplenished>0){
+            if(nHeartsReplenished==1)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺¹";
+            else if(nHeartsReplenished==2)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺²";
+        }
+        
+        t= [levelArrows objectAtIndex:arrowN];
+        [t update:@"" rightLabel:stageClearedString color:instructions.color animate:NO];
+        margin-=spacing+t.frame.size.height;
+        d+=inc;
+        [t slideUpTo:margin delay:d];
+        [self.view bringSubviewToFront:t];
+    }
+    arrowN++;
+
+
     
     
     
