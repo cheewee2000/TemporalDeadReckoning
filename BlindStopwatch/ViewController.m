@@ -18,7 +18,7 @@
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 5
+#define TRIALSINSTAGE 2
 #define NUMHEARTS 3
 #define SHOWNEXTRASTAGES 3
 
@@ -335,7 +335,6 @@
     self.myGraph.enableTouchReport = YES;
     self.myGraph.enablePopUpReport = YES;
     self.myGraph.autoScaleYAxis = YES;
-    
     self.myGraph.animationGraphEntranceTime = 1.5;
     //myGraph.alphaTop=.2;
     //myGraph.enableBezierCurve = YES;
@@ -385,40 +384,40 @@
      
      //UNITS
     UIFont * SMF=[UIFont fontWithName:@"HelveticaNeue" size:10];
-    precisionUnit=[[UILabel alloc] initWithFrame:CGRectMake(precision.frame.origin.x+precision.frame.size.width, 0, 80, 20)];
-     precisionUnit.text=@"SEC";
-     precisionUnit.font = SMF;
-     [stats addSubview:precisionUnit];
-     
-     accuracyUnit=[[UILabel alloc] initWithFrame:CGRectMake(accuracy.frame.origin.x+accuracy.frame.size.width, 0, 80, 20)];
-     accuracyUnit.text=@"%";
-     accuracyUnit.font = SMF;
-     [stats addSubview:accuracyUnit];
-     
-     //LABELS
-     float y=precision.frame.size.height-15;
-     lastResultLabel=[[UILabel alloc] initWithFrame:CGRectMake(0, y, stats.frame.size.width*.33-12, 20)];
+    precisionUnit=[[UILabel alloc] initWithFrame:CGRectMake(precision.frame.origin.x+precision.frame.size.width, -5, 80, 20)];
+    precisionUnit.text=@"SEC";
+    precisionUnit.font = SMF;
+    [stats addSubview:precisionUnit];
+
+    accuracyUnit=[[UILabel alloc] initWithFrame:CGRectMake(accuracy.frame.origin.x+accuracy.frame.size.width, -5, 80, 20)];
+    accuracyUnit.text=@"%";
+    accuracyUnit.font = SMF;
+    [stats addSubview:accuracyUnit];
+
+    //LABELS
+    float y=precision.frame.size.height-10;
+    lastResultLabel=[[UILabel alloc] initWithFrame:CGRectMake(0, y, stats.frame.size.width*.33-12, 20)];
     lastResultLabel.center=CGPointMake(stats.frame.size.width*1/5.0, lastResultLabel.center.y);
-     lastResultLabel.text=@"TRIALS";
+    lastResultLabel.text=@"TRIALS";
     lastResultLabel.textAlignment=NSTextAlignmentCenter;
     lastResultLabel.font = SMF;
-     [stats addSubview:lastResultLabel];
-    
-     accuracyLabel=[[UILabel alloc] initWithFrame:CGRectMake(0, y, stats.frame.size.width*.33-12, 20)];
+    [stats addSubview:lastResultLabel];
+
+    accuracyLabel=[[UILabel alloc] initWithFrame:CGRectMake(0, y, stats.frame.size.width*.33-12, 20)];
     accuracyLabel.center=CGPointMake(stats.frame.size.width*4/5.0, accuracyLabel.center.y);
-     accuracyLabel.text=@"ACCURACY";
+    accuracyLabel.text=@"ACCURACY";
     accuracyLabel.textAlignment=NSTextAlignmentCenter;
     accuracyLabel.font = SMF;
-     [stats addSubview:accuracyLabel];
-     
-     precisionLabel=[[UILabel alloc] initWithFrame:CGRectMake(0, y, stats.frame.size.width*.33-12, 20)];
+    [stats addSubview:accuracyLabel];
+
+    precisionLabel=[[UILabel alloc] initWithFrame:CGRectMake(0, y, stats.frame.size.width*.33-12, 20)];
     precisionLabel.center=CGPointMake(stats.frame.size.width*2.5/5.0, precisionLabel.center.y);
 
-     precisionLabel.text=@"PRECISION";
+    precisionLabel.text=@"PRECISION";
     precisionLabel.textAlignment=NSTextAlignmentCenter;
     precisionLabel.font = SMF;
-     [stats addSubview:precisionLabel];
-    
+    [stats addSubview:precisionLabel];
+
     [progressView addSubview:stats];
     
     
@@ -2101,22 +2100,40 @@
 -(void)updateStats{
      //results
      lastResults.text=[NSString stringWithFormat:@"%02d",(int)nPointsVisible];
-     
+    int nPoints=0;
+
      //accuracy
      int averageAccuracy=0;
      for( int i=0; i<nPointsVisible; i++){
-     int index=(int)[self.trialData count]-(int)nPointsVisible+i; //show last nPoints
-     float absResult=fabs([[[self.trialData objectAtIndex:index] objectForKey:@"accuracy"] floatValue]);
-     averageAccuracy+=abs((absResult-timerGoal)/timerGoal*100);
+         int index=(int)[self.trialData count]-(int)nPointsVisible+i; //show last nPoints
+         float absResult=fabs([[[self.trialData objectAtIndex:index] objectForKey:@"accuracy"] floatValue]);
+         float goal=[[[self.trialData objectAtIndex:index] objectForKey:@"goal"] floatValue];
+         
+         if(goal!=0){
+            float accuracyPercent=100.0-absResult/goal*100.0;
+            if(accuracyPercent<0)accuracyPercent=0;
+            accuracyPercent=ceilf(accuracyPercent);
+             averageAccuracy+=accuracyPercent;
+             nPoints++;
+         }
+         
+         //averageAccuracy+=abs((absResult-timerGoal)/timerGoal*100);
      }
      
-     averageAccuracy=averageAccuracy/nPointsVisible;
+     averageAccuracy=averageAccuracy/(float)nPoints;
     
     //float accuracyP=100.0-fabs(([[self.myGraph calculatePointValueAverage] floatValue])/1000.0)/(float)timerGoal*100.0;
      accuracy.text = [NSString stringWithFormat:@"%02i", (int)averageAccuracy];
+
+    float total=0;
+    for( int i=0; i<nPointsVisible; i++){
+        int index=(int)[self.trialData count]-(int)nPointsVisible+i; //show last nPoints
+        total+=[[[self.trialData objectAtIndex:index] objectForKey:@"accuracy"] floatValue];
+    }
+    float mean=total/(float)nPointsVisible;
     
      //precision
-     float uncertainty=[[self.myGraph calculatePointValueMedian] floatValue]-[[self.myGraph calculateMinimumPointValue] floatValue]+[[self.myGraph calculateMaximumPointValue] floatValue]-[[self.myGraph calculatePointValueMedian] floatValue];
+     float uncertainty=mean-[[self.myGraph calculateMinimumPointValue] floatValue]+[[self.myGraph calculateMaximumPointValue] floatValue]-mean;
     
      precision.text=[NSString stringWithFormat:@"%.03f",(float)uncertainty];
 }
