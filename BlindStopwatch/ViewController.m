@@ -324,11 +324,13 @@
     
     ///*
     nPointsVisible=20;
-    self.myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, screenHeight, screenWidth-22, screenHeight*.5)];
+    self.myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, screenHeight, screenWidth-22, 220)];
     self.myGraph.delegate = self;
     self.myGraph.dataSource = self;
     self.myGraph.colorTop =[UIColor clearColor];
     self.myGraph.colorBottom =[UIColor clearColor];
+    //self.myGraph.colorTop =[UIColor grayColor];
+    //self.myGraph.colorBottom =[UIColor grayColor];
 
     self.myGraph.colorLine = [UIColor blackColor];
     self.myGraph.colorXaxisLabel = [UIColor blackColor];
@@ -338,18 +340,19 @@
     self.myGraph.animationGraphStyle = BEMLineAnimationDraw;
     self.myGraph.enableTouchReport = YES;
     self.myGraph.enablePopUpReport = YES;
-    self.myGraph.autoScaleYAxis = YES;
+    self.myGraph.autoScaleYAxis = NO;
+    self.myGraph.yAxisScale=100.0;
     self.myGraph.animationGraphEntranceTime = 1.75;
     
     [progressView addSubview:self.myGraph];
 
     
     //stats
-    stats = [[UIView alloc] initWithFrame:CGRectMake(0, self.myGraph.frame.origin.y+self.myGraph.frame.size.height, screenWidth, screenHeight*.1)];
-     UIFont * LF=[UIFont fontWithName:@"DIN Condensed" size:36];
+    stats = [[UIView alloc] initWithFrame:CGRectMake(0, self.myGraph.frame.origin.y+self.myGraph.frame.size.height+10, screenWidth, screenHeight*.1)];
+     UIFont * LF=[UIFont fontWithName:@"DIN Condensed" size:34];
     
     int h=40;
-    averageTime=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 95, h)];
+    averageTime=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 85, h)];
     averageTime.center=CGPointMake(stats.frame.size.width*1/5.0, averageTime.center.y);
     averageTime.font = LF;
     averageTime.textColor =  [UIColor blackColor];
@@ -363,7 +366,7 @@
     accuracy.textAlignment=NSTextAlignmentCenter;
     [stats addSubview:accuracy];
 
-    precision=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 75, h)];
+    precision=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 65, h)];
     precision.center=CGPointMake(stats.frame.size.width*2.5/5.0, precision.center.y);
     precision.font = LF;
     precision.textColor =  [UIColor blackColor];

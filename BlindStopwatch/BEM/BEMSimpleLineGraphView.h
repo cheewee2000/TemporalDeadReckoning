@@ -257,6 +257,7 @@
 
 /// Color of the label's text displayed on the Y-Axis. Defaut value is blackColor.
 @property (strong, nonatomic) UIColor *colorYaxisLabel;
+@property (nonatomic) CGFloat yAxisScale;
 
 
 /// Color of the pop up label's background displayed when the user touches the graph.

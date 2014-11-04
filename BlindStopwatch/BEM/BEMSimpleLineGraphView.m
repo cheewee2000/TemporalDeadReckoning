@@ -153,6 +153,8 @@
     dataPoints = [NSMutableArray array];
     xAxisLabels = [NSMutableArray array];
     yAxisValues = [NSMutableArray array];
+    
+    _yAxisScale=1;
 }
 
 - (void)layoutSubviews {
@@ -1085,7 +1087,7 @@
     
     if (minValue == maxValue) positionOnYAxis = self.frame.size.height/2;
     else if (self.autoScaleYAxis == YES) positionOnYAxis = ((self.frame.size.height - padding) - ((dotValue - minValue) / ((maxValue - minValue) / (self.frame.size.height - padding))) + padding/2);
-    else positionOnYAxis = ((self.frame.size.height - padding) - dotValue);
+    else positionOnYAxis = ((self.frame.size.height - padding) - dotValue*self.yAxisScale);
     
     if ([self.dataSource respondsToSelector:@selector(lineGraph:labelOnXAxisForIndex:)] || [self.dataSource respondsToSelector:@selector(labelOnXAxisForIndex:)]) {
         if ([xAxisLabels count] > 0) {
