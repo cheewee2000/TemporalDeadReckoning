@@ -323,7 +323,7 @@
     
     
     ///*
-    nPointsVisible=40;
+    nPointsVisible=20;
     self.myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, screenHeight, screenWidth-22, screenHeight*.5)];
     self.myGraph.delegate = self;
     self.myGraph.dataSource = self;
