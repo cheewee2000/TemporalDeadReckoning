@@ -172,8 +172,8 @@
     if([defaults objectForKey:@"best"] == nil) best=0;
     else best = (int)[defaults integerForKey:@"best"];
     
-    if([defaults objectForKey:@"highScore"] == nil) experiencePoints=0;
-    else experiencePoints = (int)[defaults integerForKey:@"highScore"];
+    if([defaults objectForKey:@"experiencepoints"] == nil) experiencePoints=0;
+    else experiencePoints = (int)[defaults integerForKey:@"experiencepoints"];
     
     if([defaults objectForKey:@"practicing"] == nil) practicing=false;
     else practicing = (int)[defaults integerForKey:@"practicing"];
@@ -1509,10 +1509,10 @@
         }
         
         
-        float currentHS=(int)[defaults integerForKey:@"highScore"];
+        float currentHS=(int)[defaults integerForKey:@"experiencepoints"];
         if(experiencePoints>currentHS){
             currentHS=experiencePoints;
-            [defaults setInteger:experiencePoints forKey:@"highScore"];
+            [defaults setInteger:experiencePoints forKey:@"experiencepoints"];
         }
 
         [self updateHighscore];
