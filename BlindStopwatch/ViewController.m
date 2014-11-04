@@ -348,7 +348,7 @@
 
     
     //stats
-    stats = [[UIView alloc] initWithFrame:CGRectMake(0, self.myGraph.frame.origin.y+self.myGraph.frame.size.height+10, screenWidth, screenHeight*.1)];
+    stats = [[UIView alloc] initWithFrame:CGRectMake(0, screenHeight*1.5-88, screenWidth, 100)];
      UIFont * LF=[UIFont fontWithName:@"DIN Condensed" size:34];
     
     int h=40;
@@ -557,7 +557,7 @@
                               delay:(arc4random()%1000)*.001
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^{
-                             d.frame=CGRectOffset(d.frame, 0, screenHeight);
+                             d.frame=CGRectOffset(d.frame, 0, screenHeight*1.5);
                          }
                          completion:^(BOOL finished){
                              
@@ -571,12 +571,23 @@
                               delay:(arc4random()%1000)*.001
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^{
-                             sl.frame=CGRectOffset(sl.frame, 0, screenHeight);
+                             sl.frame=CGRectOffset(sl.frame, 0, screenHeight*1.5);
                          }
                          completion:^(BOOL finished){
                              
                          }];
     }
+    
+    [UIView animateWithDuration:.4
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         bestLevelDot.frame=CGRectOffset(bestLevelDot.frame, 0, screenHeight*1.5);
+                     }
+                     completion:^(BOOL finished){
+                         
+                     }];
+
     
     
     
@@ -692,7 +703,7 @@
             [sLabel removeFromSuperview];
         }
     }
-    
+    bestLevelDot.alpha=0;
     [dots removeAllObjects];
     [stageLabels removeAllObjects];
 }
@@ -834,13 +845,7 @@
                                                 //add level label
                                                 [self updateDot:i];
                     
-                                                if(best==[self getLevel:i]){
-                                                    bestLevelDot.alpha=1.0;
-                                                    [bestLevelDot setFill:NO];
-                                                    [bestLevelDot setColor:dot.dotColor];
-                                                    bestLevelDot.center=dot.center;
-                                                }
-                                                
+
                                             //animate dot appearance
                                             [UIView animateWithDuration:.2
                                                                   delay:.8+(i-currentLevel)*.05
@@ -852,9 +857,13 @@
 
                                                              }
                                                              completion:^(BOOL finished){
-
+                                                                 if(best==[self getLevel:i]){
+                                                                     bestLevelDot.alpha=1.0;
+                                                                     [bestLevelDot setFill:NO];
+                                                                     [bestLevelDot setColor:dot.dotColor];
+                                                                     bestLevelDot.center=dot.center;
+                                                                 }
                                                              }];
-                                            
                                             }
                                         }
                                        
@@ -885,8 +894,19 @@
                          }];
         
     }
-    [bestLevelDot setColor:[self getBackgroundColor:currentLevel]];
-    [bestLevelDot setNeedsDisplay];
+    
+    [UIView animateWithDuration:.4
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         [bestLevelDot setColor:[self getBackgroundColor:currentLevel]];
+                         [bestLevelDot setNeedsDisplay];
+                     }
+                     completion:^(BOOL finished){
+                         
+                     }];
+
+    
 
 }
 
@@ -1115,7 +1135,7 @@
                                      progressView.frame=CGRectMake(0, -screenHeight*.5, screenWidth, screenHeight*2.0);
                                  }
                                  
-                                 else if(progressView.frame.origin.y<0 && progressView.frame.origin.y>-self.myGraph.frame.size.height){
+                                 else if(progressView.frame.origin.y<0){
                                      if(location.y<previousLocation.y)progressView.frame=CGRectMake(0, -screenHeight*.5, screenWidth, screenHeight*2.0);
                                      else if(location.y>previousLocation.y)progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
 
