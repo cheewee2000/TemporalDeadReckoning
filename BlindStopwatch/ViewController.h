@@ -55,6 +55,7 @@
     UILabel *bestLabel;
     UILabel *highScoreLabel;
     NSMutableArray *dots;
+    Dots *bestLevelDot;
     
     float buttonYPos;
     

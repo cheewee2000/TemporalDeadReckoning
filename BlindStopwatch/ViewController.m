@@ -312,6 +312,10 @@
     dots=[NSMutableArray array];
     stageLabels=[NSMutableArray array];
 
+    bestLevelDot=[[Dots alloc] initWithFrame:CGRectMake(0, 0, 17, 17)];
+    bestLevelDot.backgroundColor = [UIColor clearColor];
+    bestLevelDot.alpha=0;
+    [progressView.dotsContainer addSubview:bestLevelDot];
 
     //[self updateDots];
     //[self updateTimeDisplay:0];
@@ -335,7 +339,7 @@
     self.myGraph.enableTouchReport = YES;
     self.myGraph.enablePopUpReport = YES;
     self.myGraph.autoScaleYAxis = YES;
-    self.myGraph.animationGraphEntranceTime = 1.5;
+    self.myGraph.animationGraphEntranceTime = 1.75;
     //myGraph.alphaTop=.2;
     //myGraph.enableBezierCurve = YES;
     //myGraph.alwaysDisplayDots = YES;
@@ -837,6 +841,13 @@
                                                 //add level label
                                                 [self updateDot:i];
                     
+                                                if(best==[self getLevel:i]){
+                                                    bestLevelDot.alpha=1.0;
+                                                    [bestLevelDot setFill:NO];
+                                                    [bestLevelDot setColor:dot.dotColor];
+                                                    bestLevelDot.center=dot.center;
+                                                }
+                                                
                                             //animate dot appearance
                                             [UIView animateWithDuration:.2
                                                                   delay:.8+(i-currentLevel)*.05
@@ -881,6 +892,8 @@
         
 
     }
+    [bestLevelDot setColor:[self getBackgroundColor:currentLevel]];
+
 }
 
 -(void) updateDot:(int)i{
@@ -912,13 +925,15 @@
     else {
         [dot setFill:NO];
     }
+    
+
    
 }
 
 -(void) updateDots{
 
     for (int i=0; i<[dots count]; i++)[self updateDot:i];
-  
+
 
     //hide xo view`
     [UIView animateWithDuration:.4
@@ -1241,6 +1256,8 @@
     //[self.ArrayOfValues  insertObject:myDictionary atIndex:currentLevel];
     //dave data into continuous array
     [self.trialData addObject:myDictionary];
+    [self.trialData removeObjectAtIndex:0];
+    
     
     //save data into clean array
     [self.levelData  insertObject:myDictionary atIndex:currentLevel];
@@ -1350,7 +1367,7 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     //timeValuesFile = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"timeData%i.dat",(int)level]];
-    timeValuesFile = [documentsDirectory stringByAppendingPathComponent:@"trialData3.dat"];
+    timeValuesFile = [documentsDirectory stringByAppendingPathComponent:@"trialData4.dat"];
 
     //Load the array
     self.trialData = [[NSMutableArray alloc] initWithContentsOfFile: timeValuesFile];
@@ -2103,38 +2120,31 @@
     int nPoints=0;
 
      //accuracy
-     int averageAccuracy=0;
+    float averageAccuracy=0;
      for( int i=0; i<nPointsVisible; i++){
          int index=(int)[self.trialData count]-(int)nPointsVisible+i; //show last nPoints
-         float absResult=fabs([[[self.trialData objectAtIndex:index] objectForKey:@"accuracy"] floatValue]);
+        float absResult=fabs([[[self.trialData objectAtIndex:index] objectForKey:@"accuracy"] floatValue]);
          float goal=[[[self.trialData objectAtIndex:index] objectForKey:@"goal"] floatValue];
          
-         if(goal!=0){
+                  if(goal!=0){
             float accuracyPercent=100.0-absResult/goal*100.0;
             if(accuracyPercent<0)accuracyPercent=0;
             accuracyPercent=ceilf(accuracyPercent);
              averageAccuracy+=accuracyPercent;
              nPoints++;
          }
-         
-         //averageAccuracy+=abs((absResult-timerGoal)/timerGoal*100);
+
+
      }
      
      averageAccuracy=averageAccuracy/(float)nPoints;
     
-    //float accuracyP=100.0-fabs(([[self.myGraph calculatePointValueAverage] floatValue])/1000.0)/(float)timerGoal*100.0;
+    //averageAccuracy=[[self.myGraph calculatePointValueAverage] floatValue];
+    //float accuracyP=100.0-fabs(([[self.myGraph calculatePointValueAverage] floatValue]))/(float)goal*100.0;
      accuracy.text = [NSString stringWithFormat:@"%02i", (int)averageAccuracy];
 
-    float total=0;
-    for( int i=0; i<nPointsVisible; i++){
-        int index=(int)[self.trialData count]-(int)nPointsVisible+i; //show last nPoints
-        total+=[[[self.trialData objectAtIndex:index] objectForKey:@"accuracy"] floatValue];
-    }
-    float mean=total/(float)nPointsVisible;
     
-     //precision
-     float uncertainty=mean-[[self.myGraph calculateMinimumPointValue] floatValue]+[[self.myGraph calculateMaximumPointValue] floatValue]-mean;
-    
+     float uncertainty=[[self.myGraph calculateLineGraphStandardDeviation]floatValue];
      precision.text=[NSString stringWithFormat:@"%.03f",(float)uncertainty];
 }
 
