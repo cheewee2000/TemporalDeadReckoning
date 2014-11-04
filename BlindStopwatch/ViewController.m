@@ -888,12 +888,12 @@
                          completion:^(BOOL finished){
                              dot.color=[self getBackgroundColor:currentLevel];
                              [dot setNeedsDisplay];
-                             [bestLevelDot setColor:[self getBackgroundColor:currentLevel]];
-                             [bestLevelDot setNeedsDisplay];
+
                          }];
         
-
     }
+    [bestLevelDot setColor:[self getBackgroundColor:currentLevel]];
+    [bestLevelDot setNeedsDisplay];
 
 }
 
@@ -2352,7 +2352,10 @@
 
     if(trialSequence==0)
     {
-        [instructions update:@"START" rightLabel:@"PRESS VOLUME BUTTON TO START. . . ." color:[self getForegroundColor:currentLevel] animate:NO];
+        [instructions update:@"START" rightLabel:@"PRESS VOLUME BUTTON" color:[self getForegroundColor:currentLevel] animate:NO];
+        instructions.rightLabel.frame=CGRectMake(-instructions.rightLabel.frame.size.height*.25,-instructions.rightLabel.frame.size.height*.05,
+                                                 instructions.rightLabel.frame.size.width,instructions.rightLabel.frame.size.height);
+        
         instructions.rightLabel.font=[UIFont fontWithName:@"DIN Condensed" size:screenHeight*.03];
  
         [instructions bounce];
