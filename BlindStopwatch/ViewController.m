@@ -18,7 +18,7 @@
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 2
+#define TRIALSINSTAGE 5
 #define NUMHEARTS 3
 #define SHOWNEXTRASTAGES 3
 
@@ -340,52 +340,38 @@
     self.myGraph.enablePopUpReport = YES;
     self.myGraph.autoScaleYAxis = YES;
     self.myGraph.animationGraphEntranceTime = 1.75;
-    //myGraph.alphaTop=.2;
-    //myGraph.enableBezierCurve = YES;
-    //myGraph.alwaysDisplayDots = YES;
-    //self.myGraph.enableReferenceAxisLines = YES;
-    //self.myGraph.enableYAxisLabel = YES;
-    //self.myGraph.alwaysDisplayPopUpLabels = YES;
-    
-    //self.myGraph.userInteractionEnabled=YES;
-    //self.myGraph.multipleTouchEnabled=YES;
     
     [progressView addSubview:self.myGraph];
-    
-    //    UIPinchGestureRecognizer *pinch =[[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(scalePiece:)];
-    //    [pinch setDelegate:self];
-    //    [self.myGraph addGestureRecognizer:pinch];
-    //*/
+
     
     //stats
     stats = [[UIView alloc] initWithFrame:CGRectMake(0, self.myGraph.frame.origin.y+self.myGraph.frame.size.height, screenWidth, screenHeight*.1)];
-     UIFont * LF=[UIFont fontWithName:@"DIN Condensed" size:48];
+     UIFont * LF=[UIFont fontWithName:@"DIN Condensed" size:36];
     
-    int h=50;
-     lastResults=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, h)];
-    lastResults.center=CGPointMake(stats.frame.size.width*1/5.0, lastResults.center.y);
-     lastResults.font = LF;
-     lastResults.textColor =  [UIColor blackColor];
-    lastResults.textAlignment=NSTextAlignmentCenter;
-     [stats addSubview:lastResults];
-    
-     accuracy=[[UILabel alloc] initWithFrame:CGRectMake(stats.frame.size.width*.5, 0, 40, h)];
-    accuracy.center=CGPointMake(stats.frame.size.width*4/5.0, accuracy.center.y);
+    int h=40;
+    averageTime=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 95, h)];
+    averageTime.center=CGPointMake(stats.frame.size.width*1/5.0, averageTime.center.y);
+    averageTime.font = LF;
+    averageTime.textColor =  [UIColor blackColor];
+    averageTime.textAlignment=NSTextAlignmentCenter;
+    [stats addSubview:averageTime];
 
-     accuracy.font = LF;
-     accuracy.textColor =  [UIColor blackColor];
-     accuracy.textAlignment=NSTextAlignmentCenter;
-     [stats addSubview:accuracy];
-     
-     precision=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, h)];
+    accuracy=[[UILabel alloc] initWithFrame:CGRectMake(stats.frame.size.width*.5, 0, 35, h)];
+    accuracy.center=CGPointMake(stats.frame.size.width*4/5.0, accuracy.center.y);
+    accuracy.font = LF;
+    accuracy.textColor =  [UIColor blackColor];
+    accuracy.textAlignment=NSTextAlignmentCenter;
+    [stats addSubview:accuracy];
+
+    precision=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 75, h)];
     precision.center=CGPointMake(stats.frame.size.width*2.5/5.0, precision.center.y);
-     precision.font = LF;
-     precision.textColor =  [UIColor blackColor];
+    precision.font = LF;
+    precision.textColor =  [UIColor blackColor];
     precision.textAlignment=NSTextAlignmentCenter;
-     precision.adjustsFontSizeToFitWidth=YES;
-     [stats addSubview:precision];
-     
-     
+    precision.adjustsFontSizeToFitWidth=YES;
+    [stats addSubview:precision];
+
+    
      //UNITS
     UIFont * SMF=[UIFont fontWithName:@"HelveticaNeue" size:10];
     precisionUnit=[[UILabel alloc] initWithFrame:CGRectMake(precision.frame.origin.x+precision.frame.size.width, -5, 80, 20)];
@@ -393,6 +379,11 @@
     precisionUnit.font = SMF;
     [stats addSubview:precisionUnit];
 
+    averageUnit=[[UILabel alloc] initWithFrame:CGRectMake(averageTime.frame.origin.x+averageTime.frame.size.width, -5, 80, 20)];
+    averageUnit.text=@"SEC";
+    averageUnit.font = SMF;
+    [stats addSubview:averageUnit];
+    
     accuracyUnit=[[UILabel alloc] initWithFrame:CGRectMake(accuracy.frame.origin.x+accuracy.frame.size.width, -5, 80, 20)];
     accuracyUnit.text=@"%";
     accuracyUnit.font = SMF;
@@ -400,12 +391,12 @@
 
     //LABELS
     float y=precision.frame.size.height-10;
-    lastResultLabel=[[UILabel alloc] initWithFrame:CGRectMake(0, y, stats.frame.size.width*.33-12, 20)];
-    lastResultLabel.center=CGPointMake(stats.frame.size.width*1/5.0, lastResultLabel.center.y);
-    lastResultLabel.text=@"TRIALS";
-    lastResultLabel.textAlignment=NSTextAlignmentCenter;
-    lastResultLabel.font = SMF;
-    [stats addSubview:lastResultLabel];
+    averageLabel=[[UILabel alloc] initWithFrame:CGRectMake(0, y, stats.frame.size.width*.33-12, 20)];
+    averageLabel.center=CGPointMake(stats.frame.size.width*1/5.0, averageLabel.center.y);
+    averageLabel.text=@"AVERAGE";
+    averageLabel.textAlignment=NSTextAlignmentCenter;
+    averageLabel.font = SMF;
+    [stats addSubview:averageLabel];
 
     accuracyLabel=[[UILabel alloc] initWithFrame:CGRectMake(0, y, stats.frame.size.width*.33-12, 20)];
     accuracyLabel.center=CGPointMake(stats.frame.size.width*4/5.0, accuracyLabel.center.y);
@@ -416,7 +407,6 @@
 
     precisionLabel=[[UILabel alloc] initWithFrame:CGRectMake(0, y, stats.frame.size.width*.33-12, 20)];
     precisionLabel.center=CGPointMake(stats.frame.size.width*2.5/5.0, precisionLabel.center.y);
-
     precisionLabel.text=@"PRECISION";
     precisionLabel.textAlignment=NSTextAlignmentCenter;
     precisionLabel.font = SMF;
@@ -1568,14 +1558,14 @@
                           
                           precision.textColor=[self getBackgroundColor:currentLevel];
                           accuracy.textColor=[self getBackgroundColor:currentLevel];
-                          lastResults.textColor=[self getBackgroundColor:currentLevel];
+                          averageTime.textColor=[self getBackgroundColor:currentLevel];
                           
                           precisionUnit.textColor=[self getBackgroundColor:currentLevel];
                           accuracyUnit.textColor=[self getBackgroundColor:currentLevel];
-                          
+                          averageUnit.textColor=[self getBackgroundColor:currentLevel];
                           precisionLabel.textColor=[self getBackgroundColor:currentLevel];
                           accuracyLabel.textColor=[self getBackgroundColor:currentLevel];
-                          lastResultLabel.textColor=[self getBackgroundColor:currentLevel];
+                          averageLabel.textColor=[self getBackgroundColor:currentLevel];
                           
                         }
                       completion:^(BOOL finished){
@@ -2117,17 +2107,22 @@
 
 -(void)updateStats{
      //results
-     lastResults.text=[NSString stringWithFormat:@"%02d",(int)nPointsVisible];
     int nPoints=0;
 
      //accuracy
+    //needs to be this way in case timergoal is 0
     float averageAccuracy=0;
+    float averageOffset=0;
+    float accuracyOffset=0;
+    
      for( int i=0; i<nPointsVisible; i++){
          int index=(int)[self.trialData count]-(int)nPointsVisible+i; //show last nPoints
-        float absResult=fabs([[[self.trialData objectAtIndex:index] objectForKey:@"accuracy"] floatValue]);
+        accuracyOffset=[[[self.trialData objectAtIndex:index] objectForKey:@"accuracy"] floatValue];
+        float absResult=fabs(accuracyOffset);
          float goal=[[[self.trialData objectAtIndex:index] objectForKey:@"goal"] floatValue];
          
-                  if(goal!=0){
+        if(goal!=0){
+            averageOffset+=accuracyOffset;
             float accuracyPercent=100.0-absResult/goal*100.0;
             if(accuracyPercent<0)accuracyPercent=0;
             accuracyPercent=ceilf(accuracyPercent);
@@ -2138,10 +2133,13 @@
 
      }
      
-     averageAccuracy=averageAccuracy/(float)nPoints;
-    
+    averageOffset=averageOffset/(float)nPoints;
+    if(averageOffset>=0) averageTime.text=[NSString stringWithFormat:@"+%.03f",(float)averageOffset];
+    else averageTime.text=[NSString stringWithFormat:@"%.03f",(float)averageOffset];
+
     //averageAccuracy=[[self.myGraph calculatePointValueAverage] floatValue];
     //float accuracyP=100.0-fabs(([[self.myGraph calculatePointValueAverage] floatValue]))/(float)goal*100.0;
+    averageAccuracy=averageAccuracy/(float)nPoints;
      accuracy.text = [NSString stringWithFormat:@"%02i", (int)averageAccuracy];
 
     
