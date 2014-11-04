@@ -888,11 +888,12 @@
                          completion:^(BOOL finished){
                              dot.color=[self getBackgroundColor:currentLevel];
                              [dot setNeedsDisplay];
+                             [bestLevelDot setColor:[self getBackgroundColor:currentLevel]];
+                             [bestLevelDot setNeedsDisplay];
                          }];
         
 
     }
-    [bestLevelDot setColor:[self getBackgroundColor:currentLevel]];
 
 }
 
