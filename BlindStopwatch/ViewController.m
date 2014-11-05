@@ -991,15 +991,13 @@
    
 }
 
--(void) updateDots{
-
+-(void) updateBestDot{
+    
     for (int i=0; i<[dots count]; i++){
         
-        [self updateDot:i];
-
         if([self getLevel:i]==best){
             Dots *dot=[dots objectAtIndex:i];
-
+            
             [bestLevelDot setFill:NO];
             [bestLevelDot setColor:dot.dotColor];
             bestLevelDot.center=dot.center;
@@ -1019,7 +1017,15 @@
         }
     }
 
+    
+}
+-(void) updateDots{
 
+    for (int i=0; i<[dots count]; i++){
+        
+        [self updateDot:i];
+
+    }
 
     //hide xo view`
     [UIView animateWithDuration:.4
@@ -1579,6 +1585,8 @@
             best=lastSuccessfulGoal;
             [defaults setInteger:best forKey:@"best"];
         }
+        [self updateBestDot];
+
         
         
         float currentHS=(int)[defaults integerForKey:@"experiencepoints"];
@@ -1731,7 +1739,7 @@
                      }
                      completion:^(BOOL finished){
                          nHeartsReplenished=0;
-                         
+
                          [self xoViewOffScreen];
                          
                          //save trial data now
@@ -2098,7 +2106,6 @@
     [self setLevel:currentLevel];
     [self loadTrialData];
     [self loadLevelProgress];
-    [self updateDots];
 
     
     //[self.myGraph reloadGraph];
