@@ -59,6 +59,9 @@
     
     float buttonYPos;
     
+    
+    UIView *progressViewLower;
+    
     BFPaperButton *restartExpandButton;
     UIButton *restartButton;
     UIButton *playButton;
@@ -97,6 +100,7 @@
     UIVisualEffectView *labelContainerBlur;
     
     UIVisualEffectView *blobBlur;
+    UIVisualEffectView *progressViewBlur;
 
     UIView *stats;
     UILabel *averageTime;

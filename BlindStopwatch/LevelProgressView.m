@@ -17,7 +17,8 @@
         _shadowO=.3;
         
         self.dotsContainer=[[UIView alloc] init];
-        self.dotsContainer.frame=CGRectMake(0, 0, self.frame.size.width, self.frame.size.height*2);
+        self.dotsContainer.frame=CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+        self.dotsContainer.clipsToBounds=YES;
         [self addSubview:self.dotsContainer];
         [self bringSubviewToFront:self.dotsContainer];
         

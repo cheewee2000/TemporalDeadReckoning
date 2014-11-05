@@ -206,8 +206,20 @@
     [self.view addSubview:progressView];
     progressView.backgroundColor=[self getForegroundColor:currentLevel];
 
-    buttonYPos=screenHeight-66;
     
+
+    progressViewLower=[[UIView alloc] initWithFrame:CGRectMake(0, screenHeight-100, screenWidth, screenHeight)];
+    [progressView addSubview:progressViewLower];
+
+//    UIBlurEffect *pBlur= [UIBlurEffect init];
+//    progressViewBlur = [[UIVisualEffectView alloc] initWithEffect:pBlur];
+//    progressViewBlur.frame=progressViewLower.frame;
+//    [progressView addSubview:progressViewBlur];
+//    
+
+    
+    
+    buttonYPos=44;
     
     trophyButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage * trophy=[UIImage imageNamed:@"trophy"];
@@ -217,7 +229,7 @@
     [trophyButton setFrame:CGRectMake(0,0,44,44)];
     trophyButton.center=CGPointMake(screenWidth/2.0, buttonYPos);
     [trophyButton addTarget:self action:@selector(showGlobalLeaderboard) forControlEvents:UIControlEventTouchUpInside];
-    [progressView addSubview:trophyButton];
+    [progressViewLower addSubview:trophyButton];
     
     trophyButton.layer.shadowOpacity = progressView.shadowO;
     trophyButton.layer.shadowRadius = progressView.shadowR;
@@ -234,7 +246,7 @@
     [medalButton setFrame:CGRectMake(0,0,44,44)];
     medalButton.center=CGPointMake(screenWidth*1.0/5.0, buttonYPos);
     [medalButton addTarget:self action:@selector(showXPLeaderboard) forControlEvents:UIControlEventTouchUpInside];
-    [progressView addSubview:medalButton];
+    [progressViewLower addSubview:medalButton];
     medalButton.layer.shadowOpacity = progressView.shadowO;
     medalButton.layer.shadowRadius = progressView.shadowR;
     medalButton.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -245,7 +257,7 @@
     bestLabel.center=CGPointMake(screenWidth*.5, trophyButton.frame.origin.y+trophyButton.frame.size.height+15);
     bestLabel.textAlignment=NSTextAlignmentCenter;
     bestLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
-    [progressView addSubview:bestLabel];
+    [progressViewLower addSubview:bestLabel];
     bestLabel.layer.shadowOpacity = progressView.shadowO;
     bestLabel.layer.shadowRadius = progressView.shadowR;
     bestLabel.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -257,7 +269,7 @@
     highScoreLabel.center=CGPointMake(screenWidth/5.0, medalButton.frame.origin.y+medalButton.frame.size.height+15);
     highScoreLabel.textAlignment=NSTextAlignmentCenter;
     highScoreLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
-    [progressView addSubview:highScoreLabel];
+    [progressViewLower addSubview:highScoreLabel];
     [self updateHighscore];
     highScoreLabel.layer.shadowOpacity = progressView.shadowO;
     highScoreLabel.layer.shadowRadius = progressView.shadowR;
@@ -273,7 +285,7 @@
     [restartButton setFrame:CGRectMake(0,0,44,44)];
     restartButton.center=CGPointMake(screenWidth*4/5.0, buttonYPos);
     [restartButton addTarget:self action:@selector(restart) forControlEvents:UIControlEventTouchUpInside];
-    [progressView addSubview:restartButton];
+    [progressViewLower addSubview:restartButton];
     restartButton.layer.shadowOpacity = progressView.shadowO;
     restartButton.layer.shadowRadius = progressView.shadowR;
     restartButton.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -288,7 +300,7 @@
     restartExpandButton.rippleFromTapLocation=NO;
     restartExpandButton.rippleBeyondBounds=YES;
     restartExpandButton.usesSmartColor=NO;
-    [progressView addSubview:restartExpandButton];
+    [progressViewLower addSubview:restartExpandButton];
     
     
     playButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -298,8 +310,8 @@
     [playButton adjustsImageWhenHighlighted];
     [playButton setFrame:CGRectMake(0,0,44,44)];
     [playButton addTarget:self action:@selector(restartFromLastStage) forControlEvents:UIControlEventTouchUpInside];
-    [progressView addSubview:playButton];
-    [progressView bringSubviewToFront:playButton];
+    [progressViewLower addSubview:playButton];
+    [progressViewLower bringSubviewToFront:playButton];
     playButton.alpha=0;
     playButton.layer.shadowOpacity = progressView.shadowO;
     playButton.layer.shadowRadius = progressView.shadowR;
@@ -324,7 +336,7 @@
     
     ///*
     nPointsVisible=20;
-    self.myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, screenHeight, screenWidth-22, 220)];
+    self.myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, 88, screenWidth-22, 220)];
     self.myGraph.delegate = self;
     self.myGraph.dataSource = self;
     self.myGraph.colorTop =[UIColor clearColor];
@@ -344,12 +356,12 @@
     self.myGraph.yAxisScale=100.0;
     self.myGraph.animationGraphEntranceTime = 1.75;
     
-    [progressView addSubview:self.myGraph];
+    [progressViewLower addSubview:self.myGraph];
 
     
     //stats
-    stats = [[UIView alloc] initWithFrame:CGRectMake(0, screenHeight*1.5-88, screenWidth, 100)];
-     UIFont * LF=[UIFont fontWithName:@"DIN Condensed" size:34];
+    stats = [[UIView alloc] initWithFrame:CGRectMake(0, screenHeight*.5+22, screenWidth, 100)];
+     UIFont * LF=[UIFont fontWithName:@"DIN Condensed" size:32];
     
     int h=40;
     averageTime=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 85, h)];
@@ -415,7 +427,7 @@
     precisionLabel.font = SMF;
     [stats addSubview:precisionLabel];
 
-    [progressView addSubview:stats];
+    [progressViewLower addSubview:stats];
     
     
     
@@ -722,7 +734,7 @@
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
                          progressView.frame=CGRectMake(0, -screenHeight*.5, screenWidth, screenHeight*2.0);
-                         progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
+                         progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, progressView.dotsContainer.frame.size.height);
                      }
                     completion:^(BOOL finished){
                                  
@@ -736,7 +748,7 @@
                                             options:UIViewAnimationOptionCurveLinear
                                          animations:^{
                                              progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
-                                             progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
+                                             progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, progressView.dotsContainer.frame.size.height);
                                              
                                          }
                                          completion:^(BOOL finished){
@@ -750,7 +762,7 @@
                                             float dotDia=15;
                                             float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
                                             //float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*([self getCurrentStage]+SHOWNEXTRASTAGES);
-                                                 float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*floor(nDotsToShow/TRIALSINSTAGE-1);
+                                            float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*floor(nDotsToShow/TRIALSINSTAGE-1);
 
                                             
                                             //update existing dots
@@ -780,6 +792,14 @@
                                                     TextArrow *sLabel=[stageLabels objectAtIndex:stage];
                                                     sLabel.alpha=1;
 
+                                                    CGFloat hue, saturation, brightness, alpha ;
+                                                    [[self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+                                                    if(y>=screenHeight*.5) alpha=fabs(y-88)/(float)(screenHeight*.5);
+                                                    else alpha=1.0;
+                                                    UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
+
+                                                        
+                                                        
                                                     //shift label down
                                                     [UIView animateWithDuration:.8
                                                                           delay:0.8
@@ -789,7 +809,9 @@
                                                                      animations:^{
                                                                          sLabel.frame=CGRectMake(0, y, 70, 15);
         //                                                                 sLabel.color=[self getBackgroundColor:currentLevel];
-                                                                         [sLabel setArrowColor:[self getBackgroundColor:currentLevel]];
+                                                                         //[sLabel setArrowColor:[self getBackgroundColor:currentLevel]];
+                                                                         [sLabel setArrowColor:sColor];
+
                                                                          sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
                                                                          [sLabel setNeedsDisplay];
 
@@ -817,7 +839,16 @@
                                                     [stageLabels addObject:sLabel];
                                                     [progressView.dotsContainer addSubview:sLabel];
                                                     
-                                                    [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:[self getBackgroundColor:currentLevel] animate:NO];
+                                                    
+                                                    CGFloat hue, saturation, brightness, alpha ;
+                                                    [[self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+                                                    if(y>=screenHeight*.5) alpha=fabs(screenHeight-y-88)/(float)(screenHeight*.5);
+                                                    else alpha=1.0;
+                                                    UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
+                                                    
+                                                    
+                                                    
+                                                    [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:sColor animate:NO];
                                                     sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
 
                                                     [UIView animateWithDuration:.4
@@ -878,20 +909,27 @@
 }
 
 -(void)updateDotColors{
+    
+    CGFloat hue, saturation, brightness, alpha ;
+    [[self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+
     for (int i=0; i<[dots count]; i++){
         Dots *dot=[dots objectAtIndex:i];
+        if(dot.frame.origin.y>=screenHeight*.5){
+            alpha=fabs(screenHeight-dot.frame.origin.y-88)/(float)(screenHeight*.5);
+        }
+        else alpha=1.0;
         
-        //shift label down
+        UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
+
         [UIView animateWithDuration:.4
                               delay:0.0
                             options:UIViewAnimationOptionCurveLinear
                          animations:^{
-                             dot.color=[self getBackgroundColor:currentLevel];
+                             dot.color=sColor;
+                             [dot setNeedsDisplay];
                          }
                          completion:^(BOOL finished){
-                             dot.color=[self getBackgroundColor:currentLevel];
-                             [dot setNeedsDisplay];
-
                          }];
         
     }
@@ -942,6 +980,9 @@
     }
     
 
+
+    
+    
    
 }
 
@@ -1115,14 +1156,14 @@
                                  if( (progressView.frame.origin.y<screenHeight-44 && location.y<previousLocation.y) || progressView.frame.origin.y<screenHeight*.125)
                                  {
                                     progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
-                                     progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
+                                     progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, progressView.dotsContainer.frame.size.height);
                                      [self.view bringSubviewToFront:progressView];
                                  }
                                 else {
                                     progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
                                     TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
                                     float y=sLabel.frame.origin.y;
-                                    progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, screenHeight*2.0);
+                                    progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, progressView.dotsContainer.frame.size.height);
 
                                     [self.view sendSubviewToBack:progressView];
                                     [self.view sendSubviewToBack:blob];
@@ -1215,7 +1256,7 @@
                                  progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, screenHeight*2.0);
                                  TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
                                  float y=sLabel.frame.origin.y;
-                                 progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, screenHeight*2.0);
+                                 progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, progressView.dotsContainer.frame.size.height);
                                  //blobBlur.alpha=0;
 
                              }
@@ -1556,14 +1597,11 @@
                           
                           
                           CGFloat hue, saturation, brightness, alpha ;
-                          BOOL ok = [ [self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
-                          if ( !ok ) {
-                              // handle error 
-                          }
-                          brightness+=.15;
-                          //saturation+=.1;
-
-                          UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha ] ;
+                          [[self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
+                          UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness+.15 alpha:alpha ];
+                          
+                          [[self getForegroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
+                          UIColor * aColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:.95 ] ;
 
                           restartButton.tintColor=sColor;
                           restartExpandButton.tapCircleColor=sColor;
@@ -1581,6 +1619,9 @@
 
                           [instructions setColor:[self getForegroundColor:currentLevel]];
                           progressView.backgroundColor=[self getForegroundColor:currentLevel];
+                          
+                          //progressViewLower.backgroundColor=aColor;
+                          
                           counterLabel.textColor=[self getForegroundColor:currentLevel];
                           counterGoalLabel.textColor=[self getForegroundColor:currentLevel];
                           goalPrecision.textColor=[self getForegroundColor:currentLevel];
@@ -1880,7 +1921,7 @@
                             options:UIViewAnimationOptionCurveLinear
                          animations:^{
                              progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
-                             progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
+                             progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, progressView.dotsContainer.frame.size.height);
                          }
                          completion:^(BOOL finished){
                          }];
@@ -1915,7 +1956,7 @@
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
                          progressView.frame=CGRectMake(0, 0, screenWidth, screenHeight*2.0);
-                         progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, screenHeight*2.0);
+                         progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, progressView.dotsContainer.frame.size.height);
                      }
                      completion:^(BOOL finished){
                          [self countdown];
@@ -2330,7 +2371,7 @@
                          progressView.frame=CGRectMake(0, screenHeight-44, self.view.frame.size.width, screenHeight*2.0);
                          TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
                          float y=sLabel.frame.origin.y;
-                         progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, screenHeight*2.0);
+                         progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, progressView.dotsContainer.frame.size.height);
                          restartButton.center=CGPointMake(screenWidth*4/5.0, buttonYPos);
 
                      }
