@@ -721,7 +721,7 @@
 }
 
 -(void)setupDots{
-    int rowHeight=60;
+    int rowHeight=50;
 
     [self.view bringSubviewToFront:progressView];
     float d=.5;
@@ -761,7 +761,6 @@
                                              for (int i = 0; i < nDotsToShow; i++){
                                             float dotDia=15;
                                             float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
-                                            //float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*([self getCurrentStage]+SHOWNEXTRASTAGES);
                                             float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*floor(nDotsToShow/TRIALSINSTAGE-1);
 
                                             
@@ -791,15 +790,7 @@
                                                     int stage=floorf(i/TRIALSINSTAGE);
                                                     TextArrow *sLabel=[stageLabels objectAtIndex:stage];
                                                     sLabel.alpha=1;
-
-                                                    CGFloat hue, saturation, brightness, alpha ;
-                                                    [[self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
-                                                    if(y>=screenHeight*.5) alpha=fabs(y-88)/(float)(screenHeight*.5);
-                                                    else alpha=1.0;
-                                                    UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
-
-                                                        
-                                                        
+                                                    
                                                     //shift label down
                                                     [UIView animateWithDuration:.8
                                                                           delay:0.8
@@ -808,17 +799,8 @@
                                                                         options:UIViewAnimationOptionCurveLinear
                                                                      animations:^{
                                                                          sLabel.frame=CGRectMake(0, y, 70, 15);
-        //                                                                 sLabel.color=[self getBackgroundColor:currentLevel];
-                                                                         //[sLabel setArrowColor:[self getBackgroundColor:currentLevel]];
-                                                                         [sLabel setArrowColor:sColor];
-
-                                                                         sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
-                                                                         [sLabel setNeedsDisplay];
-
                                                                      }
                                                                      completion:^(BOOL finished){
-                                                                         
-                                                                         
                                                                      }];
                                                 }
 
@@ -839,14 +821,11 @@
                                                     [stageLabels addObject:sLabel];
                                                     [progressView.dotsContainer addSubview:sLabel];
                                                     
-                                                    
                                                     CGFloat hue, saturation, brightness, alpha ;
                                                     [[self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
                                                     if(y>=screenHeight*.5) alpha=fabs(screenHeight-y-88)/(float)(screenHeight*.5);
                                                     else alpha=1.0;
                                                     UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
-                                                    
-                                                    
                                                     
                                                     [sLabel update:[NSString stringWithFormat:@"STAGE %i",stage+1] rightLabel:@"" color:sColor animate:NO];
                                                     sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
@@ -868,7 +847,14 @@
                                                 Dots *dot = [[Dots alloc] initWithFrame:CGRectMake(margin+(screenWidth-margin)/TRIALSINSTAGE*(i%TRIALSINSTAGE),y,dotDia,dotDia)];
                                                 dot.alpha = 1;
                                                 dot.backgroundColor = [UIColor clearColor];
-                                                [dot setColor:self.view.backgroundColor];
+                                                
+                                                CGFloat hue, saturation, brightness, alpha ;
+                                                [[self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+                                                if(y>=screenHeight*.5) alpha=fabs(screenHeight-y-88)/(float)(screenHeight*.5);
+                                                else alpha=1.0;
+                                                UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
+                                                
+                                                [dot setColor:sColor];
                                                 
                                                 [dots addObject:dot];
                                                 [progressView.dotsContainer addSubview:dots[i]];
@@ -932,6 +918,33 @@
                          completion:^(BOOL finished){
                          }];
         
+        if(i%TRIALSINSTAGE==0){
+            int stage=floorf(i/TRIALSINSTAGE);
+            TextArrow *sLabel=[stageLabels objectAtIndex:stage];
+            sLabel.alpha=1;
+
+            CGFloat hue, saturation, brightness, alpha ;
+            [[self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+            if(sLabel.frame.origin.y>=screenHeight*.5) alpha=fabs(sLabel.frame.origin.y-88)/(float)(screenHeight*.5);
+            else alpha=1.0;
+            UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
+            
+            
+            [UIView animateWithDuration:.8
+                                  delay:0.0
+                                options:UIViewAnimationOptionCurveLinear
+                             animations:^{
+                                 [sLabel setColor:sColor];
+                                 sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
+                                 [sLabel setNeedsDisplay];
+                                 
+                             }
+                             completion:^(BOOL finished){
+                                 
+                             }];
+        }
+        
+        
     }
     
     [UIView animateWithDuration:.4
@@ -945,7 +958,7 @@
                          
                      }];
 
-    
+
 
 }
 
@@ -1598,11 +1611,8 @@
                           
                           CGFloat hue, saturation, brightness, alpha ;
                           [[self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
-                          UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness+.15 alpha:alpha ];
+                          UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation+.05 brightness:brightness+.05 alpha:alpha ];
                           
-                          [[self getForegroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
-                          UIColor * aColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:.95 ] ;
-
                           restartButton.tintColor=sColor;
                           restartExpandButton.tapCircleColor=sColor;
                           trophyButton.tintColor=sColor;
