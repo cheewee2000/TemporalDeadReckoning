@@ -37,7 +37,7 @@
         self.level.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
 
     
-        int starSize=35;
+        int starSize=43;
         stars=[NSArray array];
         UIImageView* starLeft=[[UIImageView alloc] init];
         [starLeft setImage:[[UIImage imageNamed: @"starLeft"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];

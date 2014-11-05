@@ -18,7 +18,7 @@
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 1
+#define TRIALSINSTAGE 2
 #define NUMHEARTS 3
 #define SHOWNEXTRASTAGES 3
 
@@ -208,8 +208,8 @@
 
     
 
-    progressViewLower=[[UIView alloc] initWithFrame:CGRectMake(0, screenHeight-100, screenWidth, screenHeight)];
-    [progressView addSubview:progressViewLower];
+//    progressViewLower=[[UIView alloc] initWithFrame:CGRectMake(0, screenHeight-100, screenWidth, screenHeight)];
+//    [progressView addSubview:progressViewLower];
 
 //    UIBlurEffect *pBlur= [UIBlurEffect init];
 //    progressViewBlur = [[UIVisualEffectView alloc] initWithEffect:pBlur];
@@ -219,7 +219,7 @@
 
     
     
-    buttonYPos=44;
+    buttonYPos=screenHeight-66;
     
     trophyButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage * trophy=[UIImage imageNamed:@"trophy"];
@@ -229,7 +229,7 @@
     [trophyButton setFrame:CGRectMake(0,0,44,44)];
     trophyButton.center=CGPointMake(screenWidth/2.0, buttonYPos);
     [trophyButton addTarget:self action:@selector(showGlobalLeaderboard) forControlEvents:UIControlEventTouchUpInside];
-    [progressViewLower addSubview:trophyButton];
+    [progressView addSubview:trophyButton];
     
     trophyButton.layer.shadowOpacity = progressView.shadowO;
     trophyButton.layer.shadowRadius = progressView.shadowR;
@@ -246,7 +246,7 @@
     [medalButton setFrame:CGRectMake(0,0,44,44)];
     medalButton.center=CGPointMake(screenWidth*1.0/5.0, buttonYPos);
     [medalButton addTarget:self action:@selector(showXPLeaderboard) forControlEvents:UIControlEventTouchUpInside];
-    [progressViewLower addSubview:medalButton];
+    [progressView addSubview:medalButton];
     medalButton.layer.shadowOpacity = progressView.shadowO;
     medalButton.layer.shadowRadius = progressView.shadowR;
     medalButton.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -257,7 +257,7 @@
     bestLabel.center=CGPointMake(screenWidth*.5, trophyButton.frame.origin.y+trophyButton.frame.size.height+15);
     bestLabel.textAlignment=NSTextAlignmentCenter;
     bestLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
-    [progressViewLower addSubview:bestLabel];
+    [progressView addSubview:bestLabel];
     bestLabel.layer.shadowOpacity = progressView.shadowO;
     bestLabel.layer.shadowRadius = progressView.shadowR;
     bestLabel.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -269,7 +269,7 @@
     highScoreLabel.center=CGPointMake(screenWidth/5.0, medalButton.frame.origin.y+medalButton.frame.size.height+15);
     highScoreLabel.textAlignment=NSTextAlignmentCenter;
     highScoreLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
-    [progressViewLower addSubview:highScoreLabel];
+    [progressView addSubview:highScoreLabel];
     [self updateHighscore];
     highScoreLabel.layer.shadowOpacity = progressView.shadowO;
     highScoreLabel.layer.shadowRadius = progressView.shadowR;
@@ -285,7 +285,7 @@
     [restartButton setFrame:CGRectMake(0,0,44,44)];
     restartButton.center=CGPointMake(screenWidth*4/5.0, buttonYPos);
     [restartButton addTarget:self action:@selector(restart) forControlEvents:UIControlEventTouchUpInside];
-    [progressViewLower addSubview:restartButton];
+    [progressView addSubview:restartButton];
     restartButton.layer.shadowOpacity = progressView.shadowO;
     restartButton.layer.shadowRadius = progressView.shadowR;
     restartButton.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -300,7 +300,7 @@
     restartExpandButton.rippleFromTapLocation=NO;
     restartExpandButton.rippleBeyondBounds=YES;
     restartExpandButton.usesSmartColor=NO;
-    [progressViewLower addSubview:restartExpandButton];
+    [progressView addSubview:restartExpandButton];
     
     
     playButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -310,8 +310,8 @@
     [playButton adjustsImageWhenHighlighted];
     [playButton setFrame:CGRectMake(0,0,44,44)];
     [playButton addTarget:self action:@selector(restartFromLastStage) forControlEvents:UIControlEventTouchUpInside];
-    [progressViewLower addSubview:playButton];
-    [progressViewLower bringSubviewToFront:playButton];
+    [progressView addSubview:playButton];
+    [progressView bringSubviewToFront:playButton];
     playButton.alpha=0;
     playButton.layer.shadowOpacity = progressView.shadowO;
     playButton.layer.shadowRadius = progressView.shadowR;
@@ -324,7 +324,7 @@
     dots=[NSMutableArray array];
     stageLabels=[NSMutableArray array];
 
-    bestLevelDot=[[Dots alloc] initWithFrame:CGRectMake(0, 0, 17, 17)];
+    bestLevelDot=[[Dots alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     bestLevelDot.backgroundColor = [UIColor clearColor];
     bestLevelDot.alpha=0;
     [progressView.dotsContainer addSubview:bestLevelDot];
@@ -336,7 +336,7 @@
     
     ///*
     nPointsVisible=20;
-    self.myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, 88, screenWidth-22, 220)];
+    self.myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, screenHeight, screenWidth-22, 220)];
     self.myGraph.delegate = self;
     self.myGraph.dataSource = self;
     self.myGraph.colorTop =[UIColor clearColor];
@@ -356,11 +356,11 @@
     self.myGraph.yAxisScale=100.0;
     self.myGraph.animationGraphEntranceTime = 1.75;
     
-    [progressViewLower addSubview:self.myGraph];
+    [progressView addSubview:self.myGraph];
 
     
     //stats
-    stats = [[UIView alloc] initWithFrame:CGRectMake(0, screenHeight*.5+22, screenWidth, 100)];
+    stats = [[UIView alloc] initWithFrame:CGRectMake(0, screenHeight*1.5-55, screenWidth, 100)];
      UIFont * LF=[UIFont fontWithName:@"DIN Condensed" size:32];
     
     int h=40;
@@ -427,7 +427,7 @@
     precisionLabel.font = SMF;
     [stats addSubview:precisionLabel];
 
-    [progressViewLower addSubview:stats];
+    [progressView addSubview:stats];
     
     
     
@@ -721,7 +721,7 @@
 }
 
 -(void)setupDots{
-    int rowHeight=50;
+    int rowHeight=55;
 
     [self.view bringSubviewToFront:progressView];
     float d=.5;
@@ -875,23 +875,15 @@
 
                                                              }
                                                              completion:^(BOOL finished){
-                                                                 if(best==[self getLevel:i]){
-                                                                     bestLevelDot.alpha=1.0;
-                                                                     [bestLevelDot setFill:NO];
-                                                                     [bestLevelDot setColor:dot.dotColor];
-                                                                     bestLevelDot.center=dot.center;
-                                                                 }
-                                                             }];
+                                                  }];
                                             }
                                         }
                                        
-                                             int stage=floorf(currentLevel/TRIALSINSTAGE);
-
+                                int stage=floorf(currentLevel/TRIALSINSTAGE);
                                 if(stage<SHOWNEXTRASTAGES) [self performSelector:@selector(loadLevel) withObject:self afterDelay:0.8];
                                else  [self performSelector:@selector(loadLevel) withObject:self afterDelay:2.0];
                         }];
-            
-                                         }];
+            }];
 }
 
 -(void)updateDotColors{
@@ -1001,7 +993,32 @@
 
 -(void) updateDots{
 
-    for (int i=0; i<[dots count]; i++)[self updateDot:i];
+    for (int i=0; i<[dots count]; i++){
+        
+        [self updateDot:i];
+
+        if([self getLevel:i]==best){
+            Dots *dot=[dots objectAtIndex:i];
+
+            [bestLevelDot setFill:NO];
+            [bestLevelDot setColor:dot.dotColor];
+            bestLevelDot.center=dot.center;
+            [UIView animateWithDuration:.8
+                                  delay:0
+                 usingSpringWithDamping:.5
+                  initialSpringVelocity:1.0
+                                options:UIViewAnimationOptionCurveLinear
+                             animations:^{
+                                 bestLevelDot.alpha=1.0;
+                             }
+                             completion:^(BOOL finished){
+                                 
+                             }];
+            
+            
+        }
+    }
+
 
 
     //hide xo view`
@@ -2081,6 +2098,8 @@
     [self setLevel:currentLevel];
     [self loadTrialData];
     [self loadLevelProgress];
+    [self updateDots];
+
     
     //[self.myGraph reloadGraph];
 }

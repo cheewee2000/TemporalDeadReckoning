@@ -60,7 +60,7 @@
     float buttonYPos;
     
     
-    UIView *progressViewLower;
+    //UIView *progressViewLower;
     
     BFPaperButton *restartExpandButton;
     UIButton *restartButton;
@@ -100,7 +100,7 @@
     UIVisualEffectView *labelContainerBlur;
     
     UIVisualEffectView *blobBlur;
-    UIVisualEffectView *progressViewBlur;
+    //UIVisualEffectView *progressViewBlur;
 
     UIView *stats;
     UILabel *averageTime;
@@ -111,7 +111,7 @@
     UILabel* accuracyUnit;
     UILabel* averageLabel;
     UILabel* accuracyLabel;
-    UILabel* precisionLabel;
+    UILabel *precisionLabel;
 
     //NSMutableArray * levelData;
     
