@@ -18,7 +18,7 @@
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 5
+#define TRIALSINSTAGE 1
 #define NUMHEARTS 3
 #define SHOWNEXTRASTAGES 3
 
@@ -747,7 +747,7 @@
 
 
                                              for (int i = 0; i < nDotsToShow; i++){
-                                            float dotDia=12;
+                                            float dotDia=15;
                                             float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
                                             //float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*([self getCurrentStage]+SHOWNEXTRASTAGES);
                                                  float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*floor(nDotsToShow/TRIALSINSTAGE-1);
@@ -791,6 +791,7 @@
         //                                                                 sLabel.color=[self getBackgroundColor:currentLevel];
                                                                          [sLabel setArrowColor:[self getBackgroundColor:currentLevel]];
                                                                          sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
+                                                                         [sLabel setNeedsDisplay];
 
                                                                      }
                                                                      completion:^(BOOL finished){
@@ -1524,7 +1525,20 @@
     
     timerGoal=[self getLevel:level];
 
-    [self updateDotColors];
+    
+    [UIView animateWithDuration:0.2
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         counterGoalLabel.alpha=0;
+                         counterLabel.alpha=0;
+                         goalPrecision.alpha=0;
+                     }
+                     completion:^(BOOL finished){
+                         [self animateLevelReset];
+
+                     }];
+    
 
      //change background color
      [UIView animateWithDuration:0.4
@@ -1538,9 +1552,7 @@
                           bestLabel.alpha=1;
                           restartButton.alpha=1;
                           
-                          counterGoalLabel.alpha=0;
-                          counterLabel.alpha=0;
-                          goalPrecision.alpha=0;
+
                           
                           
                           CGFloat hue, saturation, brightness, alpha ;
@@ -1592,23 +1604,13 @@
                           
                         }
                       completion:^(BOOL finished){
-
+                          [self updateDotColors];
                           [self.myGraph reloadGraph];//to reload color
                           
-                          [self updateTimeDisplay:0];
+                          //[self updateTimeDisplay:0];
                           [self setTimerGoalMarginDisplay];
 
-                         [UIView animateWithDuration:0.2
-                                               delay:0.0
-                                             options:UIViewAnimationOptionCurveLinear
-                                          animations:^{
-                                              counterGoalLabel.alpha=1;
-                                              counterLabel.alpha=0;
-                                              goalPrecision.alpha=1;
-                                          }
-                                          completion:^(BOOL finished){
-                                              [self animateLevelReset];
-                                          }];
+
      
           }];
     
@@ -2316,7 +2318,6 @@
 -(void)animateLevelReset{
     
     [instructions slideOut:0];
-    [self updateTimeDisplay:0];
 
     
     [UIView animateWithDuration:0.8
@@ -2337,6 +2338,8 @@
                          [self.view sendSubviewToBack:progressView];
                          [self.view sendSubviewToBack:blob];
                          [self updateLife];
+                         [self updateTimeDisplay:0];
+
                           //fade in new counters
                           [UIView animateWithDuration:0.2
                                                 delay:0.0
@@ -2348,6 +2351,7 @@
                                            }
                                            completion:^(BOOL finished){
                                                //[instructions resetFrame];
+
                                                [instructions update:@"START" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:NO];
                                                [instructions slideIn:0];
                                                [self performSelector:@selector(resetTrialSequence) withObject:self afterDelay:0.1];

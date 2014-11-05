@@ -20,7 +20,7 @@
 
         self.dotColor=[UIColor blackColor];
         
-        self.label=[[UILabel alloc] initWithFrame:CGRectMake(0, 40, 100, 20)];
+        self.label=[[UILabel alloc] initWithFrame:CGRectMake(0, 42, 100, 20)];
         self.label.text=@"";
         self.label.textAlignment = NSTextAlignmentLeft;
         [self.label setTransform:CGAffineTransformMakeRotation(M_PI *.25)];
@@ -28,7 +28,7 @@
         self.label.backgroundColor = [UIColor clearColor];
         self.label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
 
-        self.level=[[UILabel alloc] initWithFrame:CGRectMake(0, 40, 100, 20)];
+        self.level=[[UILabel alloc] initWithFrame:CGRectMake(0, 42, 100, 20)];
         self.level.text=@"";
         self.level.textAlignment = NSTextAlignmentLeft;
         [self.level setTransform:CGAffineTransformMakeRotation(M_PI *.25)];
@@ -37,7 +37,7 @@
         self.level.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
 
     
-        int starSize=30;
+        int starSize=35;
         stars=[NSArray array];
         UIImageView* starLeft=[[UIImageView alloc] init];
         [starLeft setImage:[[UIImage imageNamed: @"starLeft"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
