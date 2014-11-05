@@ -103,11 +103,6 @@
     counterLabel.center=CGPointMake(screenWidth*.5, instructions.frame.origin.y+instructions.frame.size.height+counterGoalLabel.frame.size.height*.55);
 
     
-    UITapGestureRecognizer *tapGestureRecognizer3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
-    tapGestureRecognizer3.numberOfTouchesRequired = 1;
-    tapGestureRecognizer3.numberOfTapsRequired = 1;
-    [self.view addGestureRecognizer:tapGestureRecognizer3];
-    self.view.userInteractionEnabled = YES;
 
     
     //goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, counterGoalLabel.frame.size.height-30, counterGoalLabel.frame.size.width*.5-13, 40)];
@@ -205,7 +200,7 @@
     progressView.clipsToBounds=YES;
     [self.view addSubview:progressView];
     progressView.backgroundColor=[self getForegroundColor:currentLevel];
-
+//    progressView.userInteractionEnabled=NO;
     
 
 //    progressViewLower=[[UIView alloc] initWithFrame:CGRectMake(0, screenHeight-100, screenWidth, screenHeight)];
@@ -444,7 +439,16 @@
 
     
     //set blob frame
+    blob.frame=self.view.frame;
+    //blob.frame=CGRectMake(0, 0, screenWidth, screenHeight);
     [self resetMainDot];
+    
+    UITapGestureRecognizer *tapGestureRecognizer3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
+    tapGestureRecognizer3.numberOfTouchesRequired = 1;
+    tapGestureRecognizer3.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:tapGestureRecognizer3];
+    //blob.userInteractionEnabled = YES;
+    self.view.userInteractionEnabled=YES;
     
     
     mainDot = [[Dots alloc] init];
@@ -455,14 +459,6 @@
     [self resetMainDot];
     [blob addSubview:mainDot];
     
-
-    //mainDot.userInteractionEnabled = YES;
-    //blob.userInteractionEnabled = YES;
-    //self.view.userInteractionEnabled=YES;
-//    UISwipeGestureRecognizer *swipeUpDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swiped:)];
-//    [swipeUpDown setDirection:(UISwipeGestureRecognizerDirectionUp | UISwipeGestureRecognizerDirectionDown )];
-//    [self.view addGestureRecognizer:swipeUpDown];
-//    
     
     //satellites
     satellites=[NSArray array];
@@ -479,22 +475,10 @@
     
     
     UIBlurEffect *blurEffect= [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-    labelContainerBlur = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    labelContainerBlur.frame = self.view.bounds;
-    labelContainerBlur.alpha=0;
-    [labelContainer addSubview:labelContainerBlur];
-    
-    //labelContainer.userInteractionEnabled=YES;
-//    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
-//    tapGestureRecognizer.numberOfTouchesRequired = 1;
-//    tapGestureRecognizer.numberOfTapsRequired = 1;
-//    [self.view addGestureRecognizer:tapGestureRecognizer];
-//    
     blobBlur = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
     blobBlur.frame = self.view.bounds;
     blobBlur.alpha=1.0;
     [blob addSubview:blobBlur];
-    //blobBlur.userInteractionEnabled = YES;
 
     
     xView=[[UIImageView alloc] init];
@@ -1132,8 +1116,7 @@
     int d=screenWidth*.65;
     mainDot.frame=CGRectMake(0,0,d,d);
     mainDot.center=CGPointMake(screenWidth/2.0, (screenHeight-44)*.75);
-    blob.frame=CGRectMake(0,screenHeight*.5,screenWidth,screenHeight*.5);
-    blob.frame=self.view.frame;
+    //blob.frame=CGRectMake(0,screenHeight*.5,screenWidth,screenHeight*.5);
 }
 
 
@@ -1256,7 +1239,7 @@
 //volume buttons
 -(void)buttonPressed{
     
-    if(progressView.frame.origin.y==0)return;
+    if(progressView.frame.origin.y<=screenHeight*.25)return;
     //START
     if(trialSequence==0){
         startTime=[NSDate timeIntervalSinceReferenceDate];
