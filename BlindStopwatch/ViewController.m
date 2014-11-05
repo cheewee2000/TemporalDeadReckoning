@@ -18,8 +18,8 @@
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 2
-#define NUMHEARTS 3
+#define TRIALSINSTAGE 5
+#define NUMHEARTS 4
 #define SHOWNEXTRASTAGES 3
 
 
@@ -373,7 +373,7 @@
     accuracy.textAlignment=NSTextAlignmentCenter;
     [stats addSubview:accuracy];
 
-    precision=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 65, h)];
+    precision=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 85, h)];
     precision.center=CGPointMake(stats.frame.size.width*2.5/5.0, precision.center.y);
     precision.font = LF;
     precision.textColor =  [UIColor blackColor];
@@ -1046,13 +1046,15 @@
                                 options:UIViewAnimationOptionCurveLinear
                              animations:^{
                                  heart.tintColor=counterGoalLabel.textColor;
+                                 if(life>10) heart.alpha=.7;
+                                 else heart.alpha=1;
                              }
                              completion:^(BOOL finished){
                              }];
 
         
             if(heart.frame.origin.y>screenHeight){
-                if([hearts count]>10) heart.alpha=.7;
+                if(life>10) heart.alpha=.7;
                 else heart.alpha=1;
                 //heart.transform = CGAffineTransformScale(CGAffineTransformIdentity, .01, .01);
 
@@ -1316,6 +1318,7 @@
     [df setDateFormat:@"±s.SSS"];
     stop =[NSString stringWithFormat:@"%@ SEC", [df stringFromDate:aDate]];
     goalPrecision.text=stop;
+    goalPrecision.alpha=1.0;
 }
 
 -(void)saveTrialData{
@@ -1331,7 +1334,7 @@
     //[self.ArrayOfValues  insertObject:myDictionary atIndex:currentLevel];
     //dave data into continuous array
     [self.trialData addObject:myDictionary];
-    [self.trialData removeObjectAtIndex:0];
+    //[self.trialData removeObjectAtIndex:0];
     
     
     //save data into clean array
@@ -1449,19 +1452,23 @@
     
     if(self.trialData == nil)
     {
-        //Array file didn't exist... create a new one
-        self.trialData = [[NSMutableArray alloc] init];
-        for (int i = 0; i <nPointsVisible ; i++) {
-            NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
-            [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"accuracy"];
-            [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"goal"];
-            [myDictionary setObject:[NSDate date] forKey:@"date"];
-            [self.trialData addObject:myDictionary];
-        }
-        [self saveValues];
+        [self clearTrialData];
     }
 }
 
+-(void)clearTrialData{
+    //Array file didn't exist... create a new one
+    self.trialData = [[NSMutableArray alloc] init];
+    for (int i = 0; i <1 ; i++) {
+        NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
+        [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"accuracy"];
+        [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"goal"];
+        [myDictionary setObject:[NSDate date] forKey:@"date"];
+        [self.trialData addObject:myDictionary];
+    }
+    [self saveValues];
+    
+}
 
 -(void)saveValues{
     [self.trialData writeToFile:timeValuesFile atomically:YES];
@@ -2089,9 +2096,7 @@
     [self setLevel:currentLevel];
     [self loadTrialData];
     [self loadLevelProgress];
-
-    
-    //[self.myGraph reloadGraph];
+    [self.myGraph reloadGraph];
 }
 
 
@@ -2191,6 +2196,8 @@
 }
 
 -(void)updateStats{
+    
+    if([self.trialData count]>0){
      //results
     int nPoints=0;
 
@@ -2200,11 +2207,11 @@
     float averageOffset=0;
     float accuracyOffset=0;
     
-     for( int i=0; i<nPointsVisible; i++){
-         int index=(int)[self.trialData count]-(int)nPointsVisible+i; //show last nPoints
-        accuracyOffset=[[[self.trialData objectAtIndex:index] objectForKey:@"accuracy"] floatValue];
+     for( int i=0; i<[self.trialData count]; i++){
+         //int index=(int)[self.trialData count]-(int)nPointsVisible+i; //show last nPoints
+        accuracyOffset=[[[self.trialData objectAtIndex:i] objectForKey:@"accuracy"] floatValue];
         float absResult=fabs(accuracyOffset);
-         float goal=[[[self.trialData objectAtIndex:index] objectForKey:@"goal"] floatValue];
+        float goal=[[[self.trialData objectAtIndex:i] objectForKey:@"goal"] floatValue];
          
         if(goal!=0){
             averageOffset+=accuracyOffset;
@@ -2229,7 +2236,8 @@
 
     
      float uncertainty=[[self.myGraph calculateLineGraphStandardDeviation]floatValue];
-     precision.text=[NSString stringWithFormat:@"%.03f",(float)uncertainty];
+     precision.text=[NSString stringWithFormat:@"±%.03f",(float)uncertainty];
+    }
 }
 
 
@@ -2399,7 +2407,10 @@
                          [self.view sendSubviewToBack:blob];
                          [self updateLife];
                          [self updateTimeDisplay:0];
-
+                         
+                         //new stage
+                         if (currentLevel%TRIALSINSTAGE==0) [self clearTrialData];
+                         
                           //fade in new counters
                           [UIView animateWithDuration:0.2
                                                 delay:0.0
@@ -2535,13 +2546,13 @@
 #pragma mark - SimpleLineGraph Data Source
 ///*
 - (NSInteger)numberOfPointsInLineGraph:(BEMSimpleLineGraphView *)graph {
-    return nPointsVisible;
+    return [self.trialData count];
 }
 
 - (CGFloat)lineGraph:(BEMSimpleLineGraphView *)graph valueForPointAtIndex:(NSInteger)index {
     if([self.trialData count]==0)return 0.0;
-    NSInteger i=[self.trialData count]-nPointsVisible+index; //show last nPoints
-    float naccuracy=[[[self.trialData objectAtIndex:i] objectForKey:@"accuracy"] floatValue];
+    //NSInteger i=[self.trialData count]-nPointsVisible+index; //show last nPoints
+    float naccuracy=[[[self.trialData objectAtIndex:index] objectForKey:@"accuracy"] floatValue];
     //cap graph
     if(naccuracy>1)naccuracy=1;
     else if (naccuracy<-1)naccuracy=-1;
