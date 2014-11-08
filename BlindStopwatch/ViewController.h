@@ -33,7 +33,8 @@
     NSTimeInterval elapsed;
     NSTimeInterval timerGoal;
     NSString *timeValuesFile;
-    
+    NSString *allTrialDataFile;
+
     NSInteger nPointsVisible;
     
     
@@ -113,6 +114,19 @@
     UILabel* accuracyLabel;
     UILabel *precisionLabel;
 
+    
+    UIView *allStats;
+    UILabel *allAverageTime;
+    UILabel *allAccuracy;
+    UILabel *allPrecision;
+    UILabel* allPrecisionUnit;
+    UILabel* allAverageUnit;
+    UILabel* allAccuracyUnit;
+    UILabel* allAverageLabel;
+    UILabel* allAccuracyLabel;
+    UILabel *allPrecisionLabel;
+    
+    
     //NSMutableArray * levelData;
     
     
@@ -124,6 +138,7 @@ void drawLine(CGContextRef context, CGPoint startPoint, CGPoint endPoint, CGColo
 @property (assign, nonatomic) NSInteger indexNumber;
 @property (retain) RBVolumeButtons *buttonStealer;
 @property (strong, nonatomic) NSMutableArray *trialData;
+@property (strong, nonatomic) NSMutableArray *allTrialData;
 @property (strong, nonatomic) NSMutableArray *levelData;
 
 @property (strong, nonatomic) NSMutableArray *ArrayOfDates;
@@ -136,6 +151,8 @@ void drawLine(CGContextRef context, CGPoint startPoint, CGPoint endPoint, CGColo
 @property NSString *leaderboardIdentifier;
 
 @property (strong, nonatomic) IBOutlet BEMSimpleLineGraphView *myGraph;
+@property (strong, nonatomic) IBOutlet BEMSimpleLineGraphView *allGraph;
+
 //- (IBAction)refresh:(id)sender;
 //- (IBAction)addOrRemoveLineFromGraph:(id)sender;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *graphColorChoice;
