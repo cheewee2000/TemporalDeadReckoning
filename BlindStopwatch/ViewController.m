@@ -19,7 +19,7 @@
 #define NUMLEVELARROWS 5
 
 #define TRIALSINSTAGE 5
-#define NUMHEARTS 4
+#define NUMHEARTS 5
 #define SHOWNEXTRASTAGES 3
 
 
@@ -1843,6 +1843,10 @@
         else if(nHeartsReplenished>0){
             if(nHeartsReplenished==1)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺¹";
             else if(nHeartsReplenished==2)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺²";
+            else if(nHeartsReplenished==3)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺³";
+            else if(nHeartsReplenished==4)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺⁴";
+            else stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E";
+
         }
         
         t= [levelArrows objectAtIndex:arrowN];
