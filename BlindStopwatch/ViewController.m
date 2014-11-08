@@ -863,6 +863,8 @@
                                             }
                                         }
                                        
+                                             [self clearTrialData];
+                                             
                                 int stage=floorf(currentLevel/TRIALSINSTAGE);
                                 if(stage<SHOWNEXTRASTAGES) [self performSelector:@selector(loadLevel) withObject:self afterDelay:0.8];
                                else  [self performSelector:@selector(loadLevel) withObject:self afterDelay:2.0];
@@ -1744,8 +1746,9 @@
 
                             //add heart for triplestar level
                              float trialAccuracy=fabs(elapsed-timerGoal);
-                             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/10.0)life+=3;
-                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/10.0)life+=2;
+                             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/10.0)life+=4;
+                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/10.0)life+=3;
+                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/10.0)life+=2;
                              else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/10.0)life++;
                              
                              //save current level now
@@ -1799,9 +1802,9 @@
     if(life>0){
         NSString * bonusString=@"";
         float trialAccuracy=fabs(elapsed-timerGoal);
-        if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/10.0)      bonusString=@"PERFECT! ❤\U0000FE0E⁺³";
-        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/10.0) bonusString=@"BOOOOOM! ❤\U0000FE0E⁺²";
-        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/10.0) bonusString=@"WOOT! ❤\U0000FE0E⁺¹";
+        if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/10.0)      bonusString=@"PERFECT! ❤\U0000FE0E⁺⁴";
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/10.0) bonusString=@"BOOOOOM! ❤\U0000FE0E⁺³";
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/10.0) bonusString=@"WOOT! ❤\U0000FE0E⁺²";
         else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/10.0) bonusString=@"MONEY! ❤\U0000FE0E⁺¹";
         else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*5/10.0) bonusString=@"GREAT!";
         else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*6/10.0) bonusString=@"NICE!";
@@ -2412,9 +2415,7 @@
                          [self updateLife];
                          [self updateTimeDisplay:0];
                          
-                         //new stage
-                         if (currentLevel%TRIALSINSTAGE==0) [self clearTrialData];
-                         
+
                           //fade in new counters
                           [UIView animateWithDuration:0.2
                                                 delay:0.0
