@@ -366,7 +366,7 @@
     averageTime.textAlignment=NSTextAlignmentCenter;
     [stats addSubview:averageTime];
 
-    accuracy=[[UILabel alloc] initWithFrame:CGRectMake(stats.frame.size.width*.5, 0, 35, h)];
+    accuracy=[[UILabel alloc] initWithFrame:CGRectMake(stats.frame.size.width*.5, 0, 45, h)];
     accuracy.center=CGPointMake(stats.frame.size.width*4/5.0, accuracy.center.y);
     accuracy.font = LF;
     accuracy.textColor =  [UIColor blackColor];
@@ -605,6 +605,9 @@
 
     //setup new dots
     life=NUMHEARTS;
+    
+    [self clearTrialData];
+
     [self setupDots];
     [self updateLife];
     
@@ -862,8 +865,6 @@
                                                   }];
                                             }
                                         }
-                                       
-                                             [self clearTrialData];
                                              
                                 int stage=floorf(currentLevel/TRIALSINSTAGE);
                                 if(stage<SHOWNEXTRASTAGES) [self performSelector:@selector(loadLevel) withObject:self afterDelay:0.8];
@@ -2086,7 +2087,11 @@
     }
     
     //check for stage up to add dots
-    else if ( (currentLevel%TRIALSINSTAGE==0 && [self isAccurate])) [self performSelector:@selector(setupDots) withObject:self afterDelay:.1];
+    else if ( (currentLevel%TRIALSINSTAGE==0 && [self isAccurate])) {
+        [self performSelector:@selector(setupDots) withObject:self afterDelay:.1];
+        [self performSelector:@selector(clearTrialData) withObject:self afterDelay:2.0];
+
+    }
     else [self performSelector:@selector(loadLevel) withObject:self afterDelay:.1];
     
 
