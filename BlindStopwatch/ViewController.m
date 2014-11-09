@@ -32,7 +32,7 @@
 
 
 @synthesize buttonStealer = _buttonStealer;
-@synthesize screenLabel,indexNumber; 
+//@synthesize screenLabel,indexNumber;
 
 - (void)didReceiveMemoryWarning
 {
@@ -51,7 +51,6 @@
 
     trialSequence=-1;
 
-    
     int vbuttonY=137;//5s
     if(IS_IPAD)vbuttonY=237;
     else if(IS_IPHONE_6)vbuttonY=145;
@@ -59,13 +58,17 @@
     else if(IS_IPHONE_5)vbuttonY=128;
     else if(IS_IPHONE)vbuttonY=95;
 
+    
+
+#pragma mark - instructions
+
     //instructions
     instructions=[[TextArrow alloc ] initWithFrame:CGRectMake(screenWidth, vbuttonY, screenWidth-8, 44)];
     [self.view addSubview:instructions];
-    
     [self loadLevelProgress];
 
-    
+#pragma mark - Counter Labels
+
     labelContainer=[[UIView alloc] initWithFrame:self.view.frame];
     [self.view addSubview:labelContainer];
     [self.view bringSubviewToFront:instructions];
@@ -100,6 +103,8 @@
     goalPrecision.text = @"";
     [counterGoalLabel addSubview:goalPrecision];
     
+    
+#pragma mark - Level Arrow
     levelArrows=[[NSMutableArray alloc] init];
     for (int i=0; i<NUMLEVELARROWS; i++) {
         TextArrow *arrow;
@@ -146,6 +151,7 @@
     [levelAlert addSubview:shareButton];
     
 
+#pragma mark - Persistent Variables
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if([defaults objectForKey:@"currentLevel"] == nil) currentLevel=0;
@@ -160,12 +166,15 @@
     if([defaults objectForKey:@"practicing"] == nil) practicing=false;
     else practicing = (int)[defaults integerForKey:@"practicing"];
     
-
+    if([defaults objectForKey:@"showIntro"] == nil) showIntro=true;
+    else showIntro = (int)[defaults integerForKey:@"showIntro"];
+    
+    
     //currentLevel=22;
     
     //[self loadData:currentLevel];
     
-    //buttonstealer
+#pragma mark - Button Stealer
     id progressDelegate = self;
     self.buttonStealer = [[RBVolumeButtons alloc] init];
     self.buttonStealer.upBlock = ^{
@@ -177,9 +186,8 @@
     [self.buttonStealer startStealingVolumeButtonEvents];
 
     
+#pragma mark - progressView
 
-
-    
     //dot array for level progress
     progressView=[[LevelProgressView alloc] initWithFrame:CGRectMake(0, screenHeight, self.view.frame.size.width, self.view.frame.size.height*2.5)];
     progressView.clipsToBounds=YES;
@@ -284,7 +292,8 @@
     playButton.layer.shadowOffset = CGSizeMake(0.0, 1.0);
     
 
-    
+#pragma mark - Dots
+
     //Dots
     dots=[NSMutableArray array];
     stageLabels=[NSMutableArray array];
@@ -298,7 +307,8 @@
     //[self updateTimeDisplay:0];
     
     
-    
+#pragma mark - Graphs
+
     ///*
     nPointsVisible=20;
     self.myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, screenHeight+55, screenWidth-22, 220)];
@@ -340,7 +350,8 @@
     [progressView addSubview:self.allGraph];
     
     
-    
+#pragma mark - Stats
+
     
     //stats
     stats = [[UIView alloc] initWithFrame:CGRectMake(0, screenHeight*1.5-55, screenWidth, 100)];
@@ -488,12 +499,16 @@
     
     [progressView addSubview:allStats];
     
+    
+#pragma mark - life
+
     //life hearsts
     if([defaults objectForKey:@"life"] == nil) life=NUMHEARTS;
     else life = (int)[defaults integerForKey:@"life"];
     hearts=[[NSMutableArray alloc]init];
 
-
+    
+#pragma mark - blob
     //big dot
     
     blob=[[UIView alloc] init];
@@ -543,6 +558,9 @@
     [blob addSubview:blobBlur];
 
     
+#pragma mark - XO
+
+    
     xView=[[UIImageView alloc] init];
     [xView setImage:[[UIImage imageNamed: @"x"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
     [self.view addSubview:xView];
@@ -564,11 +582,64 @@
     //game center
     [self authenticateLocalPlayer];
     
-    
     if(life==0)[self restart];
     
+#pragma mark - intro
+    intro=[[UIView alloc] initWithFrame:self.view.frame];
+    intro.backgroundColor=[self getBackgroundColor:0];
+    [self.view addSubview:intro];
+    
+    int m=15;
+    int w=screenWidth-m*2.0;
+    //instructions
+    introArrow=[[TextArrow alloc ] initWithFrame:CGRectMake(screenWidth, vbuttonY, screenWidth-8, 44)];
+    introArrow.instructionText.textColor=intro.backgroundColor;
+    introArrow.rightLabel.textColor=intro.backgroundColor;
+    [introArrow update:@"OK LET'S GO!" rightLabel:@"" color:[self getForegroundColor:0] animate:NO];
+    [introArrow slideOut:0];
+    [intro addSubview:introArrow];
 
+    
+    introTitle=[[UILabel alloc] initWithFrame:CGRectMake(m, introArrow.frame.origin.y-100, w, 65)];
+    introTitle.font = [UIFont fontWithName:@"DIN Condensed" size:55];
+    introTitle.text=@"THIS IS TEMPRA";
+    introTitle.textColor=[self getForegroundColor:0];
+    [intro addSubview:introTitle];
+
+    
+    introSubtitle=[[UILabel alloc] initWithFrame:CGRectMake(m, introArrow.frame.origin.y+introArrow.frame.size.height+15, w, 90)];
+    introSubtitle.font = [UIFont fontWithName:@"DIN Condensed" size:32];
+    introSubtitle.numberOfLines=3;
+    introSubtitle.text=@"TEST AND INCREASE YOUR TIME PERCEPTION";
+    introSubtitle.textColor=[self getForegroundColor:0];
+    [intro addSubview:introSubtitle];
+    
+    
+    introParagraph=[[UILabel alloc] initWithFrame:CGRectMake(m, introSubtitle.frame.origin.y+introSubtitle.frame.size.height+10, w, 180)];
+    introParagraph.font = [UIFont fontWithName:@"DIN Condensed" size:20];
+    introParagraph.numberOfLines=10;
+    introParagraph.textAlignment=NSTextAlignmentJustified;
+    introParagraph.text=@"For each trial, your goal is to get as close as possible to the displayed target time. Tap the screen or press the volume button to start the counter, then press stop when you think the right amount of time has elapsed. \n\nBreath... relax, and focus on your internal sense of time.  Become mindful of time.";
+    introParagraph.textColor=[self getForegroundColor:0];
+    [intro addSubview:introParagraph];
+    
+    credits=[[UILabel alloc] initWithFrame:CGRectMake(m, screenHeight-55, w, 40)];
+    credits.font = [UIFont fontWithName:@"HelveticaNeue" size:9];
+    credits.numberOfLines=3;
+    credits.textAlignment=NSTextAlignmentCenter;
+    credits.text=@"TEMPRA, 2014\nDesigned and built by Che-Wei Wang\nMIT Media Lab, Playful Systems";
+    credits.textColor=[self getForegroundColor:0];
+    [intro addSubview:credits];
+    
+    
+    
+    intro.alpha=0;
+    
+    
 }
+
+
+#pragma mark - restart
 
 -(void)restartButtonPressed{
     
@@ -1197,7 +1268,11 @@
 
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    if(progressView.frame.origin.y<-screenHeight*.5-screenHeight*.5)return;
+    if(progressView.frame.origin.y<-screenHeight*1.25){
+        showIntro=true;
+        [self showIntroView];
+        return;
+    }
     if([progressView.subMessage.text isEqual:@"GAME OVER"] || life==0)return;
     UITouch *aTouch = [touches anyObject];
     CGPoint location = [aTouch locationInView:self.view];
@@ -1306,6 +1381,27 @@
 
 //volume buttons
 -(void)buttonPressed{
+    if(showIntro){
+        showIntro=false;
+        [introArrow slideOut:0.0];
+        [instructions slideOut:0.0];
+
+        [UIView animateWithDuration:0.4
+                              delay:0.6
+                            options:UIViewAnimationOptionCurveLinear
+                         animations:^{
+                             intro.alpha=0;
+                         }
+                         completion:^(BOOL finished){
+                             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                             [defaults setInteger:showIntro forKey:@"showIntro"];
+                             [defaults synchronize];
+                             [instructions slideIn:0.2];
+
+                         }];
+
+        return;
+    }
     
     if(progressView.frame.origin.y<=screenHeight*.25)return;
     //START
@@ -1463,6 +1559,23 @@
     
     UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:sharingItems applicationActivities:nil];
     [self presentViewController:activityController animated:YES completion:nil];
+}
+
+-(void)showIntroView{
+    [self.view bringSubviewToFront:intro];
+    [introArrow slideOut:0];
+    
+    [UIView animateWithDuration:0.4
+                          delay:0
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         intro.alpha=1.0;
+                     }
+                     completion:^(BOOL finished){
+                         [introArrow slideIn:0.8];
+                         progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, progressView.frame.size.height);
+                     }];
+    
 }
 
 - (UIImage *)screenshot
@@ -2837,6 +2950,11 @@
 
                      }];
 
+    if(showIntro){
+        [self performSelector:@selector(showIntroView) withObject:self afterDelay:1.5];
+    }
+    
+    
 //    if(trialSequence==0)[instructions updateText:@"START" animate:YES];
     
    [super viewDidAppear:animated];

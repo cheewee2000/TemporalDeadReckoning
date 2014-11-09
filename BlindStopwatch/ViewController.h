@@ -28,17 +28,16 @@
     int lastStage;
 
     
-    //timing
+    #pragma mark - timing
     NSTimeInterval startTime;
     NSTimeInterval elapsed;
     NSTimeInterval timerGoal;
     NSString *timeValuesFile;
     NSString *allTrialDataFile;
 
-    NSInteger nPointsVisible;
     
     
-    //points
+    #pragma mark - points
     float best;
     float experiencePoints;
     int currentLevel;
@@ -50,7 +49,7 @@
     int nHeartsReplenished;
     
     
-    //progressView
+    #pragma mark - progressview
     LevelProgressView *progressView;
     
     UILabel *bestLabel;
@@ -59,9 +58,6 @@
     Dots *bestLevelDot;
     
     float buttonYPos;
-    
-    
-    //UIView *progressViewLower;
     
     BFPaperButton *restartExpandButton;
     UIButton *restartButton;
@@ -72,9 +68,7 @@
     NSMutableArray * stageLabels;
     int resetCountdown;
 
-    
-    //self.view
-    UIView *labelContainer;
+        UIView *labelContainer;
      UILabel *counterLabel;
      UILabel *counterGoalLabel;
     UILabel *goalPrecision;
@@ -82,27 +76,36 @@
 
     IBOutlet UILabel *differencelLabel;
     
+    
+    
+    #pragma mark - Labels
     TextArrow* instructions;
     TextArrow* levelAlert;
     NSMutableArray * levelArrows;
+    IBOutlet UILabel *nextLevelLabel;
+
+    
+    #pragma mark - Buttons
+
     UIButton *nextButton;
     UIButton *shareButton;
+    
+    
+    #pragma mark - Blob
     UIView *blob;
+    UIVisualEffectView *blobBlur;
 
     Dots *mainDot;
     NSArray *satellites;
     
     UIImageView * xView;
     UIImageView * oView;
-    
-    IBOutlet UILabel *nextLevelLabel;
-
-    
     UIVisualEffectView *labelContainerBlur;
-    
-    UIVisualEffectView *blobBlur;
-    //UIVisualEffectView *progressViewBlur;
 
+    NSInteger nPointsVisible;
+
+    
+    #pragma mark - stats
     UIView *stats;
     UILabel *averageTime;
     UILabel *accuracy;
@@ -126,38 +129,47 @@
     UILabel* allAverageLabel;
     UILabel* allAccuracyLabel;
     UILabel *allPrecisionLabel;
-    
     UILabel *allGraphLabel;
     
-    //NSMutableArray * levelData;
+    #pragma mark - intro
+    UIView *intro;
+    UILabel* introTitle;
+    TextArrow* introArrow;
+    UILabel* introSubtitle;
+    UILabel* introParagraph;
+    UILabel* credits;
+
+    UIButton* feedbackButton;
+    BOOL showIntro;
+    
+    
     
     
 }
 
 
-void drawLine(CGContextRef context, CGPoint startPoint, CGPoint endPoint, CGColorRef color);
-@property (weak, nonatomic) IBOutlet UILabel *screenLabel;
-@property (assign, nonatomic) NSInteger indexNumber;
+//void drawLine(CGContextRef context, CGPoint startPoint, CGPoint endPoint, CGColorRef color);
+//@property (weak, nonatomic) IBOutlet UILabel *screenLabel;
+//@property (assign, nonatomic) NSInteger indexNumber;
 @property (retain) RBVolumeButtons *buttonStealer;
+
 @property (strong, nonatomic) NSMutableArray *trialData;
 @property (strong, nonatomic) NSMutableArray *allTrialData;
 @property (strong, nonatomic) NSMutableArray *levelData;
 
-@property (strong, nonatomic) NSMutableArray *ArrayOfDates;
-@property (strong, nonatomic) NSMutableDictionary *TimeData;
-@property (strong, nonatomic) IBOutlet UILabel *labelValues;
-@property (strong, nonatomic) IBOutlet UILabel *labelDates;
+//@property (strong, nonatomic) NSMutableArray *ArrayOfDates;
+//@property (strong, nonatomic) NSMutableDictionary *TimeData;
+//@property (strong, nonatomic) IBOutlet UILabel *labelValues;
+//@property (strong, nonatomic) IBOutlet UILabel *labelDates;
 
-//- (IBAction)displayStatistics:(id)sender;
 @property BOOL gameCenterEnabled;
 @property NSString *leaderboardIdentifier;
 
 @property (strong, nonatomic) IBOutlet BEMSimpleLineGraphView *myGraph;
 @property (strong, nonatomic) IBOutlet BEMSimpleLineGraphView *allGraph;
 
-//- (IBAction)refresh:(id)sender;
-//- (IBAction)addOrRemoveLineFromGraph:(id)sender;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *graphColorChoice;
-@property (weak, nonatomic) IBOutlet UIStepper *graphObjectIncrement;
+
+//@property (weak, nonatomic) IBOutlet UISegmentedControl *graphColorChoice;
+//@property (weak, nonatomic) IBOutlet UIStepper *graphObjectIncrement;
 
 @end
