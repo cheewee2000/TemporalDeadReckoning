@@ -344,9 +344,15 @@
     
     //stats
     stats = [[UIView alloc] initWithFrame:CGRectMake(0, screenHeight*1.5-55, screenWidth, 100)];
-     UIFont * LF=[UIFont fontWithName:@"DIN Condensed" size:32];
-    
+     UIFont * LF=[UIFont fontWithName:@"DIN Condensed" size:34];
     int h=40;
+
+    myGraphLabel=[[UILabel alloc] initWithFrame:CGRectMake(10, -34, 85, h)];
+    myGraphLabel.font = [UIFont fontWithName:@"DIN Condensed" size:16];
+    myGraphLabel.text=@"STAGE 0";
+    [stats addSubview:myGraphLabel];
+    
+    
     averageTime=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 85, h)];
     averageTime.center=CGPointMake(stats.frame.size.width*1/5.0, averageTime.center.y);
     averageTime.font = LF;
@@ -411,7 +417,13 @@
     
     
     //stats
-    allStats = [[UIView alloc] initWithFrame:CGRectMake(0, screenHeight*2-55, screenWidth, 100)];
+    allStats = [[UIView alloc] initWithFrame:CGRectMake(20, screenHeight*2-55, screenWidth, 100)];
+    
+    allGraphLabel=[[UILabel alloc] initWithFrame:CGRectMake(10, -34, 85, h)];
+    allGraphLabel.font = [UIFont fontWithName:@"DIN Condensed" size:16];
+    allGraphLabel.text=@"LAST 0 TRIALS";
+    [allStats addSubview:allGraphLabel];
+    
     
     allAverageTime=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, 85, h)];
     allAverageTime.center=CGPointMake(allStats.frame.size.width*1/5.0, allAverageTime.center.y);
@@ -1749,7 +1761,7 @@
                           precisionLabel.textColor=[self getBackgroundColor:currentLevel];
                           accuracyLabel.textColor=[self getBackgroundColor:currentLevel];
                           averageLabel.textColor=[self getBackgroundColor:currentLevel];
-                          
+                          myGraphLabel.textColor=[self getBackgroundColor:currentLevel];
                           
                           
                           //all data
@@ -1767,7 +1779,7 @@
                           allPrecisionLabel.textColor=[self getBackgroundColor:currentLevel];
                           allAccuracyLabel.textColor=[self getBackgroundColor:currentLevel];
                           allAverageLabel.textColor=[self getBackgroundColor:currentLevel];
-                          
+                          allGraphLabel.textColor=[self getBackgroundColor:currentLevel];
                           
                           
                           
@@ -2404,19 +2416,6 @@
     //reposition maindot below screen
     [self resetMainDot];
 
-//    blob.transform = CGAffineTransformScale(CGAffineTransformIdentity, .00001, .000001);
-//
-//    [UIView animateWithDuration:0.8
-//                          delay:0.4
-//         usingSpringWithDamping:.5
-//          initialSpringVelocity:1.0
-//                        options:UIViewAnimationOptionCurveEaseIn
-//                     animations:^{
-//                         blob.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-//                     }
-//                     completion:^(BOOL finished){
-//
-//                     }];
 }
 
 
@@ -2430,18 +2429,6 @@
     [self showXO];
     [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:.1];
     
-//    [UIView animateWithDuration:0.4
-//                          delay:0.0
-//                        options:UIViewAnimationOptionCurveEaseInOut
-//                     animations:^{
-//                         //blobBlur.alpha=1;
-//                         labelContainerBlur.alpha=0.0;
-//                         //[self.view sendSubviewToBack:blob];
-//                        }
-//         completion:^(BOOL finished){
-//             
-//  
-//         }];
 
 }
 

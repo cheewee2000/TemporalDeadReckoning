@@ -113,6 +113,7 @@
     UILabel* averageLabel;
     UILabel* accuracyLabel;
     UILabel *precisionLabel;
+    UILabel *myGraphLabel;
 
     
     UIView *allStats;
@@ -126,6 +127,7 @@
     UILabel* allAccuracyLabel;
     UILabel *allPrecisionLabel;
     
+    UILabel *allGraphLabel;
     
     //NSMutableArray * levelData;
     
