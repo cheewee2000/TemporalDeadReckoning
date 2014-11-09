@@ -349,6 +349,7 @@
 
     myGraphLabel=[[UILabel alloc] initWithFrame:CGRectMake(10, -34, 85, h)];
     myGraphLabel.font = [UIFont fontWithName:@"DIN Condensed" size:16];
+    myGraphLabel.textAlignment=NSTextAlignmentLeft;
     myGraphLabel.text=@"STAGE 0";
     [stats addSubview:myGraphLabel];
     
@@ -417,10 +418,11 @@
     
     
     //stats
-    allStats = [[UIView alloc] initWithFrame:CGRectMake(20, screenHeight*2-55, screenWidth, 100)];
+    allStats = [[UIView alloc] initWithFrame:CGRectMake(0, screenHeight*2-55, screenWidth, 100)];
     
     allGraphLabel=[[UILabel alloc] initWithFrame:CGRectMake(10, -34, 85, h)];
     allGraphLabel.font = [UIFont fontWithName:@"DIN Condensed" size:16];
+    allGraphLabel.textAlignment=NSTextAlignmentLeft;
     allGraphLabel.text=@"LAST 0 TRIALS";
     [allStats addSubview:allGraphLabel];
     
@@ -2355,16 +2357,19 @@
      
     averageOffset=averageOffset/(float)nPoints;
     if(averageOffset>=0) averageTime.text=[NSString stringWithFormat:@"+%.03f",(float)averageOffset];
-    else averageTime.text=[NSString stringWithFormat:@"%.03f",(float)averageOffset];
+        else averageTime.text=[NSString stringWithFormat:@"%.03f",(float)averageOffset];
 
-    //averageAccuracy=[[self.myGraph calculatePointValueAverage] floatValue];
-    //float accuracyP=100.0-fabs(([[self.myGraph calculatePointValueAverage] floatValue]))/(float)goal*100.0;
-    averageAccuracy=averageAccuracy/(float)nPoints;
-     accuracy.text = [NSString stringWithFormat:@"%02i", (int)averageAccuracy];
+        //averageAccuracy=[[self.myGraph calculatePointValueAverage] floatValue];
+        //float accuracyP=100.0-fabs(([[self.myGraph calculatePointValueAverage] floatValue]))/(float)goal*100.0;
+        averageAccuracy=averageAccuracy/(float)nPoints;
+         accuracy.text = [NSString stringWithFormat:@"%02i", (int)averageAccuracy];
 
-    
-     float uncertainty=[[self.myGraph calculateLineGraphStandardDeviation]floatValue];
-     precision.text=[NSString stringWithFormat:@"±%.03f",(float)uncertainty];
+        
+         float uncertainty=[[self.myGraph calculateLineGraphStandardDeviation]floatValue];
+         precision.text=[NSString stringWithFormat:@"±%.03f",(float)uncertainty];
+            
+        myGraphLabel.text=[NSString stringWithFormat:@"STAGE %i",[self getCurrentStage]+1];
+
     }
     
     
@@ -2404,6 +2409,10 @@
         
         float uncertainty=[[self.allGraph calculateLineGraphStandardDeviation]floatValue];
         allPrecision.text=[NSString stringWithFormat:@"±%.03f",(float)uncertainty];
+        
+        allGraphLabel.text=[NSString stringWithFormat:@"LAST %i TRIALS",(int)[self.allTrialData count]];
+        
+
     }
     
     
