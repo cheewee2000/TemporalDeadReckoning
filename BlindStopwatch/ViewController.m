@@ -18,9 +18,6 @@
 
 #define IS_OS_7_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
 
-#define ARC4RANDOM_MAX      0x100000000
-
-
 #define NUMLEVELARROWS 5
 
 #define TRIALSINSTAGE 5
@@ -636,6 +633,7 @@
     [self.view addGestureRecognizer:tapGestureRecognizer3];
     self.view.userInteractionEnabled=YES;
     
+    //currentLevel=11;
 }
 
 
@@ -2766,26 +2764,25 @@
 -(UIColor*) getBackgroundColor:(int)level {
 
     NSArray * backgroundColors = [[NSArray alloc] initWithObjects:
-                                  //[UIColor colorWithRed:206/255.0 green:0/255.0 blue:78/255.0 alpha:1],
-                                  [UIColor colorWithRed:255/255.0 green:217/255.0 blue:15/255.0 alpha:1],
-                                  [UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1],
-                                  [UIColor colorWithRed:253/255.0 green:242/255.0 blue:62/255.0 alpha:1],
-                                  [UIColor colorWithRed:0/255.0 green:163/255.0 blue:238/255.0 alpha:1],
+                                  [UIColor colorWithRed:255/255.0 green:215/255.0 blue:16/255.0 alpha:1],
+                                  [UIColor colorWithRed:255/255.0 green:237/255.0 blue:144/255.0 alpha:1],
+                                  [UIColor colorWithRed:255/255.0 green:66/255.0 blue:66/255.0 alpha:1],
+                                  [UIColor colorWithRed:151/255.0 green:239/255.0 blue:229/255.0 alpha:1],
                                   
-                                  [UIColor colorWithRed:18/255.0 green:68/255.0 blue:85/255.0 alpha:1],
-                                  [UIColor colorWithRed:82/255.0 green:82/255.0 blue:75/255.0 alpha:1],
-                                  [UIColor colorWithRed:200/255.0 green:203/255.0 blue:207/255.0 alpha:1],//
-                                  [UIColor colorWithRed:91/255.0 green:96/255.0 blue:122/255.0 alpha:1],
+                                  [UIColor colorWithRed:240/255.0 green:255/255.0 blue:245/255.0 alpha:1],
+                                  [UIColor colorWithRed:252/255.0 green:73/255.0 blue:108/255.0 alpha:1],//
+                                  [UIColor colorWithRed:255/255.0 green:29/255.0 blue:111/255.0 alpha:1],//
+                                  [UIColor colorWithRed:130/255.0 green:35/255.0 blue:57/255.0 alpha:1],//
+
                                   nil];
   
     
     int currentStage=floorf(level/TRIALSINSTAGE);
     int cl=currentStage%[backgroundColors count];
-
     UIColor *c=backgroundColors[cl];
 
-    if(currentStage>[backgroundColors count]){
-        double hue = (level%50)/50.0;
+    if(currentStage>=[backgroundColors count]){
+        double hue = (level%10+level%6/2.0)/13.0;
         c=[UIColor colorWithHue:hue saturation:1.0 brightness:.4 alpha:1];
     }
     return c;
@@ -2794,16 +2791,15 @@
 -(UIColor*) getForegroundColor:(int)level {
     
     NSArray * foregroundColor = [[NSArray alloc] initWithObjects:
-                                  //[UIColor colorWithRed:248/255.0 green:238/255.0 blue:223/255.0 alpha:1],
-                                 [UIColor colorWithRed:85/255.0 green:85/255.0 blue:98/255.0 alpha:1],
-                                 [UIColor colorWithRed:255/255.0 green:153/255.0 blue:0/255.0 alpha:1],
-                                  [UIColor colorWithRed:255/255.0 green:61/255.0 blue:132/255.0 alpha:1],
-                                 [UIColor colorWithRed:236/255.0 green:236/255.0 blue:136/255.0 alpha:1],
+                                 [UIColor colorWithRed:91/255.0 green:89/255.0 blue:87/255.0 alpha:1],
+                                 [UIColor colorWithRed:53/255.0 green:150/255.0 blue:104/255.0 alpha:1],
+                                  [UIColor colorWithRed:244/255.0 green:350/255.0 blue:210/255.0 alpha:1],
+                                 [UIColor colorWithRed:237/255.0 green:21/255.0 blue:21/255.0 alpha:1],
 
-                                  [UIColor colorWithRed:222/255.0 green:195/255.0 blue:153/255.0 alpha:1],
-                                  [UIColor colorWithRed:254/255.0 green:253/255.0 blue:211/255.0 alpha:1],
-                                  [UIColor colorWithRed:255/255.0 green:14/255.0 blue:0/255.0 alpha:1],//
-                                  [UIColor colorWithRed:71/255.0 green:241/255.0 blue:0/255.0 alpha:1],
+                                 [UIColor colorWithRed:108/255.0 green:189/255.0 blue:181/255.0 alpha:1],
+                                  [UIColor colorWithRed:107/255.0 green:45/255.0 blue:81/255.0 alpha:1],//
+                                 [UIColor colorWithRed:61/255.0 green:222/255.0 blue:237/255.0 alpha:1],//
+                                 [UIColor colorWithRed:247/255.0 green:62/255.0 blue:62/255.0 alpha:1],//
 
                                   nil];
     
@@ -2811,8 +2807,8 @@
     int cl=currentStage%[foregroundColor count];
     UIColor *c=foregroundColor[cl];
     
-    if(currentStage>[foregroundColor count]){
-        double hue = (level%50)/50.0;
+    if(currentStage>=[foregroundColor count]){
+        double hue = (level%10+level%6/2.0)/13.0;
         c=[UIColor colorWithHue:hue saturation:.8 brightness:.7 alpha:1];
     }
     return c;
