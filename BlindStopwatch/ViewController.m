@@ -631,11 +631,7 @@
     credits.textColor=[self getForegroundColor:0];
     [intro addSubview:credits];
     
-    
-    
     intro.alpha=0;
-    
-    
 }
 
 
@@ -1268,7 +1264,7 @@
 
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    if(progressView.frame.origin.y<-screenHeight*1.25){
+    if(progressView.frame.origin.y<-screenHeight*1.4){
         showIntro=true;
         [self showIntroView];
         return;

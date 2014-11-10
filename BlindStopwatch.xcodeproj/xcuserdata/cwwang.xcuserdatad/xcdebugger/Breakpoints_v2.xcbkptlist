@@ -52,11 +52,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BlindStopwatch/ViewController.m"
-            timestampString = "437248578.16742"
+            timestampString = "437248937.503343"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2815"
-            endingLineNumber = "2815"
+            startingLineNumber = "2811"
+            endingLineNumber = "2811"
             landmarkName = "-numberOfPointsInLineGraph:"
             landmarkType = "5">
          </BreakpointContent>

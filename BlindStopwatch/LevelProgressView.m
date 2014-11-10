@@ -13,8 +13,8 @@
     self = [super initWithFrame:theFrame];
     if (self) {
         
-         _shadowR=4.0;
-        _shadowO=.3;
+         _shadowR=10.0;
+        _shadowO=.4;
         
         self.dotsContainer=[[UIView alloc] init];
         self.dotsContainer.frame=CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
