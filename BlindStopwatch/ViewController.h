@@ -27,6 +27,7 @@
     int trialSequence;
     int lastStage;
 
+    int allTimeTotalTrials;
     
     #pragma mark - timing
     NSTimeInterval startTime;

@@ -18,6 +18,9 @@
 
 #define IS_OS_7_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
 
+#define ARC4RANDOM_MAX      0x100000000
+
+
 #define NUMLEVELARROWS 5
 
 #define TRIALSINSTAGE 5
@@ -171,7 +174,9 @@
     if([defaults objectForKey:@"showIntro"] == nil) showIntro=true;
     else showIntro = (int)[defaults integerForKey:@"showIntro"];
     
-    
+    if([defaults objectForKey:@"allTimeTotalTrials"] == nil) allTimeTotalTrials=0;
+    else allTimeTotalTrials = (int)[defaults integerForKey:@"allTimeTotalTrials"];
+
     //currentLevel=22;
     
     //[self loadData:currentLevel];
@@ -513,51 +518,41 @@
 #pragma mark - blob
     //big dot
     
-    blob=[[UIView alloc] init];
-    [self.view addSubview:blob];
-
+//    blob=[[UIView alloc] init];
+//    [self.view addSubview:blob];
+//    
+//    //set blob frame
+//    blob.frame=self.view.frame;
+//    [self resetMainDot];
     
-    //set blob frame
-    blob.frame=self.view.frame;
-    //blob.frame=CGRectMake(0, 0, screenWidth, screenHeight);
-    [self resetMainDot];
-    
-    UITapGestureRecognizer *tapGestureRecognizer3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
-    tapGestureRecognizer3.numberOfTouchesRequired = 1;
-    tapGestureRecognizer3.numberOfTapsRequired = 1;
-    [self.view addGestureRecognizer:tapGestureRecognizer3];
-    //blob.userInteractionEnabled = YES;
-    self.view.userInteractionEnabled=YES;
-    
-    
-    mainDot = [[Dots alloc] init];
-    mainDot.alpha = 1;
-    mainDot.backgroundColor = [UIColor clearColor];
-    [mainDot setFill:YES];
-    [mainDot setClipsToBounds:NO];
-    [self resetMainDot];
-    [blob addSubview:mainDot];
+//    mainDot = [[Dots alloc] init];
+//    mainDot.alpha = 1;
+//    mainDot.backgroundColor = [UIColor clearColor];
+//    [mainDot setFill:YES];
+//    [mainDot setClipsToBounds:NO];
+//    [self resetMainDot];
+    //[blob addSubview:mainDot];
     
     
     //satellites
-    satellites=[NSArray array];
-    for (int i=0;i<10;i++){
-        Dots *sat = [[Dots alloc] init];
-        sat.alpha = 1;
-        sat.backgroundColor = [UIColor clearColor];
-        [sat setFill:YES];
-        [sat setClipsToBounds:NO];
-        satellites = [satellites arrayByAddingObject:sat];
-        [blob addSubview:satellites[i]];
-    }
-    [self setupSatellites];
+//    satellites=[NSArray array];
+//    for (int i=0;i<10;i++){
+//        Dots *sat = [[Dots alloc] init];
+//        sat.alpha = 1;
+//        sat.backgroundColor = [UIColor clearColor];
+//        [sat setFill:YES];
+//        [sat setClipsToBounds:NO];
+//        satellites = [satellites arrayByAddingObject:sat];
+//        [blob addSubview:satellites[i]];
+//    }
+//[self setupSatellites];
     
     
-    UIBlurEffect *blurEffect= [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-    blobBlur = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    blobBlur.frame = self.view.bounds;
-    blobBlur.alpha=1.0;
-    [blob addSubview:blobBlur];
+//    UIBlurEffect *blurEffect= [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+//    blobBlur = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+//    blobBlur.frame = self.view.bounds;
+//    blobBlur.alpha=1;
+//    [blob addSubview:blobBlur];
 
     
 #pragma mark - XO
@@ -634,6 +629,13 @@
     [intro addSubview:credits];
     
     intro.alpha=0;
+    
+    UITapGestureRecognizer *tapGestureRecognizer3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
+    tapGestureRecognizer3.numberOfTouchesRequired = 1;
+    tapGestureRecognizer3.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:tapGestureRecognizer3];
+    self.view.userInteractionEnabled=YES;
+    
 }
 
 
@@ -1253,9 +1255,9 @@
 }
 
 -(void)resetMainDot{
-    int d=screenWidth*.65;
+    int d=screenWidth*.8;
     mainDot.frame=CGRectMake(0,0,d,d);
-    mainDot.center=CGPointMake(screenWidth/2.0, (screenHeight-44)*.75);
+    mainDot.center=CGPointMake(screenWidth/2.0, (screenHeight-88)*.75);
     //blob.frame=CGRectMake(0,screenHeight*.5,screenWidth,screenHeight*.5);
 }
 
@@ -1324,10 +1326,11 @@
                                  }
                                 else {
                                     progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, progressView.frame.size.height);
-                                    TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
-                                    float y=sLabel.frame.origin.y;
-                                    progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, progressView.dotsContainer.frame.size.height);
-
+                                    if([self getCurrentStage]){
+                                        TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
+                                        float y=sLabel.frame.origin.y;
+                                        progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, progressView.dotsContainer.frame.size.height);
+                                    }
                                     [self.view sendSubviewToBack:progressView];
                                     [self.view sendSubviewToBack:blob];
                                 }
@@ -1456,7 +1459,7 @@
         elapsed = currentTime-startTime;
             trialSequence=2;
             [self updateTimeDisplay:elapsed];
-            [self animateLevelDotScore];
+            [self trialStopped];
             counterLabel.alpha=1.0;
         mainDot.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
         for (int i=0;i<[satellites count];i++){
@@ -1707,6 +1710,32 @@
     }
 }
 
+//-(void)updateAchievements{
+//    
+//    GKAchievement *trialAchievement = nil;
+//
+//    trialAchievement = [[GKAchievement alloc] initWithIdentifier:@"1000Trials"];
+//    //trialAchievement.percentComplete = allTimeTotalTrials/1000*100;
+//    trialAchievement.percentComplete = allTimeTotalTrials*10;
+//
+//    GKAchievement *perfectHealthStreak = nil;
+//    perfectHealthStreak = [[GKAchievement alloc] initWithIdentifier:@"perfectHealthStreak"];
+//    perfectHealthStreak.percentComplete=0;
+//    
+//    GKAchievement *perfectAccuracyStreak = nil;
+//    perfectAccuracyStreak = [[GKAchievement alloc] initWithIdentifier:@"perfectAccuracyStreak"];
+//    perfectAccuracyStreak.percentComplete=0;
+//
+//    NSArray *achievements =@[trialAchievement,perfectHealthStreak,perfectAccuracyStreak] ;
+//    
+//    [GKAchievement reportAchievements:achievements withCompletionHandler:^(NSError *error) {
+//        if (error != nil) {
+//            //NSLog(@&quot;%@&quot;, [error localizedDescription]);
+//        }
+//    }];
+//}
+
+
 -(void)showGlobalLeaderboard{
     GKGameCenterViewController *gcViewController = [[GKGameCenterViewController alloc] init];
     gcViewController.gameCenterDelegate = self;
@@ -1831,8 +1860,9 @@
                           restartButton.alpha=1;
                           
 
-                          
-                          
+                          mainDot.dotColor=[self getForegroundColor:currentLevel];
+                          [mainDot setNeedsDisplay];
+
                           CGFloat hue, saturation, brightness, alpha ;
                           [[self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
                           UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation+.05 brightness:brightness+.05 alpha:alpha ];
@@ -2549,11 +2579,14 @@
 
 
 
--(void)animateLevelDotScore{
+-(void)trialStopped{
 
     [self showXO];
     [self performSelector:@selector(morphOrDropDots) withObject:self afterDelay:.1];
+    allTimeTotalTrials++;
+    [[NSUserDefaults standardUserDefaults] setInteger:allTimeTotalTrials forKey:@"allTimeTotalTrials"];
     
+    //[self updateAchievements];
 
 }
 
@@ -2602,10 +2635,10 @@
 
     xView.alpha=1.0;
     oView.alpha=1.0;
-    xView.tintColor=[self getBackgroundColor:currentLevel];
-    oView.tintColor=[self getBackgroundColor:currentLevel];
-    float w=screenWidth*.60;
-    float y=(screenHeight-44)*.75-w/2.0;
+    xView.tintColor=[self getForegroundColor:currentLevel];
+    oView.tintColor=[self getForegroundColor:currentLevel];
+    float w=screenWidth*.7;
+    float y=(screenHeight-88)*.75-w/2.0;
     float x=screenWidth/2.0-w/2.0;
     
     [UIView animateWithDuration:0.4
@@ -2744,11 +2777,18 @@
                                   [UIColor colorWithRed:200/255.0 green:203/255.0 blue:207/255.0 alpha:1],//
                                   [UIColor colorWithRed:91/255.0 green:96/255.0 blue:122/255.0 alpha:1],
                                   nil];
+  
     
     int currentStage=floorf(level/TRIALSINSTAGE);
     int cl=currentStage%[backgroundColors count];
-    
-    return backgroundColors[cl];
+
+    UIColor *c=backgroundColors[cl];
+
+    if(currentStage>[backgroundColors count]){
+        double hue = (level%50)/50.0;
+        c=[UIColor colorWithHue:hue saturation:1.0 brightness:.4 alpha:1];
+    }
+    return c;
 }
 
 -(UIColor*) getForegroundColor:(int)level {
@@ -2769,7 +2809,14 @@
     
     int currentStage=floorf(level/TRIALSINSTAGE);
     int cl=currentStage%[foregroundColor count];
-    return foregroundColor[cl];
+    UIColor *c=foregroundColor[cl];
+    
+    if(currentStage>[foregroundColor count]){
+        double hue = (level%50)/50.0;
+        c=[UIColor colorWithHue:hue saturation:.8 brightness:.7 alpha:1];
+    }
+    return c;
+    
 }
 
 
