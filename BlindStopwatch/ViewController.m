@@ -1999,8 +1999,8 @@
                          if(life==0) lastStage=[self getCurrentStage];
                          if(practicing==false) [self reportScore];
 
-                         [self performSelector:@selector(updateLife) withObject:self afterDelay:.1];
-                         [self performSelector:@selector(updateDots) withObject:self afterDelay:.1];
+                         [self performSelector:@selector(updateLife) withObject:self afterDelay:.01];
+                         [self performSelector:@selector(updateDots) withObject:self afterDelay:.01];
                          [self performSelector:@selector(showLevelAlerts) withObject:self afterDelay:.5];
 
 
@@ -2319,6 +2319,8 @@
     
     //check for stage up to add dots
     else if ( (currentLevel%TRIALSINSTAGE==0 && [self isAccurate])) {
+        bestLevelDot.alpha=0;
+        
         [self performSelector:@selector(setupDots) withObject:self afterDelay:.1];
         [self performSelector:@selector(clearTrialData) withObject:self afterDelay:2.0];
 
