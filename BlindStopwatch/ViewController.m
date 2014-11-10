@@ -16,6 +16,8 @@
 #define IS_IPHONE_6 (IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 667.0)
 #define IS_IPHONE_6_PLUS (IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 736.0)
 
+#define IS_OS_7_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+
 #define NUMLEVELARROWS 5
 
 #define TRIALSINSTAGE 5
@@ -1233,17 +1235,20 @@
 #pragma mark - Setup
 
 -(void)setupSatellites{
-    for (int i=0;i<[satellites count];i++){
-        
-        float satD=50+arc4random()%100;
-        Dots *sat= [satellites objectAtIndex:i];
-        sat.frame=CGRectMake(16+(self.view.frame.size.width-16)/10.0*i,260,satD,satD);
-        int dir=(arc4random() % 2 ? 1 : -1);
-        float h=mainDot.frame.size.height*(arc4random()%8/10.0);
-        
-        CGRect orbit=CGRectMake(mainDot.frame.origin.x+satD*.15, mainDot.center.y-h/2.0, mainDot.frame.size.width-satD*.5, h);
-        [sat animateAlongPath:orbit rotate:i/10.0*M_PI_2*2.0 speed:dir*((.01+arc4random()%1000)/4000.0)];
+    
+    if(IS_OS_7_OR_LATER){
+        for (int i=0;i<[satellites count];i++){
+            
+            float satD=50+arc4random()%100;
+            Dots *sat= [satellites objectAtIndex:i];
+            sat.frame=CGRectMake(16+(self.view.frame.size.width-16)/10.0*i,260,satD,satD);
+            int dir=(arc4random() % 2 ? 1 : -1);
+            float h=mainDot.frame.size.height*(arc4random()%8/10.0);
+            
+            CGRect orbit=CGRectMake(mainDot.frame.origin.x+satD*.15, mainDot.center.y-h/2.0, mainDot.frame.size.width-satD*.5, h);
+            [sat animateAlongPath:orbit rotate:i/10.0*M_PI_2*2.0 speed:dir*((.01+arc4random()%1000)/4000.0)];
 
+        }
     }
 }
 
@@ -1904,6 +1909,7 @@
                           //[self updateTimeDisplay:0];
                           [self setTimerGoalMarginDisplay];
 
+                          myGraphLabel.text=[NSString stringWithFormat:@"STAGE %i",[self getCurrentStage]+1];
 
      
           }];
@@ -2477,7 +2483,6 @@
          float uncertainty=[[self.myGraph calculateLineGraphStandardDeviation]floatValue];
          precision.text=[NSString stringWithFormat:@"±%.03f",(float)uncertainty];
             
-        myGraphLabel.text=[NSString stringWithFormat:@"STAGE %i",[self getCurrentStage]+1];
 
     }
     
