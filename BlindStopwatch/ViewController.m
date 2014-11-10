@@ -2708,7 +2708,7 @@
 
 -(void)resetTrialSequence{
     trialSequence=0;
-    [self performSelector:@selector(instructionBounce) withObject:self afterDelay:5.0];
+    [self performSelector:@selector(instructionBounce) withObject:self afterDelay:10.0];
 }
 
 -(void)instructionBounce{
@@ -2722,7 +2722,7 @@
         instructions.rightLabel.font=[UIFont fontWithName:@"DIN Condensed" size:screenHeight*.03];
  
         [instructions bounce];
-        [self performSelector:@selector(instructionBounce) withObject:self afterDelay:5.0];
+        [self performSelector:@selector(instructionBounce) withObject:self afterDelay:10.0];
     }
     
 }
