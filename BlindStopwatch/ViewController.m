@@ -49,8 +49,6 @@
 {
    [super viewDidLoad];
     
-    screenHeight=self.view.frame.size.height;
-    screenWidth=self.view.frame.size.width;
 
     trialSequence=-1;
 
@@ -61,6 +59,10 @@
     else if(IS_IPHONE_5)vbuttonY=128;
     else if(IS_IPHONE_4)vbuttonY=95;
 
+    screenHeight=self.view.frame.size.height;
+    screenWidth=self.view.frame.size.width;
+
+    
     aTimer = [MachTimer timer];
 
 #pragma mark - instructions
@@ -317,7 +319,7 @@
 
     ///*
     nPointsVisible=20;
-    self.myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, screenHeight*1.0, screenWidth-22, screenHeight*.4)];
+    self.myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, screenHeight, screenWidth-22, screenHeight*.5-55)];
     self.myGraph.delegate = self;
     self.myGraph.dataSource = self;
     self.myGraph.colorTop =[UIColor clearColor];
@@ -332,11 +334,12 @@
     self.myGraph.enablePopUpReport = YES;
     self.myGraph.autoScaleYAxis = NO;
     self.myGraph.yAxisScale=100.0;
+    if(IS_IPHONE_4)self.myGraph.yAxisScale=50.0;
     self.myGraph.animationGraphEntranceTime = 1.75;
     self.myGraph.tag=0;
     [progressView addSubview:self.myGraph];
 
-    self.allGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, screenHeight*1.5, screenWidth-22, screenHeight*.4)];
+    self.allGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, screenHeight*1.5, screenWidth-22, screenHeight*.5-55)];
     self.allGraph.delegate = self;
     self.allGraph.dataSource = self;
     self.allGraph.colorTop =[UIColor clearColor];
@@ -351,6 +354,7 @@
     self.allGraph.enablePopUpReport = YES;
     self.allGraph.autoScaleYAxis = NO;
     self.allGraph.yAxisScale=100.0;
+    if(IS_IPHONE_4)self.allGraph.yAxisScale=50.0;
     self.allGraph.animationGraphEntranceTime = 1.75;
     self.allGraph.tag=1;
     [progressView addSubview:self.allGraph];
@@ -360,7 +364,7 @@
 
     
     //stats
-    stats = [[UIView alloc] initWithFrame:CGRectMake(0, screenHeight*1.5-55, screenWidth, 100)];
+    stats = [[UIView alloc] initWithFrame:CGRectMake(0, screenHeight*1.5-55, screenWidth, 55)];
      UIFont * LF=[UIFont fontWithName:@"DIN Condensed" size:34];
     int h=40;
 
@@ -616,7 +620,7 @@
     introParagraph.font = [UIFont fontWithName:@"DIN Condensed" size:20];
     introParagraph.numberOfLines=10;
     introParagraph.textAlignment=NSTextAlignmentJustified;
-    introParagraph.text=@"For each trial, your goal is to get as close as possible to the displayed target time. Tap the screen or press the volume button to start the counter, then press stop when you think the right amount of time has elapsed. \n\nBreath... relax, and focus on your internal sense of time.";
+    introParagraph.text=@"For each trial, your goal is to get as close as possible to the displayed target time. Tap the screen or press the volume button to start the counter, then press stop when you think the right amount of time has elapsed. \n\nBreathe... relax, and focus on your internal sense of time.";
     introParagraph.textColor=[self getForegroundColor:0];
     [intro addSubview:introParagraph];
     
@@ -2086,7 +2090,7 @@
         else if(diff<-1)  bonusString=@"WAY TOO FAST!";
         else if(diff<-.5) bonusString=@"PATIENCE! GO SLOWER.";
         else if(diff<-.4) bonusString=@"SLOW DOWN";
-        else if(diff<-.3) bonusString=@"BREATH. SLOW DOWN.";
+        else if(diff<-.3) bonusString=@"BREATHE. SLOW DOWN.";
         else if(diff<-.2) bonusString=@"SLOW DOWN A BIT";
         else if(diff<0)   bonusString=@"TOO FAST";
         
