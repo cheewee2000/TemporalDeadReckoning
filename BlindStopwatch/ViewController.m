@@ -2418,7 +2418,7 @@
     if(trialSequence==1){
             //[self updateTimeDisplay:currentTime-startTime];
             [self performSelector:@selector(updateTime) withObject:self afterDelay:0.1];
-        if([aTimer elapsedSeconds]>9.9){
+        if([aTimer elapsedSeconds]-timerGoal>9.9){
             //stop because way off
             [self buttonPressed];
             
@@ -2986,29 +2986,29 @@
 {
     [self loadTrialData];
     [self loadLevelProgress];
-
+    [self.view bringSubviewToFront:progressView];
     [self performSelector:@selector(setupDots) withObject:self afterDelay:.5];
 
     
-    [UIView animateWithDuration:0.8
-                          delay:0.4
-         usingSpringWithDamping:.8
-          initialSpringVelocity:1.0
-                        options:UIViewAnimationOptionCurveLinear
-                     animations:^{
-                         progressView.frame=CGRectMake(0, screenHeight-44, progressView.frame.size.width, progressView.frame.size.height);
-                         if([stageLabels count]>0){
-                             TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
-                             float y=sLabel.frame.origin.y;
-                             progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, progressView.dotsContainer.frame.size.height);
-                         }
-                     }
-                     completion:^(BOOL finished){
-                         [self.view sendSubviewToBack:progressView];
-                         [self.view sendSubviewToBack:blob];
-                         //[self.myGraph reloadGraph];
-
-                     }];
+//    [UIView animateWithDuration:0.8
+//                          delay:0.4
+//         usingSpringWithDamping:.8
+//          initialSpringVelocity:1.0
+//                        options:UIViewAnimationOptionCurveLinear
+//                     animations:^{
+//                         progressView.frame=CGRectMake(0, screenHeight-44, progressView.frame.size.width, progressView.frame.size.height);
+//                         if([stageLabels count]>0){
+//                             TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
+//                             float y=sLabel.frame.origin.y;
+//                             progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, progressView.dotsContainer.frame.size.height);
+//                         }
+//                     }
+//                     completion:^(BOOL finished){
+//                         [self.view sendSubviewToBack:progressView];
+//                         [self.view sendSubviewToBack:blob];
+//                         //[self.myGraph reloadGraph];
+//
+//                     }];
 
     if(showIntro){
         [self performSelector:@selector(showIntroView) withObject:self afterDelay:1.5];
