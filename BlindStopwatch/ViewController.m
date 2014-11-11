@@ -12,6 +12,7 @@
 
 #define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 #define IS_IPHONE (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+#define IS_IPHONE_4 (IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 480.0)
 #define IS_IPHONE_5 (IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 568.0)
 #define IS_IPHONE_6 (IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 667.0)
 #define IS_IPHONE_6_PLUS (IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 736.0)
@@ -58,7 +59,7 @@
     else if(IS_IPHONE_6)vbuttonY=145;
     else if(IS_IPHONE_6_PLUS)vbuttonY=155;
     else if(IS_IPHONE_5)vbuttonY=128;
-    else if(IS_IPHONE)vbuttonY=95;
+    else if(IS_IPHONE_4)vbuttonY=95;
 
     
 
@@ -75,13 +76,14 @@
     [self.view addSubview:labelContainer];
     [self.view bringSubviewToFront:instructions];
     
+    int m=8;
     //set position relative to instruction arrow
     counterLabel=[[UILabel alloc]init];
     counterLabel.font = [UIFont fontWithName:@"DIN Condensed" size:screenWidth*.33];
     counterLabel.adjustsFontSizeToFitWidth = YES;
     counterLabel.textColor=[UIColor whiteColor];
     counterLabel.textAlignment=NSTextAlignmentCenter;
-    counterLabel.frame=CGRectMake(0,0, screenWidth, screenWidth*.35);
+    counterLabel.frame=CGRectMake(0,0, screenWidth-m*2, screenWidth*.35);
     counterLabel.clipsToBounds=NO;
     [labelContainer addSubview:counterLabel];
     
@@ -90,20 +92,20 @@
     counterGoalLabel.adjustsFontSizeToFitWidth = YES;
     counterGoalLabel.textColor=[UIColor whiteColor];
     counterGoalLabel.textAlignment=NSTextAlignmentCenter;
-    counterGoalLabel.frame=CGRectMake(0,0, screenWidth, screenWidth*.35);
+    counterGoalLabel.frame=CGRectMake(0,0, screenWidth-m*2, screenWidth*.35);
     counterGoalLabel.clipsToBounds=NO;
     [self.view addSubview:counterGoalLabel];
     
     counterGoalLabel.center=CGPointMake(screenWidth*.5, instructions.frame.origin.y-counterLabel.frame.size.height*.30);
-    counterLabel.center=CGPointMake(screenWidth*.5, instructions.frame.origin.y+instructions.frame.size.height+counterGoalLabel.frame.size.height*.55);
+    counterLabel.center=CGPointMake(screenWidth*.5, instructions.frame.origin.y+instructions.frame.size.height+counterGoalLabel.frame.size.height*.50);
 
 
-    goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, -30, counterGoalLabel.frame.size.width*.5-13, 40)];
-    goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:22.0];
+    goalPrecision=[[UILabel alloc] initWithFrame:CGRectMake(counterGoalLabel.frame.size.width*.5, -screenWidth*.05/2.0, counterGoalLabel.frame.size.width*.5-m, screenWidth*.05)];
+    goalPrecision.font = [UIFont fontWithName:@"DIN Condensed" size:screenWidth*.05];
     goalPrecision.textAlignment=NSTextAlignmentRight;
     goalPrecision.textColor = [UIColor whiteColor];
     goalPrecision.text = @"";
-    [counterGoalLabel addSubview:goalPrecision];
+    if(!IS_IPHONE_4 && !IS_IPAD)[counterGoalLabel addSubview:goalPrecision];
     
     
 #pragma mark - Level Arrow
@@ -315,7 +317,7 @@
 
     ///*
     nPointsVisible=20;
-    self.myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, screenHeight+55, screenWidth-22, 220)];
+    self.myGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, screenHeight*1.0, screenWidth-22, screenHeight*.4)];
     self.myGraph.delegate = self;
     self.myGraph.dataSource = self;
     self.myGraph.colorTop =[UIColor clearColor];
@@ -334,7 +336,7 @@
     self.myGraph.tag=0;
     [progressView addSubview:self.myGraph];
 
-    self.allGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, screenHeight*1.5+55, screenWidth-22, 220)];
+    self.allGraph = [[BEMSimpleLineGraphView alloc] initWithFrame:CGRectMake(0, screenHeight*1.5, screenWidth-22, screenHeight*.4)];
     self.allGraph.delegate = self;
     self.allGraph.dataSource = self;
     self.allGraph.colorTop =[UIColor clearColor];
@@ -583,7 +585,7 @@
     intro.backgroundColor=[self getBackgroundColor:0];
     [self.view addSubview:intro];
     
-    int m=15;
+    m=15;
     int w=screenWidth-m*2.0;
     //instructions
     introArrow=[[TextArrow alloc ] initWithFrame:CGRectMake(screenWidth, vbuttonY, screenWidth-8, 44)];
@@ -594,8 +596,9 @@
     [intro addSubview:introArrow];
 
     
-    introTitle=[[UILabel alloc] initWithFrame:CGRectMake(m, introArrow.frame.origin.y-100, w, 65)];
-    introTitle.font = [UIFont fontWithName:@"DIN Condensed" size:55];
+    introTitle=[[UILabel alloc] initWithFrame:CGRectMake(m, introArrow.frame.origin.y-screenWidth*.22, w, screenWidth*.20)];
+    introTitle.font = [UIFont fontWithName:@"DIN Condensed" size:screenWidth*.22];
+    introTitle.adjustsFontSizeToFitWidth=YES;
     introTitle.text=@"THIS IS TEMPRA";
     introTitle.textColor=[self getForegroundColor:0];
     [intro addSubview:introTitle];
@@ -613,7 +616,7 @@
     introParagraph.font = [UIFont fontWithName:@"DIN Condensed" size:20];
     introParagraph.numberOfLines=10;
     introParagraph.textAlignment=NSTextAlignmentJustified;
-    introParagraph.text=@"For each trial, your goal is to get as close as possible to the displayed target time. Tap the screen or press the volume button to start the counter, then press stop when you think the right amount of time has elapsed. \n\nBreath... relax, and focus on your internal sense of time.  Become mindful of time.";
+    introParagraph.text=@"For each trial, your goal is to get as close as possible to the displayed target time. Tap the screen or press the volume button to start the counter, then press stop when you think the right amount of time has elapsed. \n\nBreath... relax, and focus on your internal sense of time.";
     introParagraph.textColor=[self getForegroundColor:0];
     [intro addSubview:introParagraph];
     
@@ -1324,7 +1327,7 @@
                                  }
                                 else {
                                     progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, progressView.frame.size.height);
-                                    if([self getCurrentStage]){
+                                    if([stageLabels count]>0){
                                         TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
                                         float y=sLabel.frame.origin.y;
                                         progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, progressView.dotsContainer.frame.size.height);
@@ -1412,7 +1415,7 @@
  
         trialSequence=1;
 
-        //[self updateTime];
+        [self updateTime];
         [instructions update:@"STOP" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:YES];
         
         [self setTimerGoalMarginDisplay];
@@ -1459,11 +1462,11 @@
             [self updateTimeDisplay:elapsed];
             [self trialStopped];
             counterLabel.alpha=1.0;
-        mainDot.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-        for (int i=0;i<[satellites count];i++){
-            Dots *sat= [satellites objectAtIndex:i];
-            sat.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-        }
+//        mainDot.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+//        for (int i=0;i<[satellites count];i++){
+//            Dots *sat= [satellites objectAtIndex:i];
+//            sat.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
+//        }
 
     }
     //NEXT
@@ -1576,6 +1579,11 @@
                      completion:^(BOOL finished){
                          [introArrow slideIn:0.8];
                          progressView.frame=CGRectMake(0, screenHeight-44, screenWidth, progressView.frame.size.height);
+                         if([stageLabels count]>0){
+                             TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
+                             float y=sLabel.frame.origin.y;
+                             progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, progressView.dotsContainer.frame.size.height);
+                         }
                      }];
     
 }
@@ -2399,23 +2407,18 @@
 -(void)updateTime{
     
     NSTimeInterval currentTime=[NSDate timeIntervalSinceReferenceDate];
-    elapsed = currentTime-startTime;
+    //elapsed = currentTime-startTime;
     
     if(trialSequence==1){
-
-        //if(elapsed<1){
-            [self updateTimeDisplay:currentTime-startTime];
-            [self performSelector:@selector(updateTime) withObject:self afterDelay:0.0001];
-//        }else{
-//            [counterLabel setText:[NSString stringWithFormat:@"%02u:%02u.%03u",arc4random()%99, arc4random()%60, arc4random()%999]];
-//            [self performSelector:@selector(updateTime) withObject:self afterDelay:arc4random()%10*0.001];
-//        }
+            //[self updateTimeDisplay:currentTime-startTime];
+            [self performSelector:@selector(updateTime) withObject:self afterDelay:0.1];
+        if(currentTime-startTime>9.9){
+            //stop because way off
+            [self buttonPressed];
+            
+        }
     }
-//    else{
-//        [self updateTimeDisplay:elapsed];
-//        [self animateLevelDotScore];
-// 
-//    }
+
 }
 
 
@@ -2988,6 +2991,11 @@
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
                          progressView.frame=CGRectMake(0, screenHeight-44, progressView.frame.size.width, progressView.frame.size.height);
+                         if([stageLabels count]>0){
+                             TextArrow *sLabel=[stageLabels objectAtIndex:[self getCurrentStage]];
+                             float y=sLabel.frame.origin.y;
+                             progressView.dotsContainer.frame=CGRectMake(0,-y+15, screenWidth, progressView.dotsContainer.frame.size.height);
+                         }
                      }
                      completion:^(BOOL finished){
                          [self.view sendSubviewToBack:progressView];
