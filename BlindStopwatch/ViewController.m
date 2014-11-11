@@ -61,7 +61,7 @@
     else if(IS_IPHONE_5)vbuttonY=128;
     else if(IS_IPHONE_4)vbuttonY=95;
 
-    
+    aTimer = [MachTimer timer];
 
 #pragma mark - instructions
 
@@ -1404,15 +1404,14 @@
                              [instructions slideIn:0.2];
 
                          }];
-
         return;
     }
     
     if(progressView.frame.origin.y<=screenHeight*.25)return;
     //START
     if(trialSequence==0){
-        startTime=[NSDate timeIntervalSinceReferenceDate];
- 
+        //startTime=[NSDate timeIntervalSinceReferenceDate];
+        [aTimer start];
         trialSequence=1;
 
         [self updateTime];
@@ -1456,12 +1455,15 @@
     }
     //STOP
     else if(trialSequence==1){
-        NSTimeInterval currentTime=[NSDate timeIntervalSinceReferenceDate];
-        elapsed = currentTime-startTime;
-            trialSequence=2;
-            [self updateTimeDisplay:elapsed];
-            [self trialStopped];
-            counterLabel.alpha=1.0;
+        //NSTimeInterval currentTime=[NSDate timeIntervalSinceReferenceDate];
+        //elapsed = currentTime-startTime;
+        elapsed=[aTimer elapsedSeconds];
+
+        trialSequence=2;
+        [self updateTimeDisplay:elapsed];
+        [self trialStopped];
+        counterLabel.alpha=1.0;
+        
 //        mainDot.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
 //        for (int i=0;i<[satellites count];i++){
 //            Dots *sat= [satellites objectAtIndex:i];
@@ -2406,13 +2408,13 @@
 
 -(void)updateTime{
     
-    NSTimeInterval currentTime=[NSDate timeIntervalSinceReferenceDate];
+    //NSTimeInterval currentTime=[NSDate timeIntervalSinceReferenceDate];
     //elapsed = currentTime-startTime;
     
     if(trialSequence==1){
             //[self updateTimeDisplay:currentTime-startTime];
             [self performSelector:@selector(updateTime) withObject:self afterDelay:0.1];
-        if(currentTime-startTime>9.9){
+        if([aTimer elapsedSeconds]>9.9){
             //stop because way off
             [self buttonPressed];
             

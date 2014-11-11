@@ -16,6 +16,7 @@
 #import "LevelProgressView.h"
 #import <GameKit/GameKit.h>
 #import "BFPaperButton.h"
+#import "MachTimer.h"
 
 @class RBVolumeButtons;
 
@@ -30,13 +31,13 @@
     int allTimeTotalTrials;
     
     #pragma mark - timing
-    NSTimeInterval startTime;
+    //NSTimeInterval startTime;
     NSTimeInterval elapsed;
     NSTimeInterval timerGoal;
     NSString *timeValuesFile;
     NSString *allTrialDataFile;
+    MachTimer* aTimer;
 
-    
     
     #pragma mark - points
     float best;

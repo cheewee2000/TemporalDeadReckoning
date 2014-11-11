@@ -30,6 +30,7 @@
 		448E78BD19B936C100BF902A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 448E78B019B936C100BF902A /* main.m */; };
 		44C2C9FA19C9E330005ACEB7 /* Level.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C2C9F919C9E330005ACEB7 /* Level.m */; };
 		44C2E02E19BE52D3009CFF88 /* Dots.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C2E02D19BE52D3009CFF88 /* Dots.m */; };
+		44E751CA1A119E3600E5C14D /* MachTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 44E751C91A119E3600E5C14D /* MachTimer.m */; };
 		44F972CA19BE9E310094FCF4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F972C919BE9E310094FCF4 /* ViewController.m */; };
 		44FC471C1A0053D000DC7A52 /* BFPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 44FC471B1A0053D000DC7A52 /* BFPaperButton.m */; };
 		44FC47201A0054AA00DC7A52 /* UIColor+BFPaperColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 44FC471F1A0054AA00DC7A52 /* UIColor+BFPaperColors.m */; };
@@ -84,6 +85,8 @@
 		44C2C9F919C9E330005ACEB7 /* Level.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Level.m; sourceTree = "<group>"; };
 		44C2E02C19BE52D3009CFF88 /* Dots.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dots.h; sourceTree = "<group>"; };
 		44C2E02D19BE52D3009CFF88 /* Dots.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Dots.m; sourceTree = "<group>"; };
+		44E751C81A119E3600E5C14D /* MachTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MachTimer.h; sourceTree = "<group>"; };
+		44E751C91A119E3600E5C14D /* MachTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MachTimer.m; sourceTree = "<group>"; };
 		44F77D3A19ECCC3B005DB2C8 /* BlindStopwatch-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BlindStopwatch-Prefix.pch"; sourceTree = "<group>"; };
 		44F972C819BE9E310094FCF4 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		44F972C919BE9E310094FCF4 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
@@ -250,6 +253,8 @@
 				443CA72E19C0BFDB003BACD8 /* RBVolume */,
 				44FC47211A00563000DC7A52 /* BFPaperButton */,
 				440CF8041A0327FD000296ED /* BEM */,
+				44E751C81A119E3600E5C14D /* MachTimer.h */,
+				44E751C91A119E3600E5C14D /* MachTimer.m */,
 				44F972C819BE9E310094FCF4 /* ViewController.h */,
 				44F972C919BE9E310094FCF4 /* ViewController.m */,
 				440E489B19E064CE00EA7D0C /* LevelProgressView.h */,
@@ -354,6 +359,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44E751CA1A119E3600E5C14D /* MachTimer.m in Sources */,
 				440E489D19E064CE00EA7D0C /* LevelProgressView.m in Sources */,
 				44C2C9FA19C9E330005ACEB7 /* Level.m in Sources */,
 				440CF80D1A0327FD000296ED /* BEMSimpleLineGraphView.m in Sources */,
