@@ -20,7 +20,7 @@
 
 @class RBVolumeButtons;
 
-@interface ViewController : UIViewController <GKGameCenterControllerDelegate, UIAlertViewDelegate, BEMSimpleLineGraphDataSource, BEMSimpleLineGraphDelegate>
+@interface ViewController : UIViewController <GKGameCenterControllerDelegate, UIAlertViewDelegate , BEMSimpleLineGraphDataSource, BEMSimpleLineGraphDelegate>
 
 {
     int screenWidth,screenHeight;
@@ -146,7 +146,7 @@
     BOOL showIntro;
     
     
-    
+    BOOL viewLoaded;
     
 }
 

@@ -49,7 +49,6 @@
 {
    [super viewDidLoad];
     
-
     trialSequence=-1;
 
     int vbuttonY=137;//5s
@@ -1579,7 +1578,8 @@
 //    }
     
     UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:sharingItems applicationActivities:nil];
-    [self presentViewController:activityController animated:YES completion:nil];
+    [self presentViewController:activityController animated:YES completion:^{
+    }];
 }
 
 -(void)showIntroView{
@@ -1975,6 +1975,9 @@
     else if(level<TRIALSINSTAGE*3)l=1.5+level%TRIALSINSTAGE*0.2;
     else if(level<TRIALSINSTAGE*4)l=2.5+level%TRIALSINSTAGE*0.5;
     else l=level*1.0-TRIALSINSTAGE*3+1.0;
+    
+    if(l>99999.0)l=99999.0;
+    
 //    else if(level<TRIALSINSTAGE*5)l=5.0+level%TRIALSINSTAGE*1.0;
 //    else l=5.0+level%TRIALSINSTAGE*1.0;
     
@@ -2990,6 +2993,7 @@
 
 - (void)viewDidUnload
 {
+    viewLoaded=false;
    self.buttonStealer = nil;
    [super viewDidUnload];
    // Release any retained subviews of the main view.
@@ -2998,25 +3002,29 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    //set view offscreen for bounce in
-    progressView.frame=CGRectMake(0, screenHeight, progressView.frame.size.width, progressView.frame.size.height);
-    trophyButton.alpha=0;
-    medalButton.alpha=0;
-    highScoreLabel.alpha=0;
-    bestLabel.alpha=0;
 
-    restartButton.alpha=0;
+    
+    [self loadTrialData];
+    [self loadLevelProgress];
     
     [super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [self loadTrialData];
-    [self loadLevelProgress];
-    [self.view bringSubviewToFront:progressView];
-    [self performSelector:@selector(setupDots) withObject:self afterDelay:.5];
 
+    if(viewLoaded==false){
+        //set view offscreen for bounce in
+        progressView.frame=CGRectMake(0, screenHeight, progressView.frame.size.width, progressView.frame.size.height);
+        trophyButton.alpha=0;
+        medalButton.alpha=0;
+        highScoreLabel.alpha=0;
+        bestLabel.alpha=0;
+        restartButton.alpha=0;
+        
+        [self.view bringSubviewToFront:progressView];
+        [self performSelector:@selector(setupDots) withObject:self afterDelay:.5];
+    }
     
 //    [UIView animateWithDuration:0.8
 //                          delay:0.4
@@ -3041,12 +3049,15 @@
     if(showIntro){
         [self performSelector:@selector(showIntroView) withObject:self afterDelay:1.5];
     }
-    
+    viewLoaded=true;
+
     
 //    if(trialSequence==0)[instructions updateText:@"START" animate:YES];
     
    [super viewDidAppear:animated];
 }
+
+
 
 - (void)viewWillDisappear:(BOOL)animated
 {
