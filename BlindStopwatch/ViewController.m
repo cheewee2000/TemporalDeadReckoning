@@ -861,14 +861,14 @@
           initialSpringVelocity:1.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
-                         progressView.frame=CGRectMake(0, -screenHeight*.5, screenWidth, progressView.frame.size.height);
+                         if(currentLevel==0)progressView.frame=CGRectMake(0, -screenHeight, screenWidth, progressView.frame.size.height);
+                         else progressView.frame=CGRectMake(0, -screenHeight*.5, screenWidth, progressView.frame.size.height);
                          progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, progressView.dotsContainer.frame.size.height);
                      }
                     completion:^(BOOL finished){
                                  
                         [self.myGraph reloadGraph];
                         [self.allGraph reloadGraph];
-
 
                         [UIView animateWithDuration:.8
                                               delay:2.5
