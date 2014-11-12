@@ -49,6 +49,7 @@
     CGPoint offset;
     BOOL practicing;
     int nHeartsReplenished;
+    int currentStreak;
     
     
     #pragma mark - progressview

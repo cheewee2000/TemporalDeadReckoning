@@ -178,6 +178,9 @@
     if([defaults objectForKey:@"allTimeTotalTrials"] == nil) allTimeTotalTrials=0;
     else allTimeTotalTrials = (int)[defaults integerForKey:@"allTimeTotalTrials"];
 
+    if([defaults objectForKey:@"currentStreak"] == nil) currentStreak=0;
+    else currentStreak = (int)[defaults integerForKey:@"currentStreak"];
+
     //currentLevel=22;
     
     //[self loadData:currentLevel];
@@ -2004,6 +2007,7 @@
                          }
                      }
                      completion:^(BOOL finished){
+                         
                          nHeartsReplenished=0;
 
                          [self xoViewOffScreen];
@@ -2016,7 +2020,6 @@
                                  nHeartsReplenished=NUMHEARTS-life;
                                  life=NUMHEARTS;
                              }
-                             experiencePoints+=elapsed*timerGoal;
 
                             //add heart for triplestar level
                              float trialAccuracy=fabs(elapsed-timerGoal);
@@ -2027,16 +2030,30 @@
                              
                              //save current level now
                              currentLevel++;
-                             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                             [defaults setInteger:currentLevel forKey:@"currentLevel"];
-                             [defaults synchronize];
+                             
+                             //streak
+                             currentStreak++;
+                             
+                             if(currentStreak==1)experiencePoints+=elapsed*timerGoal;
+                             else if(currentStreak>1) experiencePoints+=elapsed*timerGoal*currentStreak;
+
+                             
+                             
                              
                             //add heart for clearing stage
                             if(currentLevel%TRIALSINSTAGE==0) life++;
                          }
                          else{
+                             currentStreak=0;
+
                              life--;
                          }
+
+                         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                         [defaults setInteger:currentLevel forKey:@"currentLevel"];
+                         [defaults setInteger:currentStreak forKey:@"currentStreak"];
+                         [defaults synchronize];
+
                          
                          if(life==0) lastStage=[self getCurrentStage];
                          if(practicing==false) [self reportScore];
@@ -2165,7 +2182,11 @@
     
     NSString * stageProgressString;
     //if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED %0.1f POINTS",[self getLevel:currentLevel-1], elapsed*timerGoal];
-    if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"+$%0.2f", elapsed*timerGoal];
+    if([self isAccurate]){
+        if(currentStreak==1) stageProgressString=[NSString stringWithFormat:@"+$%0.2f", elapsed*timerGoal];
+        else if(currentStreak>1) stageProgressString=[NSString stringWithFormat:@"%i LEVEL STREAK! +$%0.2f", currentStreak, elapsed*timerGoal*currentStreak];
+
+    }
     else if(life>1) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life];
     else if(life>0) stageProgressString=@"LAST TRY!";
     //else stageProgressString=@"GAME OVER";
