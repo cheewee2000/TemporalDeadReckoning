@@ -362,7 +362,7 @@
     self.allGraph.tag=1;
     [progressView addSubview:self.allGraph];
     
-    
+
 #pragma mark - Stats
 
     
@@ -511,6 +511,13 @@
     [allStats addSubview:allPrecisionLabel];
     
     [progressView addSubview:allStats];
+    
+    questionMark=[[UILabel alloc] initWithFrame:CGRectMake(0, allStats.frame.origin.y+allStats.frame.size.height, screenWidth, screenHeight*.4)];
+    questionMark.text=@"?";
+    questionMark.font = [UIFont fontWithName:@"DIN Condensed" size:screenHeight*.35];
+    questionMark.textAlignment=NSTextAlignmentCenter;
+    
+    [progressView addSubview:questionMark];
     
     
 #pragma mark - life
@@ -1942,7 +1949,7 @@
                           allAverageLabel.textColor=[self getBackgroundColor:currentLevel];
                           allGraphLabel.textColor=[self getBackgroundColor:currentLevel];
                           
-                          
+                          questionMark.textColor=[self getBackgroundColor:currentLevel];
                           
                           
                         }

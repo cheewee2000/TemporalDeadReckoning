@@ -78,7 +78,7 @@
     NSMutableArray *hearts;
 
     IBOutlet UILabel *differencelLabel;
-    
+    UILabel *questionMark;
     
     
     #pragma mark - Labels
