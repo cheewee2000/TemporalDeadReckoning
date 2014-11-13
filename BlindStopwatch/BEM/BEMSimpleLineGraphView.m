@@ -1081,13 +1081,14 @@
     
     CGFloat positionOnYAxis; // The position on the Y-axis of the point currently being created.
     CGFloat padding = self.frame.size.height/2;
-    if (padding > 90.0) {
-        padding = 90.0;
-    }
+    //padding=0;
+//    if (padding > 90.0) {
+//        padding = 90.0;
+//    }
     
     if (minValue == maxValue) positionOnYAxis = self.frame.size.height/2;
     else if (self.autoScaleYAxis == YES) positionOnYAxis = ((self.frame.size.height - padding) - ((dotValue - minValue) / ((maxValue - minValue) / (self.frame.size.height - padding))) + padding/2);
-    else positionOnYAxis = ((self.frame.size.height - padding) - dotValue*self.yAxisScale);
+    else positionOnYAxis = ((self.frame.size.height - padding) - dotValue*(float)self.yAxisScale);
     
     if ([self.dataSource respondsToSelector:@selector(lineGraph:labelOnXAxisForIndex:)] || [self.dataSource respondsToSelector:@selector(labelOnXAxisForIndex:)]) {
         if ([xAxisLabels count] > 0) {

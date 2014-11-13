@@ -30,14 +30,14 @@
         self.centerMessage.backgroundColor = [UIColor clearColor];
         self.centerMessage.font = [UIFont fontWithName:@"DIN Condensed" size:140];
         self.centerMessage.textColor=[UIColor whiteColor];
-        
-        
-        self.centerMessage.layer.shadowOpacity = _shadowO;
-        self.centerMessage.layer.shadowRadius = _shadowR;
-        self.centerMessage.layer.shadowColor = [UIColor blackColor].CGColor;
-        self.centerMessage.layer.shadowOffset = CGSizeMake(0.0, 1.0);
-        
         [self addSubview:self.centerMessage];
+        [self bringSubviewToFront:self.centerMessage];
+  
+//        self.centerMessage.layer.shadowOpacity = _shadowO;
+//        self.centerMessage.layer.shadowRadius = _shadowR;
+//        self.centerMessage.layer.shadowColor = [UIColor blackColor].CGColor;
+//        self.centerMessage.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+        
 
         
         self.subMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, self.frame.size.width, 80)];
@@ -51,11 +51,10 @@
         [self addSubview:self.subMessage];
         [self bringSubviewToFront:self.subMessage];
         
-        
-        self.subMessage.layer.shadowOpacity = _shadowO;
-        self.subMessage.layer.shadowRadius = _shadowR;
-        self.subMessage.layer.shadowColor = [UIColor blackColor].CGColor;
-        self.subMessage.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+//        self.subMessage.layer.shadowOpacity = _shadowO;
+//        self.subMessage.layer.shadowRadius = _shadowR;
+//        self.subMessage.layer.shadowColor = [UIColor blackColor].CGColor;
+//        self.subMessage.layer.shadowOffset = CGSizeMake(0.0, 1.0);
         
         
         
@@ -71,10 +70,10 @@
         [self bringSubviewToFront:self.lowerMessage];
  
         
-        self.lowerMessage.layer.shadowOpacity = _shadowO;
-        self.lowerMessage.layer.shadowRadius = _shadowR;
-        self.lowerMessage.layer.shadowColor = [UIColor blackColor].CGColor;
-        self.lowerMessage.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+//        self.lowerMessage.layer.shadowOpacity = _shadowO;
+//        self.lowerMessage.layer.shadowRadius = _shadowR;
+//        self.lowerMessage.layer.shadowColor = [UIColor blackColor].CGColor;
+//        self.lowerMessage.layer.shadowOffset = CGSizeMake(0.0, 1.0);
         
         
     }
@@ -94,7 +93,7 @@
 
     self.centerMessage.text=s;
     self.centerMessage.alpha=0;
-    [UIView animateWithDuration:0.2
+    [UIView animateWithDuration:0.4
                           delay:0.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
@@ -102,8 +101,8 @@
                      }
                      completion:^(BOOL finished){
                          
-                         [UIView animateWithDuration:0.8
-                                               delay:0.0
+                         [UIView animateWithDuration:0.2
+                                               delay:0.4
                                              options:UIViewAnimationOptionCurveEaseInOut
                                           animations:^{
                                               self.centerMessage.alpha=0;

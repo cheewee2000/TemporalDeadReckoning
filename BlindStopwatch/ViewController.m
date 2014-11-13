@@ -21,8 +21,8 @@
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 5
-#define NUMHEARTS 5
+#define TRIALSINSTAGE 1
+#define NUMHEARTS 1
 #define SHOWNEXTRASTAGES 3
 
 
@@ -207,6 +207,12 @@
     [self.view addSubview:progressView];
     progressView.backgroundColor=[self getForegroundColor:currentLevel];
     
+    UIBlurEffect *blurEffect= [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+    gameOverBlur = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    gameOverBlur.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height*2.5);
+    gameOverBlur.alpha=0;
+    [progressView addSubview:gameOverBlur];
+    
     
     buttonYPos=screenHeight-66;
     
@@ -219,11 +225,10 @@
     trophyButton.center=CGPointMake(screenWidth/2.0, buttonYPos);
     [trophyButton addTarget:self action:@selector(showGlobalLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:trophyButton];
-    trophyButton.layer.shadowOpacity = progressView.shadowO;
-    trophyButton.layer.shadowRadius = progressView.shadowR;
-    trophyButton.layer.shadowColor = [UIColor blackColor].CGColor;
-    trophyButton.layer.shadowOffset = CGSizeMake(0.0, 1.0);
-    
+//    trophyButton.layer.shadowOpacity = progressView.shadowO;
+//    trophyButton.layer.shadowRadius = progressView.shadowR;
+//    trophyButton.layer.shadowColor = [UIColor blackColor].CGColor;
+//    trophyButton.layer.shadowOffset = CGSizeMake(0.0, 1.0);
     
     medalButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage * medal=[UIImage imageNamed:@"medal"];
@@ -234,10 +239,10 @@
     medalButton.center=CGPointMake(screenWidth*1.0/5.0, buttonYPos);
     [medalButton addTarget:self action:@selector(showSBLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:medalButton];
-    medalButton.layer.shadowOpacity = progressView.shadowO;
-    medalButton.layer.shadowRadius = progressView.shadowR;
-    medalButton.layer.shadowColor = [UIColor blackColor].CGColor;
-    medalButton.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+//    medalButton.layer.shadowOpacity = progressView.shadowO;
+//    medalButton.layer.shadowRadius = progressView.shadowR;
+//    medalButton.layer.shadowColor = [UIColor blackColor].CGColor;
+//    medalButton.layer.shadowOffset = CGSizeMake(0.0, 1.0);
     
 
     bestLabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0,screenWidth,26)];
@@ -245,10 +250,10 @@
     bestLabel.textAlignment=NSTextAlignmentCenter;
     bestLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
     [progressView addSubview:bestLabel];
-    bestLabel.layer.shadowOpacity = progressView.shadowO;
-    bestLabel.layer.shadowRadius = progressView.shadowR;
-    bestLabel.layer.shadowColor = [UIColor blackColor].CGColor;
-    bestLabel.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+//    bestLabel.layer.shadowOpacity = progressView.shadowO;
+//    bestLabel.layer.shadowRadius = progressView.shadowR;
+//    bestLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+//    bestLabel.layer.shadowOffset = CGSizeMake(0.0, 1.0);
 
     
     highScoreLabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0,screenWidth,26)];
@@ -257,10 +262,10 @@
     highScoreLabel.font=[UIFont fontWithName:@"DIN Condensed" size:22.0];
     [progressView addSubview:highScoreLabel];
     [self updateHighscore];
-    highScoreLabel.layer.shadowOpacity = progressView.shadowO;
-    highScoreLabel.layer.shadowRadius = progressView.shadowR;
-    highScoreLabel.layer.shadowColor = [UIColor blackColor].CGColor;
-    highScoreLabel.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+//    highScoreLabel.layer.shadowOpacity = progressView.shadowO;
+//    highScoreLabel.layer.shadowRadius = progressView.shadowR;
+//    highScoreLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+//    highScoreLabel.layer.shadowOffset = CGSizeMake(0.0, 1.0);
     
 
     restartButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -272,10 +277,10 @@
     restartButton.center=CGPointMake(screenWidth*4/5.0, buttonYPos);
     [restartButton addTarget:self action:@selector(restart) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:restartButton];
-    restartButton.layer.shadowOpacity = progressView.shadowO;
-    restartButton.layer.shadowRadius = progressView.shadowR;
-    restartButton.layer.shadowColor = [UIColor blackColor].CGColor;
-    restartButton.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+//    restartButton.layer.shadowOpacity = progressView.shadowO;
+//    restartButton.layer.shadowRadius = progressView.shadowR;
+//    restartButton.layer.shadowColor = [UIColor blackColor].CGColor;
+//    restartButton.layer.shadowOffset = CGSizeMake(0.0, 1.0);
     
     
    restartExpandButton = [[BFPaperButton alloc] initWithFrame:CGRectMake(0, 0, 44,44) raised:NO];
@@ -299,10 +304,10 @@
     [progressView addSubview:playButton];
     [progressView bringSubviewToFront:playButton];
     playButton.alpha=0;
-    playButton.layer.shadowOpacity = progressView.shadowO;
-    playButton.layer.shadowRadius = progressView.shadowR;
-    playButton.layer.shadowColor = [UIColor blackColor].CGColor;
-    playButton.layer.shadowOffset = CGSizeMake(0.0, 1.0);
+//    playButton.layer.shadowOpacity = progressView.shadowO;
+//    playButton.layer.shadowRadius = progressView.shadowR;
+//    playButton.layer.shadowColor = [UIColor blackColor].CGColor;
+//    playButton.layer.shadowOffset = CGSizeMake(0.0, 1.0);
     
 
 #pragma mark - Dots
@@ -330,9 +335,7 @@
     self.myGraph.colorTop =[UIColor clearColor];
     self.myGraph.colorBottom =[UIColor clearColor];
     self.myGraph.colorLine = [UIColor blackColor];
-    self.myGraph.colorXaxisLabel = [UIColor blackColor];
-    self.myGraph.colorYaxisLabel = [UIColor blackColor];
-    self.myGraph.colorPoint=[UIColor blackColor];
+    self.myGraph.colorPoint=[UIColor clearColor];
     self.myGraph.widthLine = 2.0;
     self.myGraph.animationGraphStyle = BEMLineAnimationDraw;
     self.myGraph.enableTouchReport = YES;
@@ -350,9 +353,7 @@
     self.allGraph.colorTop =[UIColor clearColor];
     self.allGraph.colorBottom =[UIColor clearColor];
     self.allGraph.colorLine = [UIColor blackColor];
-    self.allGraph.colorXaxisLabel = [UIColor blackColor];
-    self.allGraph.colorYaxisLabel = [UIColor blackColor];
-    self.allGraph.colorPoint=[UIColor blackColor];
+    self.allGraph.colorPoint=[UIColor clearColor];
     self.allGraph.widthLine = 2.0;
     self.allGraph.animationGraphStyle = BEMLineAnimationDraw;
     self.allGraph.enableTouchReport = YES;
@@ -577,7 +578,7 @@
     [xView setImage:[[UIImage imageNamed: @"x"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
     [self.view addSubview:xView];
     [self.view bringSubviewToFront:xView];
-    
+    xView.userInteractionEnabled=NO;
     xView.alpha=0;
 
     oView=[[UIImageView alloc] init];
@@ -585,6 +586,7 @@
     [self.view addSubview:oView];
     [self.view bringSubviewToFront:oView];
     oView.alpha=0;
+    oView.userInteractionEnabled=NO;
     [self xoViewOffScreen];
 
     
@@ -594,7 +596,7 @@
     //game center
     [self authenticateLocalPlayer];
     
-    if(life==0)[self restart];
+    if(life<=0)[self restart];
     
 #pragma mark - intro
     intro=[[UIView alloc] initWithFrame:self.view.frame];
@@ -677,6 +679,8 @@
                          progressView.subMessage.alpha=0;
                          progressView.lowerMessage.alpha=0;
                          playButton.alpha=0.0;
+                         gameOverBlur.alpha=0;
+
                          
                      }
                      completion:^(BOOL finished){
@@ -773,6 +777,8 @@
                          progressView.subMessage.alpha=0;
                          progressView.lowerMessage.alpha=0;
                          playButton.alpha=0.0;
+                         gameOverBlur.alpha=0;
+
                      }
                      completion:^(BOOL finished){
                      }];
@@ -1303,7 +1309,7 @@
         [self showIntroView];
         return;
     }
-    if([progressView.subMessage.text isEqual:@"GAME OVER"] || life==0)return;
+    if([progressView.subMessage.text isEqual:@"GAME OVER"] || life<=0)return;
     UITouch *aTouch = [touches anyObject];
     CGPoint location = [aTouch locationInView:self.view];
     CGPoint previousLocation = [aTouch previousLocationInView:self.view];
@@ -1327,7 +1333,7 @@
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if([progressView.subMessage.text isEqual:@"GAME OVER"] || life==0)return;
+    if([progressView.subMessage.text isEqual:@"GAME OVER"] || life<=0)return;
     //if([[event allTouches]count]>1)return;
     //if ([touches count] == [[event touchesForView:self.view] count])
 
@@ -1562,8 +1568,8 @@
     
     //update graph
     //self.myGraph.animationGraphEntranceTime = 0.8;
-    [self.myGraph reloadGraph];
-    [self.allGraph reloadGraph];
+    //[self.myGraph reloadGraph];
+    //[self.allGraph reloadGraph];
 
     [self saveValues];
     
@@ -1908,16 +1914,16 @@
                           mainDot.dotColor=[self getForegroundColor:currentLevel];
                           [mainDot setNeedsDisplay];
 
-                          CGFloat hue, saturation, brightness, alpha ;
-                          [[self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
-                          UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation+.05 brightness:brightness+.05 alpha:alpha ];
+//                          CGFloat hue, saturation, brightness, alpha ;
+//                          [[self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha ] ;
+//                          UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation+.05 brightness:brightness+.05 alpha:alpha ];
                           
-                          restartButton.tintColor=sColor;
-                          restartExpandButton.tapCircleColor=sColor;
-                          trophyButton.tintColor=sColor;
-                          medalButton.tintColor=sColor;
-                          highScoreLabel.textColor=sColor;
-                          bestLabel.textColor=sColor;
+                          restartButton.tintColor=[self getBackgroundColor:currentLevel];
+                          restartExpandButton.tapCircleColor=[self getBackgroundColor:currentLevel];
+                          trophyButton.tintColor=[self getBackgroundColor:currentLevel];
+                          medalButton.tintColor=[self getBackgroundColor:currentLevel];
+                          highScoreLabel.textColor=[self getBackgroundColor:currentLevel];
+                          bestLabel.textColor=[self getBackgroundColor:currentLevel];
 
                           
                           if(practicing) self.view.backgroundColor=[UIColor colorWithWhite:.7 alpha:1.0];
@@ -2100,7 +2106,7 @@
                          [defaults synchronize];
 
                          
-                         if(life==0) lastStage=[self getCurrentStage];
+                         if(life<=0) lastStage=[self getCurrentStage];
                          if(practicing==false) [self reportScore];
 
                          [self performSelector:@selector(updateLife) withObject:self afterDelay:.01];
@@ -2188,12 +2194,12 @@
     arrowN++;
     
     
-    if(([self isAccurate] && currentLevel%TRIALSINSTAGE==0) || life==0 || nHeartsReplenished>0) {
+    if(([self isAccurate] && currentLevel%TRIALSINSTAGE==0) || life<=0 || nHeartsReplenished>0) {
         NSString * stageClearedString;
         NSMutableAttributedString *attributedString;
         t= [levelArrows objectAtIndex:arrowN];
 
-        if(life==0) stageClearedString=@"GAME OVER";
+        if(life<=0) stageClearedString=@"GAME OVER";
         
         else if([self isAccurate] && currentLevel%TRIALSINSTAGE==0){
             stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED! ❤\U0000FE0E⁺¹",[self getCurrentStage]];
@@ -2325,8 +2331,7 @@
 
     if(lastStage==0) {
         
-        [self showGameOver];
-
+        progressView.subMessage.alpha=0;
         [UIView animateWithDuration:0.8
                               delay:0.5
              usingSpringWithDamping:.8
@@ -2335,8 +2340,11 @@
                          animations:^{
                              progressView.frame=CGRectMake(0, 0, screenWidth, progressView.frame.size.height);
                              progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, progressView.dotsContainer.frame.size.height);
+
                          }
                          completion:^(BOOL finished){
+                             [self showGameOver];
+
                          }];
         
         return;
@@ -2344,23 +2352,24 @@
     //progressView.subMessage.text=[NSString stringWithFormat:@"SPEND $%.02f \nTO CONTINUE FROM STAGE %i?",lastStage*10.0,lastStage+1];
     progressView.subMessage.text=[NSString stringWithFormat:@"SPEND %i POINTS\nTO CONTINUE FROM STAGE %i?",lastStage ,lastStage+1];
 
-    progressView.subMessage.alpha=1.0;
+    progressView.subMessage.alpha=0.0;
+    [progressView bringSubviewToFront:progressView.subMessage];
     progressView.subMessage.textColor=trophyButton.tintColor;
-
     progressView.centerMessage.textColor=trophyButton.tintColor;
+    [progressView bringSubviewToFront:progressView.centerMessage];
 
-    playButton.alpha=1.0;
+    playButton.alpha=0.0;
     playButton.tintColor=trophyButton.tintColor;
     playButton.center=CGPointMake(screenWidth/2.0, progressView.subMessage.frame.origin.y+progressView.subMessage.frame.size.height+10);
 
     
     progressView.lowerMessage.frame=CGRectMake(0, playButton.frame.origin.y+playButton.frame.size.height+30, progressView.lowerMessage.frame.size.width, progressView.lowerMessage.frame.size.height);
     progressView.lowerMessage.text=@"RESTART";
+    progressView.lowerMessage.textColor=trophyButton.tintColor;
+    progressView.lowerMessage.textColor=trophyButton.tintColor;
+    progressView.lowerMessage.alpha=0.0;
+    [progressView bringSubviewToFront:progressView.lowerMessage];
 
-    progressView.lowerMessage.alpha=1.0;
-    progressView.lowerMessage.textColor=trophyButton.tintColor;
-    progressView.lowerMessage.textColor=trophyButton.tintColor;
-    
 //    [progressView addShadow:progressView.subMessage];
 //    [progressView addShadow:progressView.lowerMessage];
 
@@ -2374,22 +2383,40 @@
                          progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, progressView.dotsContainer.frame.size.height);
                      }
                      completion:^(BOOL finished){
-                         [self countdown];
+                         //fade in blur
+                         [UIView animateWithDuration:0.8
+                                               delay:0.4
+                                             options:UIViewAnimationOptionCurveLinear
+                                          animations:^{
+                                              gameOverBlur.alpha=1;
+                                          }
+                                          completion:^(BOOL finished){
+                                              
+                                              //move restart button
+                                              [UIView animateWithDuration:0.4
+                                                                    delay:0.4
+                                                   usingSpringWithDamping:.8
+                                                    initialSpringVelocity:1.0
+                                                                  options:UIViewAnimationOptionCurveLinear
+                                                               animations:^{
+                                                                   progressView.subMessage.alpha=1.0;
+                                                                   progressView.lowerMessage.alpha=1.0;
+                                                                   playButton.alpha=1.0;
+
+
+                                                                   restartButton.center=CGPointMake(screenWidth*.5, progressView.lowerMessage.frame.origin.y+progressView.lowerMessage.frame.size.height+20);
+                                                                   
+                                                               }
+                                                               completion:^(BOOL finished){
+                                                                   [self countdown];
+
+                                                               }];
+                                          }];
+
                      }];
 
     
-    //move restart button
-    [UIView animateWithDuration:0.4
-                          delay:0.8
-         usingSpringWithDamping:.8
-          initialSpringVelocity:1.0
-                        options:UIViewAnimationOptionCurveLinear
-                     animations:^{
-                         restartButton.center=CGPointMake(screenWidth*.5, progressView.lowerMessage.frame.origin.y+progressView.lowerMessage.frame.size.height+20);
-                         
-                     }
-                     completion:^(BOOL finished){
-                     }];
+
     
 }
 
@@ -2398,7 +2425,7 @@
     [self.view bringSubviewToFront:progressView];
     [progressView bringSubviewToFront:progressView.subMessage];
     
-    if(life==0){//check if countdown got interrupted by restart
+    if(life<=0){//check if countdown got interrupted by restart
         [progressView displayMessage:[NSString stringWithFormat:@"%i",resetCountdown]];
         resetCountdown--;
         if(resetCountdown>=0)[self performSelector:@selector(countdown) withObject:self afterDelay:1.0];
@@ -2409,7 +2436,6 @@
                              animations:^{
                                  progressView.subMessage.alpha=0;
                                  progressView.lowerMessage.alpha=0;
-
                                  playButton.alpha=0.0;
                              }
                              completion:^(BOOL finished){
@@ -2428,30 +2454,37 @@
     //[progressView addShadow:progressView.subMessage];
     
     
-    
     progressView.subMessage.textColor=trophyButton.tintColor;
 
-    [UIView animateWithDuration:0.4
-                          delay:0.8
-                        options:UIViewAnimationOptionCurveLinear
-                     animations:^{
-                         progressView.subMessage.alpha=1.0;
-                         
-                     }
-                     completion:^(BOOL finished){
-                     }];
+
+     [UIView animateWithDuration:0.8
+                           delay:0.4
+                         options:UIViewAnimationOptionCurveLinear
+                      animations:^{
+                          gameOverBlur.alpha=1;
+                      }
+                      completion:^(BOOL finished){
+                          [UIView animateWithDuration:0.4
+                                                delay:0.4
+                               usingSpringWithDamping:.8
+                                initialSpringVelocity:1.0
+                                              options:UIViewAnimationOptionCurveLinear
+                                           animations:^{
+                                               progressView.subMessage.alpha=1.0;
+
+                                               restartButton.center=CGPointMake(screenWidth*.5, progressView.subMessage.frame.origin.y+progressView.subMessage.frame.size.height);
+                                               
+                                           }
+                                           completion:^(BOOL finished){
+                                           }];
+                      }];
+     
+
+     
     
-    [UIView animateWithDuration:0.4
-                          delay:0.8
-         usingSpringWithDamping:.8
-          initialSpringVelocity:1.0
-                        options:UIViewAnimationOptionCurveLinear
-                     animations:^{
-                         restartButton.center=CGPointMake(screenWidth*.5, progressView.subMessage.frame.origin.y+progressView.subMessage.frame.size.height);
-                         
-                     }
-                     completion:^(BOOL finished){
-                     }];
+
+    
+
     
 }
 
@@ -2462,7 +2495,7 @@
     [levelAlert slideDown:(float)(NUMLEVELARROWS)*.05];
     [instructions slideOut:0];
     
-    if(life==0){
+    if(life<=0){
         resetCountdown=20;
         currentLevel=0;
         [self performSelector:@selector(showGameOverSequence) withObject:self afterDelay:1];
@@ -2484,7 +2517,7 @@
 
 
 -(void)loadLevel{
-    if(currentLevel==0 && life==0){
+    if(currentLevel==0 && life<=0){
         life=NUMHEARTS;
         [self updateLife];
     }

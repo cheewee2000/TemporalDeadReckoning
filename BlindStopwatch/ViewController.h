@@ -55,7 +55,8 @@
     
     #pragma mark - progressview
     LevelProgressView *progressView;
-    
+    UIVisualEffectView *gameOverBlur;
+
     UILabel *bestLabel;
     UILabel *highScoreLabel;
     NSMutableArray *dots;
@@ -72,9 +73,9 @@
     NSMutableArray * stageLabels;
     int resetCountdown;
 
-        UIView *labelContainer;
-     UILabel *counterLabel;
-     UILabel *counterGoalLabel;
+    UIView *labelContainer;
+    UILabel *counterLabel;
+    UILabel *counterGoalLabel;
     UILabel *goalPrecision;
     NSMutableArray *hearts;
 
