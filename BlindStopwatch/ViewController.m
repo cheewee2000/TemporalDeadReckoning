@@ -2134,10 +2134,9 @@
     TextArrow *t;//= [levelArrows objectAtIndex:arrowN];
     
     //ARROW1
-
+    float trialAccuracy=fabs(elapsed-timerGoal);
     if(life>0){
         NSString * bonusString=@"";
-        float trialAccuracy=fabs(elapsed-timerGoal);
         if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/10.0)      bonusString=@"PERFECT! ❤\U0000FE0E⁺⁴";
         else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/10.0) bonusString=@"BOOOOOM! ❤\U0000FE0E⁺³";
         else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/10.0) bonusString=@"WOOT! ❤\U0000FE0E⁺²";
@@ -2154,12 +2153,12 @@
         else if(diff<-.4) bonusString=@"SLOW DOWN";
         else if(diff<-.3) bonusString=@"BREATHE. SLOW DOWN.";
         else if(diff<-.2) bonusString=@"SLOW DOWN A BIT";
-        else if(diff<0)   bonusString=@"TOO FAST";
+        else if(diff<0)   bonusString=@"A BIT TOO EARLY";
         
         else if(diff>1)  bonusString=@"WAY TOO SLOW!";
         else if(diff>.5) bonusString=@"SPEED UP!";
         else if(diff>.4) bonusString=@"GO FASTER!";
-        else if(diff>.3) bonusString=@"TOO SLOW!";
+        else if(diff>.3) bonusString=@"TOO LATE! FASTER!";
         else if(diff>.2) bonusString=@"A BIT TOO SLOW";
         else if(diff>0)  bonusString=@"GO A BIT FASTER";
         t= [levelArrows objectAtIndex:arrowN];
@@ -2169,6 +2168,23 @@
         [t slideUpTo:margin delay:d];
         [self.view bringSubviewToFront:t];
     }
+    arrowN++;
+    
+    NSString *diffString;
+//    if(trialAccuracy>[self getLevelAccuracy:currentLevel]){
+//        if(diff<0)diffString=[NSString stringWithFormat:@"%@ SECONDS EARLY",[self getTimeDiffString:diff]];
+//        else if(diff>0)diffString=[NSString stringWithFormat:@"%@ SECONDS LATE",[self getTimeDiffString:diff]];
+//    }
+//    else {
+        if(diff<0)diffString=[NSString stringWithFormat:@"-%@ SECONDS",[self getTimeDiffString:diff]];
+        else diffString=[NSString stringWithFormat:@"+%@ SECONDS",[self getTimeDiffString:diff]];
+    //}
+    t= [levelArrows objectAtIndex:arrowN];
+    [t update:@"" rightLabel:diffString color:instructions.color animate:NO];
+    margin-=spacing+t.frame.size.height;
+    d+=inc;
+    [t slideUpTo:margin delay:d];
+    [self.view bringSubviewToFront:t];
     arrowN++;
     
     
@@ -2188,7 +2204,7 @@
                 stageClearedString=[NSString stringWithFormat:@"LIFE REPLENISHED ❤\U0000FE0E+%i", nHeartsReplenished];
                 attributedString = [[NSMutableAttributedString alloc] initWithString:stageClearedString
                                                                          attributes:@{NSFontAttributeName: [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize]}];
-                [attributedString setAttributes:@{NSFontAttributeName : [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize*.75]
+                [attributedString setAttributes:@{NSFontAttributeName : [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize*.6]
                                                   , NSBaselineOffsetAttributeName : @10} range:NSMakeRange(stageClearedString.length-2, 2)];
                 
             }
@@ -2217,15 +2233,7 @@
     
     
     
-    NSString *diffString;
-    diffString=[NSString stringWithFormat:@"%@ SECONDS",[self getTimeDiffString:diff]];
-    t= [levelArrows objectAtIndex:arrowN];
-    [t update:@"" rightLabel:diffString color:instructions.color animate:NO];
-    margin-=spacing+t.frame.size.height;
-    d+=inc;
-    [t slideUpTo:margin delay:d];
-    [self.view bringSubviewToFront:t];
-    arrowN++;
+
     
     //ARROW2
     //float accuracyP=100.0-fabs(diff/(float)timerGoal)*100.0;
@@ -2264,7 +2272,7 @@
 
             NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:stageProgressString
                                                                                                  attributes:@{NSFontAttributeName: [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize]}];
-            [attributedString setAttributes:@{NSFontAttributeName : [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize*.75]
+            [attributedString setAttributes:@{NSFontAttributeName : [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize*.6]
                                               , NSBaselineOffsetAttributeName : @10} range:NSMakeRange(stageProgressString.length-2, 2)];
             
             [t update:@"" rightLabel:@"" color:instructions.color animate:NO];
@@ -2534,13 +2542,14 @@
     
     NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: fabs(time)];
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
-    if(time<60){
-        if(time>=0) [df setDateFormat:@"+s.SSS"];
-        else [df setDateFormat:@"-s.SSS"];
-    }else{
-        if(time>=0) [df setDateFormat:@"+s.SSS"];
-        else [df setDateFormat:@"-s.SSS"];
-    }
+    //if(time<60){
+    //if(time>=0) [df setDateFormat:@"+s.SSS"];
+    //else [df setDateFormat:@"-s.SSS"];
+    [df setDateFormat:@"s.SSS"];
+//    }else{
+//        if(time>=0) [df setDateFormat:@"+s.SSS"];
+//        else [df setDateFormat:@"-s.SSS"];
+//    }
     NSString* counterString = [df stringFromDate:aDate];
     return counterString;
     
