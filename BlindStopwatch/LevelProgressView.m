@@ -95,15 +95,15 @@
     self.centerMessage.alpha=0;
     [UIView animateWithDuration:0.4
                           delay:0.0
-                        options:UIViewAnimationOptionCurveLinear
+                        options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          self.centerMessage.alpha=1;
                      }
                      completion:^(BOOL finished){
                          
-                         [UIView animateWithDuration:0.2
-                                               delay:0.4
-                                             options:UIViewAnimationOptionCurveEaseInOut
+                         [UIView animateWithDuration:0.4
+                                               delay:0.2
+                                             options:UIViewAnimationOptionCurveEaseOut
                                           animations:^{
                                               self.centerMessage.alpha=0;
                                           }

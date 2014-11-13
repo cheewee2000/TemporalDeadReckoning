@@ -21,8 +21,8 @@
 
 #define NUMLEVELARROWS 5
 
-#define TRIALSINSTAGE 1
-#define NUMHEARTS 1
+#define TRIALSINSTAGE 5
+#define NUMHEARTS 3
 #define SHOWNEXTRASTAGES 3
 
 
@@ -231,7 +231,7 @@
 //    trophyButton.layer.shadowOffset = CGSizeMake(0.0, 1.0);
     
     medalButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIImage * medal=[UIImage imageNamed:@"medal"];
+    UIImage * medal=[UIImage imageNamed:@"star"];
     medal = [medal imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [medalButton setBackgroundImage:medal forState:UIControlStateNormal];
     [medalButton adjustsImageWhenHighlighted];
@@ -885,12 +885,20 @@
                          progressView.dotsContainer.frame=CGRectMake(0, 22, screenWidth, progressView.dotsContainer.frame.size.height);
                      }
                     completion:^(BOOL finished){
-                                 
-                        [self.myGraph reloadGraph];
-                        [self.allGraph reloadGraph];
+                        float d=1.0;
 
+                        //so graph animation doesn't repeat
+                        if(viewLoaded){
+                            [self.myGraph reloadGraph];
+                            [self.allGraph reloadGraph];
+                            d=2.5;//wait for graph to finish loading
+                        }
+                        
+                        viewLoaded=true;
+                        
+                        
                         [UIView animateWithDuration:.8
-                                              delay:2.5
+                                              delay:d
                              usingSpringWithDamping:.8
                               initialSpringVelocity:1.0
                                             options:UIViewAnimationOptionCurveLinear
@@ -905,22 +913,20 @@
 
                                              if(nDotsToShow<TRIALSINSTAGE*SHOWNEXTRASTAGES)nDotsToShow=TRIALSINSTAGE*SHOWNEXTRASTAGES;
 
-
                                              for (int i = 0; i < nDotsToShow; i++){
                                             float dotDia=15;
                                             float margin=screenWidth/TRIALSINSTAGE/2.0+dotDia+40;
                                             float y=15-rowHeight*floor(i/TRIALSINSTAGE)+rowHeight*floor(nDotsToShow/TRIALSINSTAGE-1);
 
-                                            
                                             //update existing dots
                                             if(i<[dots count]){
                                                 
                                                 Dots *dot=[dots objectAtIndex:i];
                                                 [self updateDot:i];
-
+                                                
                                                 //shift dots down
                                                 [UIView animateWithDuration:.8
-                                                                      delay:0.8
+                                                                      delay:0.4
                                                      usingSpringWithDamping:.5
                                                       initialSpringVelocity:1.0
                                                                     options:UIViewAnimationOptionCurveLinear
@@ -941,7 +947,7 @@
                                                     
                                                     //shift label down
                                                     [UIView animateWithDuration:.8
-                                                                          delay:0.8
+                                                                          delay:0.4
                                                          usingSpringWithDamping:.5
                                                           initialSpringVelocity:1.0
                                                                         options:UIViewAnimationOptionCurveLinear
@@ -979,7 +985,7 @@
                                                     sLabel.instructionText.textColor=[self getForegroundColor:currentLevel];
 
                                                     [UIView animateWithDuration:.4
-                                                                          delay:0.8+stage*.1
+                                                                          delay:0.4+stage*.1
                                                          usingSpringWithDamping:.5
                                                           initialSpringVelocity:1.0
                                                                         options:UIViewAnimationOptionCurveLinear
@@ -1014,7 +1020,7 @@
 
                                             //animate dot appearance
                                             [UIView animateWithDuration:.2
-                                                                  delay:.8+(i-currentLevel)*.05
+                                                                  delay:.4+(i-currentLevel)*.05
                                                  usingSpringWithDamping:.5
                                                   initialSpringVelocity:1.0
                                                                 options:UIViewAnimationOptionCurveLinear
@@ -1029,7 +1035,7 @@
                                              
                                 int stage=floorf(currentLevel/TRIALSINSTAGE);
                                 if(stage<SHOWNEXTRASTAGES) [self performSelector:@selector(loadLevel) withObject:self afterDelay:0.8];
-                               else  [self performSelector:@selector(loadLevel) withObject:self afterDelay:2.0];
+                                else [self performSelector:@selector(loadLevel) withObject:self afterDelay:2.0];
                         }];
             }];
 }
@@ -2062,10 +2068,10 @@
 
                             //add heart for triplestar level
                              float trialAccuracy=fabs(elapsed-timerGoal);
-                             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/10.0)life+=4;
-                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/10.0)life+=3;
-                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/10.0)life+=2;
-                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/10.0)life++;
+//                             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/10.0)life+=4;
+//                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/10.0)life+=3;
+//                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/10.0)life+=2;
+//                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/10.0)life++;
                              
                              int nStarsEarned=0;
                              if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1.0/5.0)nStarsEarned=3;
@@ -2073,6 +2079,7 @@
                              else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3.0/5.0)nStarsEarned=1;
                              
                              starBank+=nStarsEarned;
+                             life+=nStarsEarned;
                              
                              [[NSUserDefaults standardUserDefaults] setInteger:starBank forKey:@"starBank"];
                              [[NSUserDefaults standardUserDefaults] synchronize];
@@ -2125,7 +2132,7 @@
 
     //arrow delay
     float d=0;
-    float inc=.05;
+    float inc=.07;
     int arrowN=0;
     int margin=screenHeight-44-37;
     int spacing=-1;
@@ -2143,10 +2150,10 @@
     float trialAccuracy=fabs(elapsed-timerGoal);
     if(life>0){
         NSString * bonusString=@"";
-        if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/10.0)      bonusString=@"PERFECT! ❤\U0000FE0E⁺⁴";
-        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/10.0) bonusString=@"BOOOOOM! ❤\U0000FE0E⁺³";
-        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/10.0) bonusString=@"WOOT! ❤\U0000FE0E⁺²";
-        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/10.0) bonusString=@"MONEY! ❤\U0000FE0E⁺¹";
+        if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1/10.0)      bonusString=@"PERFECT!";
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2/10.0) bonusString=@"BOOOOOM!";
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/10.0) bonusString=@"WOOT!";
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/10.0) bonusString=@"MONEY!";
         else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*5/10.0) bonusString=@"GREAT!";
         else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*6/10.0) bonusString=@"NICE!";
         else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*7/10.0) bonusString=@"DONE!";
@@ -2167,8 +2174,27 @@
         else if(diff>.3) bonusString=@"TOO LATE! FASTER!";
         else if(diff>.2) bonusString=@"A BIT TOO SLOW";
         else if(diff>0)  bonusString=@"GO A BIT FASTER";
+        
+        
+        int nStarsEarned=0;
+        if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1.0/5.0)nStarsEarned=3;
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2.0/5.0) nStarsEarned=2;
+        else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3.0/5.0)nStarsEarned=1;
+        
         t= [levelArrows objectAtIndex:arrowN];
-        [t update:@"" rightLabel:bonusString color:instructions.color animate:NO];
+        NSMutableAttributedString *attributedString;
+        if(nStarsEarned>0){
+            bonusString=[NSString stringWithFormat:@"%@ ❤\U0000FE0E+%i",bonusString, nStarsEarned];
+            attributedString = [[NSMutableAttributedString alloc] initWithString:bonusString
+                                                                      attributes:@{NSFontAttributeName: [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize]}];
+            [attributedString setAttributes:@{NSFontAttributeName : [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize*.4]
+                                              , NSBaselineOffsetAttributeName : [NSNumber numberWithFloat:t.rightLabel.font.pointSize*.4]} range:NSMakeRange(bonusString.length-2, 2)];
+            
+            [t update:@"" rightLabel:@"" color:instructions.color animate:NO];
+            t.rightLabel.attributedText=attributedString;
+        }else{
+            [t update:@"" rightLabel:bonusString color:instructions.color animate:NO];
+        }
         margin-=spacing+t.frame.size.height;
         d+=inc;
         [t slideUpTo:margin delay:d];
@@ -2210,8 +2236,8 @@
                 stageClearedString=[NSString stringWithFormat:@"LIFE REPLENISHED ❤\U0000FE0E+%i", nHeartsReplenished];
                 attributedString = [[NSMutableAttributedString alloc] initWithString:stageClearedString
                                                                          attributes:@{NSFontAttributeName: [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize]}];
-                [attributedString setAttributes:@{NSFontAttributeName : [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize*.6]
-                                                  , NSBaselineOffsetAttributeName : @10} range:NSMakeRange(stageClearedString.length-2, 2)];
+                [attributedString setAttributes:@{NSFontAttributeName : [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize*.4]
+                                                  , NSBaselineOffsetAttributeName : [NSNumber numberWithFloat:t.rightLabel.font.pointSize*.4]} range:NSMakeRange(stageClearedString.length-2, 2)];
                 
             }
             
@@ -2278,8 +2304,8 @@
 
             NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:stageProgressString
                                                                                                  attributes:@{NSFontAttributeName: [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize]}];
-            [attributedString setAttributes:@{NSFontAttributeName : [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize*.6]
-                                              , NSBaselineOffsetAttributeName : @10} range:NSMakeRange(stageProgressString.length-2, 2)];
+            [attributedString setAttributes:@{NSFontAttributeName : [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize*.4]
+                                              , NSBaselineOffsetAttributeName : [NSNumber numberWithFloat:t.rightLabel.font.pointSize*.4]} range:NSMakeRange(stageProgressString.length-2, 2)];
             
             [t update:@"" rightLabel:@"" color:instructions.color animate:NO];
             t.rightLabel.attributedText=attributedString;
@@ -2652,7 +2678,7 @@
 
      }
      
-    averageOffset=averageOffset/(float)nPoints;
+    if(nPoints>0) averageOffset=averageOffset/(float)nPoints;
     if(averageOffset>=0) averageTime.text=[NSString stringWithFormat:@"+%.03f",(float)averageOffset];
         else averageTime.text=[NSString stringWithFormat:@"%.03f",(float)averageOffset];
 
@@ -2661,11 +2687,8 @@
         averageAccuracy=averageAccuracy/(float)nPoints;
          accuracy.text = [NSString stringWithFormat:@"%02i", (int)averageAccuracy];
 
-        
          float uncertainty=[[self.myGraph calculateLineGraphStandardDeviation]floatValue];
          precision.text=[NSString stringWithFormat:@"±%.03f",(float)uncertainty];
-            
-
     }
     
     
@@ -3161,7 +3184,8 @@
     if(showIntro){
         [self performSelector:@selector(showIntroView) withObject:self afterDelay:1.5];
     }
-    viewLoaded=true;
+    
+    //viewLoaded=true; //moved to setupDots
 
     
 //    if(trialSequence==0)[instructions updateText:@"START" animate:YES];
