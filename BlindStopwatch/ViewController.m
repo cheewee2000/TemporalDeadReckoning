@@ -168,6 +168,9 @@
     if([defaults objectForKey:@"experiencepoints"] == nil) experiencePoints=0;
     else experiencePoints = (int)[defaults integerForKey:@"experiencepoints"];
     
+    if([defaults objectForKey:@"starBank"] == nil) starBank=0;
+    else starBank = (int)[defaults integerForKey:@"starBank"];
+    
     if([defaults objectForKey:@"practicing"] == nil) practicing=false;
     else practicing = (int)[defaults integerForKey:@"practicing"];
     
@@ -229,7 +232,7 @@
     [medalButton adjustsImageWhenHighlighted];
     [medalButton setFrame:CGRectMake(0,0,44,44)];
     medalButton.center=CGPointMake(screenWidth*1.0/5.0, buttonYPos);
-    [medalButton addTarget:self action:@selector(showXPLeaderboard) forControlEvents:UIControlEventTouchUpInside];
+    [medalButton addTarget:self action:@selector(showSBLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [progressView addSubview:medalButton];
     medalButton.layer.shadowOpacity = progressView.shadowO;
     medalButton.layer.shadowRadius = progressView.shadowR;
@@ -788,7 +791,8 @@
 
     [self removeDots];
 
-    experiencePoints-=lastStage*10.0;
+    //experiencePoints-=lastStage*10.0;
+    starBank-=lastStage;
     
     
     life=NUMHEARTS;
@@ -818,12 +822,15 @@
 }
 -(void)updateHighscore{
     if(best>0) bestLabel.text=[NSString stringWithFormat:@"BEST %.01f",best];
-    if(experiencePoints>0) {
-        if (experiencePoints<10000) highScoreLabel.text=[NSString stringWithFormat:@"$%.02f",experiencePoints];
-        else highScoreLabel.text=[NSString stringWithFormat:@"%i",(int)experiencePoints];
+//    if(experiencePoints>0) {
+//        if (experiencePoints<10000) highScoreLabel.text=[NSString stringWithFormat:@"$%.02f",experiencePoints];
+//        else highScoreLabel.text=[NSString stringWithFormat:@"%i",(int)experiencePoints];
+//    }
+    
+    if(starBank>0) {
+     highScoreLabel.text=[NSString stringWithFormat:@"%i",starBank];
     }
-        
-        
+    
 }
 
 -(int)getCurrentStage{
@@ -1109,10 +1116,16 @@
             float trialAccuracy=fabs([[[self.levelData objectAtIndex:i] objectForKey:@"accuracy"] floatValue]);
             //float trialGoal=fabs([[[self.ArrayOfValues objectAtIndex:i] objectForKey:@"goal"] floatValue]);
             //float accuracyPercent=100.0-trialAccuracy/trialGoal*100.0;
-           
-            if(trialAccuracy<=[self getLevelAccuracy:i]*1.0/5.0) [dot setStars:3];
-            else if(trialAccuracy<=[self getLevelAccuracy:i]*2.0/5.0) [dot setStars:2];
-            else if(trialAccuracy<=[self getLevelAccuracy:i]*3.0/5.0)[dot setStars:1];
+            int nStarsEarned=0;
+            
+            if(trialAccuracy<=[self getLevelAccuracy:i]*1.0/5.0)nStarsEarned=3;
+            else if(trialAccuracy<=[self getLevelAccuracy:i]*2.0/5.0) nStarsEarned=2;
+            else if(trialAccuracy<=[self getLevelAccuracy:i]*3.0/5.0)nStarsEarned=1;
+            
+            [dot setStars:nStarsEarned];
+            
+
+            
         }
     }
     else {
@@ -1721,14 +1734,24 @@
             }
         }];
         
-        GKScore *xp = [[GKScore alloc] initWithLeaderboardIdentifier:@"experiencepoints"];
-        xp.value = experiencePoints*100.0;
+//        GKScore *xp = [[GKScore alloc] initWithLeaderboardIdentifier:@"experiencepoints"];
+//        xp.value = experiencePoints*100.0;
+//        
+//        [GKScore reportScores:@[xp] withCompletionHandler:^(NSError *error) {
+//            if (error != nil) {
+//                NSLog(@"%@", [error localizedDescription]);
+//            }
+//        }];
         
-        [GKScore reportScores:@[xp] withCompletionHandler:^(NSError *error) {
+        GKScore *sp = [[GKScore alloc] initWithLeaderboardIdentifier:@"starBank"];
+        sp.value = starBank;
+        
+        [GKScore reportScores:@[sp] withCompletionHandler:^(NSError *error) {
             if (error != nil) {
                 NSLog(@"%@", [error localizedDescription]);
             }
         }];
+        
     }
 }
 
@@ -1766,11 +1789,11 @@
     [self presentViewController:gcViewController animated:YES completion:nil];
 }
 
--(void)showXPLeaderboard{
+-(void)showSBLeaderboard{
     GKGameCenterViewController *gcViewController = [[GKGameCenterViewController alloc] init];
     gcViewController.gameCenterDelegate = self;
     gcViewController.viewState = GKGameCenterViewControllerStateLeaderboards;
-    gcViewController.leaderboardIdentifier = @"experiencepoints";
+    gcViewController.leaderboardIdentifier = @"starBank";
     [self presentViewController:gcViewController animated:YES completion:nil];
 }
 -(void)showAchievements{
@@ -1839,11 +1862,11 @@
 
         
         
-        float currentHS=(int)[defaults integerForKey:@"experiencepoints"];
-        if(experiencePoints>currentHS){
-            currentHS=experiencePoints;
-            [defaults setInteger:experiencePoints forKey:@"experiencepoints"];
-        }
+//        float currentHS=(int)[defaults integerForKey:@"experiencepoints"];
+//        if(experiencePoints>currentHS){
+//            currentHS=experiencePoints;
+//            [defaults setInteger:experiencePoints forKey:@"experiencepoints"];
+//        }
 
         [self updateHighscore];
 
@@ -2038,6 +2061,18 @@
                              else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3/10.0)life+=2;
                              else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/10.0)life++;
                              
+                             int nStarsEarned=0;
+                             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1.0/5.0)nStarsEarned=3;
+                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2.0/5.0) nStarsEarned=2;
+                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3.0/5.0)nStarsEarned=1;
+                             
+                             starBank+=nStarsEarned;
+                             
+                             [[NSUserDefaults standardUserDefaults] setInteger:starBank forKey:@"starBank"];
+                             [[NSUserDefaults standardUserDefaults] synchronize];
+            
+                             
+                             
                              //save current level now
                              currentLevel++;
                              
@@ -2139,22 +2174,38 @@
     
     if(([self isAccurate] && currentLevel%TRIALSINSTAGE==0) || life==0 || nHeartsReplenished>0) {
         NSString * stageClearedString;
+        NSMutableAttributedString *attributedString;
+        t= [levelArrows objectAtIndex:arrowN];
+
         if(life==0) stageClearedString=@"GAME OVER";
         
         else if([self isAccurate] && currentLevel%TRIALSINSTAGE==0){
             stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED! ❤\U0000FE0E⁺¹",[self getCurrentStage]];
         }
         else if(nHeartsReplenished>0){
-            if(nHeartsReplenished==1)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺¹";
-            else if(nHeartsReplenished==2)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺²";
-            else if(nHeartsReplenished==3)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺³";
-            else if(nHeartsReplenished==4)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺⁴";
+            
+            if(nHeartsReplenished>1){
+                stageClearedString=[NSString stringWithFormat:@"LIFE REPLENISHED ❤\U0000FE0E+%i", nHeartsReplenished];
+                attributedString = [[NSMutableAttributedString alloc] initWithString:stageClearedString
+                                                                         attributes:@{NSFontAttributeName: [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize]}];
+                [attributedString setAttributes:@{NSFontAttributeName : [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize*.75]
+                                                  , NSBaselineOffsetAttributeName : @10} range:NSMakeRange(stageClearedString.length-2, 2)];
+                
+            }
+            
+//            if(nHeartsReplenished==1)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺¹";
+//            else if(nHeartsReplenished==2)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺²";
+//            else if(nHeartsReplenished==3)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺³";
+//            else if(nHeartsReplenished==4)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺⁴";
             else stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E";
 
         }
         
-        t= [levelArrows objectAtIndex:arrowN];
-        [t update:@"" rightLabel:stageClearedString color:instructions.color animate:NO];
+        if(nHeartsReplenished>1){
+            [t update:@"" rightLabel:@"" color:instructions.color animate:NO];
+            t.rightLabel.attributedText=attributedString;
+        }
+        else [t update:@"" rightLabel:stageClearedString color:instructions.color animate:NO];
         margin-=spacing+t.frame.size.height;
         d+=inc;
         [t slideUpTo:margin delay:d];
@@ -2193,20 +2244,37 @@
     NSString * stageProgressString;
     //if([self isAccurate]) stageProgressString=[NSString stringWithFormat:@"LEVEL %.01f CLEARED %0.1f POINTS",[self getLevel:currentLevel-1], elapsed*timerGoal];
     if([self isAccurate]){
-        if(currentStreak==1) stageProgressString=[NSString stringWithFormat:@"+$%0.2f", elapsed*timerGoal];
-        else if(currentStreak>1) stageProgressString=[NSString stringWithFormat:@"%i LEVEL STREAK! +$%0.2f", currentStreak, elapsed*timerGoal*currentStreak];
+        //if(currentStreak==1) stageProgressString=[NSString stringWithFormat:@"+$%0.2f", elapsed*timerGoal];
+        //else if(currentStreak>1) stageProgressString=[NSString stringWithFormat:@"%i LEVEL STREAK! +$%0.2f", currentStreak, elapsed*timerGoal*currentStreak];
 
-    }
-    else if(life>1) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life];
-    else if(life>0) stageProgressString=@"LAST TRY!";
-    //else stageProgressString=@"GAME OVER";
-    if(life>0){
-        t= [levelArrows objectAtIndex:arrowN];
-        [t update:@"" rightLabel:stageProgressString color:instructions.color animate:NO];
-        margin-=spacing+t.frame.size.height;
-        d+=inc;
-        [t slideUpTo:margin delay:d];
-        [self.view bringSubviewToFront:t];
+        //if(currentStreak==1) stageProgressString=[NSString stringWithFormat:@"+%i★", currentStreak;
+        if(currentStreak>1){
+            
+            
+
+        
+//    }
+//    else if(life>1) stageProgressString=[NSString stringWithFormat:@"%i TRIES LEFT",life];
+//    else if(life>0) stageProgressString=@"LAST TRY!";
+//    //else stageProgressString=@"GAME OVER";
+//    if(life>0){
+            t= [levelArrows objectAtIndex:arrowN];
+            
+            stageProgressString=[NSString stringWithFormat:@"%i LEVEL STREAK! ★+%i", currentStreak, currentStreak];
+
+            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:stageProgressString
+                                                                                                 attributes:@{NSFontAttributeName: [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize]}];
+            [attributedString setAttributes:@{NSFontAttributeName : [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize*.75]
+                                              , NSBaselineOffsetAttributeName : @10} range:NSMakeRange(stageProgressString.length-2, 2)];
+            
+            [t update:@"" rightLabel:@"" color:instructions.color animate:NO];
+            t.rightLabel.attributedText=attributedString;
+                
+            margin-=spacing+t.frame.size.height;
+            d+=inc;
+            [t slideUpTo:margin delay:d];
+            [self.view bringSubviewToFront:t];
+        }
     }
     arrowN++;
    
@@ -2265,7 +2333,9 @@
         
         return;
     }
-    progressView.subMessage.text=[NSString stringWithFormat:@"SPEND $%.02f \nTO CONTINUE FROM STAGE %i?",lastStage*10.0,lastStage+1];
+    //progressView.subMessage.text=[NSString stringWithFormat:@"SPEND $%.02f \nTO CONTINUE FROM STAGE %i?",lastStage*10.0,lastStage+1];
+    progressView.subMessage.text=[NSString stringWithFormat:@"SPEND %i POINTS\nTO CONTINUE FROM STAGE %i?",lastStage ,lastStage+1];
+
     progressView.subMessage.alpha=1.0;
     progressView.subMessage.textColor=trophyButton.tintColor;
 

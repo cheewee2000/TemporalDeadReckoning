@@ -43,6 +43,7 @@
     float best;
     float experiencePoints;
     int currentLevel;
+    int starBank;
     
     int life;
     float start;
