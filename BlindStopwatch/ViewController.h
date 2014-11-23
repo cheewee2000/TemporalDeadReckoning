@@ -36,6 +36,8 @@
     NSTimeInterval timerGoal;
     NSString *timeValuesFile;
     NSString *allTrialDataFile;
+    NSString *lastNTrialDataFile;
+
     MachTimer* aTimer;
 
     
@@ -160,6 +162,7 @@
 
 @property (strong, nonatomic) NSMutableArray *trialData;
 @property (strong, nonatomic) NSMutableArray *allTrialData;
+@property (strong, nonatomic) NSMutableArray *lastNTrialsData;
 @property (strong, nonatomic) NSMutableArray *levelData;
 
 //@property (strong, nonatomic) NSMutableArray *ArrayOfDates;

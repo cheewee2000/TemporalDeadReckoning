@@ -1449,13 +1449,12 @@
     //START
     if(trialSequence==0){
         //startTime=[NSDate timeIntervalSinceReferenceDate];
-        [aTimer start];
         trialSequence=1;
 
-        [self updateTime];
-        [instructions update:@"STOP" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:YES];
+        //[self updateTime];
+        //[instructions update:@"STOP" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:YES];
         
-        [self setTimerGoalMarginDisplay];
+        //[self setTimerGoalMarginDisplay];
         
         
         [UIView animateWithDuration:0.05
@@ -1544,10 +1543,12 @@
     //[self.trialData removeObjectAtIndex:0];
     
     //save into history
-    [self.allTrialData addObject:myDictionary];
-    if([self.allTrialData count]>100){
-        [self.allTrialData removeObjectAtIndex:0];
+    [self.lastNTrialsData addObject:myDictionary];
+    if([self.lastNTrialsData count]>100){
+        [self.lastNTrialsData removeObjectAtIndex:0];
     }
+    
+    [self.lastNTrialsData addObject:myDictionary];
     
     
     //save data into clean array
@@ -1679,18 +1680,18 @@
     self.trialData = [[NSMutableArray alloc] init];
     
     //Creating a file path under iOS:
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
     //timeValuesFile = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"timeData%i.dat",(int)level]];
-    timeValuesFile = [documentsDirectory stringByAppendingPathComponent:@"trialData4.dat"];
+    timeValuesFile = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"trialData4.dat"];
 
     //Load the array
     self.trialData = [[NSMutableArray alloc] initWithContentsOfFile: timeValuesFile];
     
     
-    
+    NSArray *docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+
     self.allTrialData = [[NSMutableArray alloc] init];
-    allTrialDataFile = [documentsDirectory stringByAppendingPathComponent:@"allTrialData.dat"];
+    allTrialDataFile = [[docPath objectAtIndex:0] stringByAppendingPathComponent:@"allTrialData.dat"];
     self.allTrialData = [[NSMutableArray alloc] initWithContentsOfFile: allTrialDataFile];
     if(self.allTrialData == nil){
         
@@ -1703,8 +1704,31 @@
             [self.allTrialData addObject:myDictionary];
         }
         [self saveValues];
-
     }
+    
+    
+    
+    self.lastNTrialsData = [[NSMutableArray alloc] init];
+    lastNTrialDataFile = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"lastNTrialsData.dat"];
+    self.lastNTrialsData = [[NSMutableArray alloc] initWithContentsOfFile: lastNTrialDataFile];
+    if(self.lastNTrialsData == nil){
+        
+        self.lastNTrialsData = [[NSMutableArray alloc] init];
+        for (int i = 0; i <2 ; i++) {
+            NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
+            [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"accuracy"];
+            [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"goal"];
+            [myDictionary setObject:[NSDate date] forKey:@"date"];
+            [self.lastNTrialsData addObject:myDictionary];
+        }
+        [self saveValues];
+    }
+    
+    
+    
+    
+    
+    
     if(self.trialData == nil)
     {
         [self clearTrialData];
@@ -1730,6 +1754,7 @@
 -(void)saveValues{
     [self.trialData writeToFile:timeValuesFile atomically:YES];
     [self.allTrialData writeToFile:allTrialDataFile atomically:YES];
+    [self.lastNTrialsData writeToFile:lastNTrialDataFile atomically:YES];
 
 }
 
@@ -1825,9 +1850,8 @@
     self.levelData = [[NSMutableArray alloc] init];
     
     //Creating a file path under iOS:
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelData.dat"];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+    NSString *File = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"levelData.dat"];
     
     //Load the array
     self.levelData = [[NSMutableArray alloc] initWithContentsOfFile: File];
@@ -1836,10 +1860,12 @@
     {
         //Array file didn't exist... create a new one
         self.levelData = [[NSMutableArray alloc] init];
-        for (int i = 0; i < nPointsVisible; i++) {
+        for (int i = 0; i < 2; i++) {
             
             NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
             [myDictionary  setObject:[NSNumber numberWithInt:0] forKey:@"accuracy"];
+            [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"goal"];
+            [myDictionary setObject:[NSDate date] forKey:@"date"];
             [self.levelData addObject:myDictionary];
  
         }
@@ -1849,9 +1875,8 @@
 }
 
 -(void)saveLevelProgress{
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *File = [documentsDirectory stringByAppendingPathComponent:@"levelData.dat"];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
+    NSString *File = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"levelData.dat"];
     [self.levelData writeToFile:File atomically:YES];
 }
 
@@ -1862,8 +1887,7 @@
     [defaults setInteger:currentLevel forKey:@"currentLevel"];
     
     if(level>0 && practicing==false){
-        
-        
+
         float lastSuccessfulGoal=fabs([[[self.levelData objectAtIndex:level-1] objectForKey:@"goal"] floatValue]);
         
         if(lastSuccessfulGoal>=best){
@@ -2692,7 +2716,7 @@
     }
     
     
-    if([self.allTrialData count]>0){
+    if([self.lastNTrialsData count]>0){
         //results
         int nPoints=0;
         
@@ -2702,10 +2726,10 @@
         float averageOffset=0;
         float accuracyOffset=0;
         
-        for( int i=0; i<[self.allTrialData count]; i++){
-            accuracyOffset=[[[self.allTrialData objectAtIndex:i] objectForKey:@"accuracy"] floatValue];
+        for( int i=0; i<[self.lastNTrialsData count]; i++){
+            accuracyOffset=[[[self.lastNTrialsData objectAtIndex:i] objectForKey:@"accuracy"] floatValue];
             float absResult=fabs(accuracyOffset);
-            float goal=[[[self.allTrialData objectAtIndex:i] objectForKey:@"goal"] floatValue];
+            float goal=[[[self.lastNTrialsData objectAtIndex:i] objectForKey:@"goal"] floatValue];
             
             if(goal!=0){
                 averageOffset+=accuracyOffset;
@@ -2729,7 +2753,7 @@
         float uncertainty=[[self.allGraph calculateLineGraphStandardDeviation]floatValue];
         allPrecision.text=[NSString stringWithFormat:@"±%.03f",(float)uncertainty];
         
-        allGraphLabel.text=[NSString stringWithFormat:@"LAST %i TRIALS",(int)[self.allTrialData count]];
+        allGraphLabel.text=[NSString stringWithFormat:@"LAST %i TRIALS",(int)[self.lastNTrialsData count]];
         
 
     }
@@ -3035,7 +3059,7 @@
         return [self.trialData count];
     }
     else {
-        return [self.allTrialData count];
+        return [self.lastNTrialsData count];
     }
 }
 
@@ -3051,9 +3075,9 @@
         return naccuracy;
     }
     else {
-        if([self.allTrialData count]==0)return 0.0;
+        if([self.lastNTrialsData count]==0)return 0.0;
         //NSInteger i=[self.trialData count]-nPointsVisible+index; //show last nPoints
-        float naccuracy=[[[self.allTrialData objectAtIndex:index] objectForKey:@"accuracy"] floatValue];
+        float naccuracy=[[[self.lastNTrialsData objectAtIndex:index] objectForKey:@"accuracy"] floatValue];
         //cap graph
         if(naccuracy>1)naccuracy=1;
         else if (naccuracy<-1)naccuracy=-1;
@@ -3076,7 +3100,7 @@
 
 - (NSInteger)numberOfGapsBetweenLabelsOnLineGraph:(BEMSimpleLineGraphView *)graph {
     if(graph.tag==0) return [self.trialData count];
-    else return [self.allTrialData count];
+    else return [self.lastNTrialsData count];
 }
 
 - (NSString *)lineGraph:(BEMSimpleLineGraphView *)graph labelOnXAxisForIndex:(NSInteger)index {
@@ -3114,7 +3138,7 @@
             self.allGraph.lastDot.alpha=1.0;
         } completion:nil];
         
-        self.allGraph.lastPointLabel.text=[NSString stringWithFormat:@"%.03f SEC",([[[self.allTrialData lastObject] objectForKey:@"accuracy"] floatValue])];
+        self.allGraph.lastPointLabel.text=[NSString stringWithFormat:@"%.03f SEC",([[[self.lastNTrialsData lastObject] objectForKey:@"accuracy"] floatValue])];
     }
     
     
