@@ -25,11 +25,20 @@
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     
-    [Parse setApplicationId:@"9eQdER3sjOhKgV8Vvc15Dku21LbZWa2NDc3EZdae"
-                  clientKey:@"W2M0sLsEPTKlioA8cYKIPKUkJITzV03mvXgVYEya"];
+    
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"configuration" ofType:@"plist"];
+    NSDictionary *configuration = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
+
+    NSString *applicationId = configuration[@"Parse"][@"applicationId"];
+    NSString *clientKey = configuration[@"Parse"][@"clientKey"];
+    
+
+    [Parse setApplicationId:applicationId
+                  clientKey:clientKey];
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
-    [TestFlight takeOff:@"3adc91eb-4d85-4881-9c0e-b99098188a50"];
+    NSString *testflightId = configuration[@"TestFlight"][@"id"];
+    [TestFlight takeOff:testflightId];
 
     return YES;
 }
