@@ -343,7 +343,7 @@
     self.myGraph.autoScaleYAxis = NO;
     self.myGraph.yAxisScale=100.0;
     if(IS_IPHONE_4)self.myGraph.yAxisScale=50.0;
-    self.myGraph.animationGraphEntranceTime = 1.75;
+    self.myGraph.animationGraphEntranceTime = .6;
     self.myGraph.tag=0;
     [progressView addSubview:self.myGraph];
 
@@ -361,7 +361,7 @@
     self.allGraph.autoScaleYAxis = NO;
     self.allGraph.yAxisScale=100.0;
     if(IS_IPHONE_4)self.allGraph.yAxisScale=50.0;
-    self.allGraph.animationGraphEntranceTime = 1.75;
+    self.allGraph.animationGraphEntranceTime = .6;
     self.allGraph.tag=1;
     [progressView addSubview:self.allGraph];
     
@@ -671,7 +671,7 @@
     //set life asap so countdown timer stops
     life=NUMHEARTS;
 
-    [UIView animateWithDuration:0.8
+    [UIView animateWithDuration:0.4
                           delay:0.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
@@ -874,7 +874,7 @@
     float d=.5;
     if(progressView.frame.origin.y==0)d=0.0;//progressview is already showing. don't animate
 
-    [UIView animateWithDuration:.8
+    [UIView animateWithDuration:.4
                           delay:d
          usingSpringWithDamping:.8
           initialSpringVelocity:1.0
@@ -891,13 +891,13 @@
                         if(viewLoaded){
                             [self.myGraph reloadGraph];
                             [self.allGraph reloadGraph];
-                            d=2.5;//wait for graph to finish loading
+                            d=1.5;//wait for graph to finish loading
                         }
                         
                         viewLoaded=true;
                         
                         
-                        [UIView animateWithDuration:.8
+                        [UIView animateWithDuration:.4
                                               delay:d
                              usingSpringWithDamping:.8
                               initialSpringVelocity:1.0
@@ -925,7 +925,7 @@
                                                 [self updateDot:i];
                                                 
                                                 //shift dots down
-                                                [UIView animateWithDuration:.8
+                                                [UIView animateWithDuration:.4
                                                                       delay:0.4
                                                      usingSpringWithDamping:.5
                                                       initialSpringVelocity:1.0
@@ -946,7 +946,7 @@
                                                     sLabel.alpha=1;
                                                     
                                                     //shift label down
-                                                    [UIView animateWithDuration:.8
+                                                    [UIView animateWithDuration:.4
                                                                           delay:0.4
                                                          usingSpringWithDamping:.5
                                                           initialSpringVelocity:1.0
@@ -1076,7 +1076,7 @@
             UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
             
             
-            [UIView animateWithDuration:.8
+            [UIView animateWithDuration:.4
                                   delay:0.0
                                 options:UIViewAnimationOptionCurveLinear
                              animations:^{
@@ -1161,7 +1161,7 @@
             [bestLevelDot setFill:NO];
             [bestLevelDot setColor:dot.dotColor];
             bestLevelDot.center=dot.center;
-            [UIView animateWithDuration:.8
+            [UIView animateWithDuration:.4
                                   delay:0
                  usingSpringWithDamping:.5
                   initialSpringVelocity:1.0
@@ -1304,7 +1304,11 @@
 #pragma mark - Action
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [self buttonPressed];
+    CGPoint locationPoint = [[touches anyObject] locationInView:self.view];
+    CGPoint viewPoint = [progressView convertPoint:locationPoint fromView:self.view];
+    if (![progressView pointInside:viewPoint withEvent:event]) {
+        [self buttonPressed];
+    }
 }
 
 
@@ -2389,8 +2393,8 @@
     if(lastStage==0) {
         
         progressView.subMessage.alpha=0;
-        [UIView animateWithDuration:0.8
-                              delay:0.5
+        [UIView animateWithDuration:0.4
+                              delay:0.0
              usingSpringWithDamping:.8
               initialSpringVelocity:1.0
                             options:UIViewAnimationOptionCurveLinear
@@ -2430,8 +2434,8 @@
 //    [progressView addShadow:progressView.subMessage];
 //    [progressView addShadow:progressView.lowerMessage];
 
-    [UIView animateWithDuration:0.8
-                          delay:0.5
+    [UIView animateWithDuration:0.4
+                          delay:0.0
          usingSpringWithDamping:.8
           initialSpringVelocity:1.0
                         options:UIViewAnimationOptionCurveLinear
@@ -2441,8 +2445,8 @@
                      }
                      completion:^(BOOL finished){
                          //fade in blur
-                         [UIView animateWithDuration:0.8
-                                               delay:0.4
+                         [UIView animateWithDuration:0.4
+                                               delay:0.0
                                              options:UIViewAnimationOptionCurveLinear
                                           animations:^{
                                               gameOverBlur.alpha=1;
@@ -2451,7 +2455,7 @@
                                               
                                               //move restart button
                                               [UIView animateWithDuration:0.4
-                                                                    delay:0.4
+                                                                    delay:0.0
                                                    usingSpringWithDamping:.8
                                                     initialSpringVelocity:1.0
                                                                   options:UIViewAnimationOptionCurveLinear
@@ -2514,15 +2518,15 @@
     progressView.subMessage.textColor=trophyButton.tintColor;
 
 
-     [UIView animateWithDuration:0.8
-                           delay:0.4
+     [UIView animateWithDuration:0.4
+                           delay:0.0
                          options:UIViewAnimationOptionCurveLinear
                       animations:^{
                           gameOverBlur.alpha=1;
                       }
                       completion:^(BOOL finished){
                           [UIView animateWithDuration:0.4
-                                                delay:0.4
+                                                delay:0.0
                                usingSpringWithDamping:.8
                                 initialSpringVelocity:1.0
                                               options:UIViewAnimationOptionCurveLinear
@@ -2561,7 +2565,6 @@
     //check for stage up to add dots
     else if ( (currentLevel%TRIALSINSTAGE==0 && [self isAccurate])) {
         bestLevelDot.alpha=0;
-        
         [self performSelector:@selector(setupDots) withObject:self afterDelay:.1];
         [self performSelector:@selector(clearTrialData) withObject:self afterDelay:2.0];
 
@@ -2895,7 +2898,7 @@
     [instructions slideOut:0];
 
     
-    [UIView animateWithDuration:0.8
+    [UIView animateWithDuration:0.4
                           delay:0
          usingSpringWithDamping:.8
           initialSpringVelocity:1.0
