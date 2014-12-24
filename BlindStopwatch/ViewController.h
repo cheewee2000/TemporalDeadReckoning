@@ -55,6 +55,8 @@
     BOOL practicing;
     int nHeartsReplenished;
     int currentStreak;
+    int nStarsEarned;
+    int nLifeEarned;
     
     
     #pragma mark - progressview
