@@ -1,5 +1,5 @@
-Temporal Dead Reckoning
+TATATA
 
 
 =====================
-iOS app for testing and training temporal dead reckoning
+

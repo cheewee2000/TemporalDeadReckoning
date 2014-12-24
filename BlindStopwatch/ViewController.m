@@ -648,11 +648,11 @@
     
     intro.alpha=0;
     
-    UITapGestureRecognizer *tapGestureRecognizer3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
-    tapGestureRecognizer3.numberOfTouchesRequired = 1;
-    tapGestureRecognizer3.numberOfTapsRequired = 1;
-    [self.view addGestureRecognizer:tapGestureRecognizer3];
-    self.view.userInteractionEnabled=YES;
+//    UITapGestureRecognizer *tapGestureRecognizer3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(buttonPressed)];
+//    tapGestureRecognizer3.numberOfTouchesRequired = 1;
+//    tapGestureRecognizer3.numberOfTapsRequired = 1;
+//    [self.view addGestureRecognizer:tapGestureRecognizer3];
+//    self.view.userInteractionEnabled=YES;
     
     //currentLevel=11;
 }
@@ -1304,7 +1304,7 @@
 #pragma mark - Action
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-
+    [self buttonPressed];
 }
 
 
@@ -1448,28 +1448,30 @@
     if(progressView.frame.origin.y<=screenHeight*.25)return;
     //START
     if(trialSequence==0){
+        [aTimer start];
+
         //startTime=[NSDate timeIntervalSinceReferenceDate];
         trialSequence=1;
 
         //[self updateTime];
-        //[instructions update:@"STOP" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:YES];
+        [instructions update:@"STOP" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:YES];
         
         //[self setTimerGoalMarginDisplay];
         
         
-        [UIView animateWithDuration:0.05
-                              delay:0.0
-                            options:UIViewAnimationOptionCurveEaseIn
-                         animations:^{
-                             mainDot.transform = CGAffineTransformScale(CGAffineTransformIdentity, .15, .15);
-                             for (int i=0;i<[satellites count];i++){
-                                 Dots *sat= [satellites objectAtIndex:i];
-                                 sat.transform = CGAffineTransformScale(CGAffineTransformIdentity, .5, .5);
-                             }
-                         }
-                         completion:^(BOOL finished){
-                             
-                         }];
+//        [UIView animateWithDuration:0.05
+//                              delay:0.0
+//                            options:UIViewAnimationOptionCurveEaseIn
+//                         animations:^{
+//                             mainDot.transform = CGAffineTransformScale(CGAffineTransformIdentity, .15, .15);
+//                             for (int i=0;i<[satellites count];i++){
+//                                 Dots *sat= [satellites objectAtIndex:i];
+//                                 sat.transform = CGAffineTransformScale(CGAffineTransformIdentity, .5, .5);
+//                             }
+//                         }
+//                         completion:^(BOOL finished){
+//                             
+//                         }];
 
             //[self.view bringSubviewToFront:blobBlur];
             [UIView animateWithDuration:0.6
@@ -1529,14 +1531,15 @@
 
 -(void)saveTrialData{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
+    NSDate* localDateTime = [NSDate dateWithTimeInterval:[[NSTimeZone systemTimeZone] secondsFromGMT] sinceDate:[NSDate date]];
+
     
     //save to disk
     NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
     float diff=elapsed-timerGoal;
     [myDictionary setObject:[NSNumber numberWithFloat:diff] forKey:@"accuracy"];
     [myDictionary setObject:[NSNumber numberWithFloat:timerGoal] forKey:@"goal"];
-    [myDictionary setObject:[NSDate date] forKey:@"date"];
+    [myDictionary setObject:localDateTime forKey:@"date"];
     //[self.ArrayOfValues  insertObject:myDictionary atIndex:currentLevel];
     //dave data into continuous array
     [self.trialData addObject:myDictionary];
@@ -1560,7 +1563,9 @@
     pObject[@"goal"] = [NSNumber numberWithFloat:(timerGoal)];
     pObject[@"accuracy"] = [NSNumber numberWithFloat:(elapsed-timerGoal)];
     pObject[@"date"]=[NSDate date];
-    //pObject[@"timezone"]=[NSTimeZone localTimeZone];
+    pObject[@"date"]=localDateTime;
+    pObject[@"timezone"]=[NSString stringWithFormat:@"%@",[NSTimeZone localTimeZone].abbreviation];
+
 
     NSString*uuid;
     //NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -1570,9 +1575,14 @@
     }
     else uuid =[defaults stringForKey:@"uuid"];
     pObject[@"uuid"]=uuid;
+    
+    
+    if(currentUser!=nil) pObject[@"user"]=currentUser;
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    if(currentInstallation!=nil)pObject[@"installation"]=currentInstallation;
+    
     [pObject saveEventually];
-    
-    
+
     //update graph
     //self.myGraph.animationGraphEntranceTime = 0.8;
     //[self.myGraph reloadGraph];
@@ -1897,7 +1907,6 @@
         [self updateBestDot];
 
         
-        
 //        float currentHS=(int)[defaults integerForKey:@"experiencepoints"];
 //        if(experiencePoints>currentHS){
 //            currentHS=experiencePoints;
@@ -2031,11 +2040,11 @@
     float l;
     if(level<TRIALSINSTAGE)l=.5+level*0.1;
     else if(level<TRIALSINSTAGE*2)l=1.0+level%TRIALSINSTAGE*0.1;
-    else if(level<TRIALSINSTAGE*3)l=1.5+level%TRIALSINSTAGE*0.2;
-    else if(level<TRIALSINSTAGE*4)l=2.5+level%TRIALSINSTAGE*0.5;
-    else l=level*1.0-TRIALSINSTAGE*3+1.0;
+    //else if(level<TRIALSINSTAGE*3)l=1.5+level%TRIALSINSTAGE*0.2;
+    //else if(level<TRIALSINSTAGE*4)l=2.5+level%TRIALSINSTAGE*0.2;
+    else l=-.5+level*0.2;
     
-    if(l>99999.0)l=99999.0;
+    if(l>999.0)l=999.0;
     
 //    else if(level<TRIALSINSTAGE*5)l=5.0+level%TRIALSINSTAGE*1.0;
 //    else l=5.0+level%TRIALSINSTAGE*1.0;
@@ -2098,12 +2107,12 @@
 //                             else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*4/10.0)life++;
                              
                              int nStarsEarned=0;
-                             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1.0/5.0)nStarsEarned=3;
+                             if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*1.0/5.0)nStarsEarned=1;
                              else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*2.0/5.0) nStarsEarned=2;
                              else if(trialAccuracy<=[self getLevelAccuracy:currentLevel]*3.0/5.0)nStarsEarned=1;
                              
                              starBank+=nStarsEarned;
-                             life+=nStarsEarned;
+                             //life+=nStarsEarned;
                              
                              [[NSUserDefaults standardUserDefaults] setInteger:starBank forKey:@"starBank"];
                              [[NSUserDefaults standardUserDefaults] synchronize];
@@ -2119,15 +2128,11 @@
                              if(currentStreak==1)experiencePoints+=elapsed*timerGoal;
                              else if(currentStreak>1) experiencePoints+=elapsed*timerGoal*currentStreak;
 
-                             
-                             
-                             
                             //add heart for clearing stage
-                            if(currentLevel%TRIALSINSTAGE==0) life++;
+                            //if(currentLevel%TRIALSINSTAGE==0) life++;
                          }
                          else{
                              currentStreak=0;
-
                              life--;
                          }
 
@@ -2207,18 +2212,18 @@
         
         t= [levelArrows objectAtIndex:arrowN];
         NSMutableAttributedString *attributedString;
-        if(nStarsEarned>0){
-            bonusString=[NSString stringWithFormat:@"%@ ❤\U0000FE0E+%i",bonusString, nStarsEarned];
-            attributedString = [[NSMutableAttributedString alloc] initWithString:bonusString
-                                                                      attributes:@{NSFontAttributeName: [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize]}];
-            [attributedString setAttributes:@{NSFontAttributeName : [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize*.4]
-                                              , NSBaselineOffsetAttributeName : [NSNumber numberWithFloat:t.rightLabel.font.pointSize*.4]} range:NSMakeRange(bonusString.length-2, 2)];
-            
-            [t update:@"" rightLabel:@"" color:instructions.color animate:NO];
-            t.rightLabel.attributedText=attributedString;
-        }else{
+//        if(nStarsEarned>0){
+//            bonusString=[NSString stringWithFormat:@"%@ ❤\U0000FE0E+%i",bonusString, nStarsEarned];
+//            attributedString = [[NSMutableAttributedString alloc] initWithString:bonusString
+//                                                                      attributes:@{NSFontAttributeName: [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize]}];
+//            [attributedString setAttributes:@{NSFontAttributeName : [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize*.4]
+//                                              , NSBaselineOffsetAttributeName : [NSNumber numberWithFloat:t.rightLabel.font.pointSize*.4]} range:NSMakeRange(bonusString.length-2, 2)];
+//            
+//            [t update:@"" rightLabel:@"" color:instructions.color animate:NO];
+//            t.rightLabel.attributedText=attributedString;
+//        }else{
             [t update:@"" rightLabel:bonusString color:instructions.color animate:NO];
-        }
+        //}
         margin-=spacing+t.frame.size.height;
         d+=inc;
         [t slideUpTo:margin delay:d];
@@ -2252,7 +2257,9 @@
         if(life<=0) stageClearedString=@"GAME OVER";
         
         else if([self isAccurate] && currentLevel%TRIALSINSTAGE==0){
-            stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED! ❤\U0000FE0E⁺¹",[self getCurrentStage]];
+            //stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED! ❤\U0000FE0E⁺¹",[self getCurrentStage]];
+            stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED!",[self getCurrentStage]];
+
         }
         else if(nHeartsReplenished>0){
             
@@ -2644,8 +2651,8 @@
     
     NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: fabs(time)];
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
-    if(time>0) [df setDateFormat:@"sssss.SSS"];
-    else [df setDateFormat:@"sssss.SSS"];
+    if(time>0) [df setDateFormat:@"sss.SSSSSS"];
+    else [df setDateFormat:@"sss.SSSSSS"];
     
     NSString* counterString = [df stringFromDate:aDate];
     [differencelLabel setText:counterString];
@@ -2656,19 +2663,20 @@
 -(void)timerGoalDisplay:(NSTimeInterval)goal{
     NSDate* gDate = [NSDate dateWithTimeIntervalSince1970: goal];
     NSDateFormatter* gf = [[NSDateFormatter alloc] init];
-    [gf setDateFormat:@"sssss.SSS"];
+    [gf setDateFormat:@"sss.SSSSSS"];
     NSString* goalString = [gf stringFromDate:gDate];
     [counterGoalLabel setText:goalString];
 }
 
 -(void)timerMainDisplay:(NSTimeInterval)time{
+//    NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: fabs(time)];
+//    NSDateFormatter* df = [[NSDateFormatter alloc] init];
+//    if(time>0) [df setDateFormat:@"sss.SSSSSS"];
+//    else [df setDateFormat:@"sss.SSSSSS"];
     
-    NSDate* aDate = [NSDate dateWithTimeIntervalSince1970: fabs(time)];
-    NSDateFormatter* df = [[NSDateFormatter alloc] init];
-    if(time>0) [df setDateFormat:@"sssss.SSS"];
-    else [df setDateFormat:@"sssss.SSS"];
-    
-    NSString* counterString = [df stringFromDate:aDate];
+    //NSString* counterString = [df stringFromDate:aDate];
+    NSString* counterString = [NSString stringWithFormat:@"%010.6f",time];
+
     [counterLabel setText:counterString];
 }
 
@@ -3149,6 +3157,47 @@
 
 
 #pragma mark - ViewController Delegate
+-(void)logIn{
+    currentUser = [PFUser currentUser];
+    if (currentUser) {
+        // do stuff with the user
+        currentUser[@"best"]=[NSNumber numberWithFloat:best];
+        [currentUser saveEventually];
+        
+    } else {
+        // show the signup or login screen
+        [PFAnonymousUtils logInWithBlock:^(PFUser *user, NSError *error) {
+            if (error) {
+                NSLog(@"Anonymous login failed.");
+            } else {
+                NSLog(@"Anonymous user logged in.");
+                currentUser = [PFUser currentUser];
+                
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                NSString*uuid;
+                if([defaults stringForKey:@"uuid"] == nil){
+                    uuid=CFBridgingRelease(CFUUIDCreateString(NULL, CFUUIDCreate(NULL)));
+                    [defaults setObject:uuid forKey:@"uuid"];
+                    [defaults synchronize];
+                }
+                else uuid =[defaults stringForKey:@"uuid"];
+                currentUser[@"uuid"]=uuid;
+                
+                PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+                currentUser[@"installation"]=currentInstallation;
+                //                currentInstallation[@"user"]=currentUser;
+                //                [currentInstallation saveEventually];
+                
+                [currentUser saveEventually];
+                
+            }
+        }];
+    }
+    
+    
+}
+
+
 
 - (void)viewDidUnload
 {
@@ -3213,6 +3262,9 @@
 
     
 //    if(trialSequence==0)[instructions updateText:@"START" animate:YES];
+    
+    [self logIn];
+
     
    [super viewDidAppear:animated];
 }

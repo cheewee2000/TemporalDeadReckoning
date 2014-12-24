@@ -23,6 +23,8 @@
 @interface ViewController : UIViewController <GKGameCenterControllerDelegate, UIAlertViewDelegate , BEMSimpleLineGraphDataSource, BEMSimpleLineGraphDelegate>
 
 {
+    
+    PFUser *currentUser;
     int screenWidth,screenHeight;
     RBVolumeButtons *_buttonStealer;
     int trialSequence;
