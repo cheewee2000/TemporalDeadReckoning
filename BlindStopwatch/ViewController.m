@@ -343,7 +343,7 @@
     self.myGraph.autoScaleYAxis = NO;
     self.myGraph.yAxisScale=100.0;
     if(IS_IPHONE_4)self.myGraph.yAxisScale=50.0;
-    self.myGraph.animationGraphEntranceTime = .6;
+    self.myGraph.animationGraphEntranceTime = .8;
     self.myGraph.tag=0;
     [progressView addSubview:self.myGraph];
 
@@ -361,7 +361,7 @@
     self.allGraph.autoScaleYAxis = NO;
     self.allGraph.yAxisScale=100.0;
     if(IS_IPHONE_4)self.allGraph.yAxisScale=50.0;
-    self.allGraph.animationGraphEntranceTime = .6;
+    self.allGraph.animationGraphEntranceTime = .8;
     self.allGraph.tag=1;
     [progressView addSubview:self.allGraph];
     
@@ -1172,21 +1172,15 @@
                              completion:^(BOOL finished){
                                  
                              }];
-            
-            
         }
     }
 
     
 }
 -(void) updateDots{
-
     for (int i=0; i<[dots count]; i++){
-        
         [self updateDot:i];
-
     }
-
     //hide xo view`
     [UIView animateWithDuration:.4
                           delay:0.0
@@ -1194,10 +1188,8 @@
                      animations:^{
                          xView.alpha=0.0;
                          oView.alpha=0.0;
-
                      }
                      completion:^(BOOL finished){
-   
                      }];
 }
 
@@ -1556,7 +1548,8 @@
     }
     
     [self.lastNTrialsData addObject:myDictionary];
-    
+    [self.allTrialData addObject:myDictionary];
+
     
     //save data into clean array
     [self.levelData  insertObject:myDictionary atIndex:currentLevel];
@@ -1710,13 +1703,11 @@
     if(self.allTrialData == nil){
         
         self.allTrialData = [[NSMutableArray alloc] init];
-        for (int i = 0; i <2 ; i++) {
-            NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
-            [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"accuracy"];
-            [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"goal"];
-            [myDictionary setObject:[NSDate date] forKey:@"date"];
-            [self.allTrialData addObject:myDictionary];
-        }
+        NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
+        [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"accuracy"];
+        [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"goal"];
+        [myDictionary setObject:[NSDate date] forKey:@"date"];
+        [self.allTrialData addObject:myDictionary];
         [self saveValues];
     }
     
@@ -1738,11 +1729,7 @@
         [self saveValues];
     }
     
-    
-    
-    
-    
-    
+
     if(self.trialData == nil)
     {
         [self clearTrialData];
@@ -2042,11 +2029,11 @@
 
 -(float)getLevel:(int)level{
     float l;
-    if(level<TRIALSINSTAGE)l=.5+level*0.1;
-    else if(level<TRIALSINSTAGE*2)l=1.0+level%TRIALSINSTAGE*0.1;
+    if(level<TRIALSINSTAGE)l=.5+level*0.1f;
+    else if(level<TRIALSINSTAGE*2)l=1.0+level%TRIALSINSTAGE*0.1f;
     //else if(level<TRIALSINSTAGE*3)l=1.5+level%TRIALSINSTAGE*0.2;
     //else if(level<TRIALSINSTAGE*4)l=2.5+level%TRIALSINSTAGE*0.2;
-    else l=-.5+level*0.2;
+    else l=-.5f+level*0.2f;
     
     if(l>999.0)l=999.0;
     
@@ -2253,9 +2240,8 @@
     arrowN++;
     
     
-    if(([self isAccurate] && currentLevel%TRIALSINSTAGE==0) || life<=0 || nHeartsReplenished>0) {
+    if(([self isAccurate] && currentLevel%TRIALSINSTAGE==0) || life<=0) {
         NSString * stageClearedString;
-        NSMutableAttributedString *attributedString;
         t= [levelArrows objectAtIndex:arrowN];
 
         if(life<=0) stageClearedString=@"GAME OVER";
@@ -2265,24 +2251,31 @@
             stageClearedString=[NSString stringWithFormat:@"STAGE %i CLEARED!",[self getCurrentStage]];
 
         }
-        else if(nHeartsReplenished>0){
-            
-            if(nHeartsReplenished>1){
-                stageClearedString=[NSString stringWithFormat:@"LIFE REPLENISHED ❤\U0000FE0E+%i", nHeartsReplenished];
-                attributedString = [[NSMutableAttributedString alloc] initWithString:stageClearedString
-                                                                         attributes:@{NSFontAttributeName: [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize]}];
-                [attributedString setAttributes:@{NSFontAttributeName : [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize*.4]
-                                                  , NSBaselineOffsetAttributeName : [NSNumber numberWithFloat:t.rightLabel.font.pointSize*.4]} range:NSMakeRange(stageClearedString.length-2, 2)];
-                
-            }
-            
-//            if(nHeartsReplenished==1)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺¹";
-//            else if(nHeartsReplenished==2)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺²";
-//            else if(nHeartsReplenished==3)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺³";
-//            else if(nHeartsReplenished==4)stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E⁺⁴";
-            else stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E";
 
+        [t update:@"" rightLabel:stageClearedString color:instructions.color animate:NO];
+        margin-=spacing+t.frame.size.height;
+        d+=inc;
+        [t slideUpTo:margin delay:d];
+        [self.view bringSubviewToFront:t];
+        arrowN++;
+
+    }
+    else if(nHeartsReplenished>0) {
+        NSString * stageClearedString;
+        NSMutableAttributedString *attributedString;
+        t= [levelArrows objectAtIndex:arrowN];
+        if(nHeartsReplenished>1){
+            int nDigits = floor(log10(abs(nHeartsReplenished))) + 1;
+
+            stageClearedString=[NSString stringWithFormat:@"LIFE REPLENISHED ❤\U0000FE0E+%i", nHeartsReplenished];
+            attributedString = [[NSMutableAttributedString alloc] initWithString:stageClearedString
+                                                                      attributes:@{NSFontAttributeName: [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize]}];
+            [attributedString setAttributes:@{NSFontAttributeName : [t.rightLabel.font fontWithSize:t.rightLabel.font.pointSize*.4]
+                                              , NSBaselineOffsetAttributeName : [NSNumber numberWithFloat:t.rightLabel.font.pointSize*.4]} range:NSMakeRange(stageClearedString.length-nDigits+1, nDigits+1)];
+            
         }
+        
+        else stageClearedString=@"LIFE REPLENISHED ❤\U0000FE0E";
         
         if(nHeartsReplenished>1){
             [t update:@"" rightLabel:@"" color:instructions.color animate:NO];
@@ -2293,8 +2286,11 @@
         d+=inc;
         [t slideUpTo:margin delay:d];
         [self.view bringSubviewToFront:t];
+        arrowN++;
     }
-    arrowN++;
+    
+
+    
 
 
     
