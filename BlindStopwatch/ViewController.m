@@ -630,9 +630,9 @@
     [intro addSubview:introSubtitle];
     
     
-    introParagraph=[[UILabel alloc] initWithFrame:CGRectMake(m, introSubtitle.frame.origin.y+introSubtitle.frame.size.height+10, w, 180)];
+    introParagraph=[[UILabel alloc] initWithFrame:CGRectMake(m, introSubtitle.frame.origin.y+introSubtitle.frame.size.height+10, w, 200)];
     introParagraph.font = [UIFont fontWithName:@"DIN Condensed" size:20];
-    introParagraph.numberOfLines=10;
+    introParagraph.numberOfLines=14;
     introParagraph.textAlignment=NSTextAlignmentJustified;
     introParagraph.text=@"For each trial, your goal is to get as close as possible to the displayed target time. Tap the screen or press the volume button to start the counter, then press stop when you think the right amount of time has elapsed. \n\nBreathe... relax, and focus on your internal sense of time.\n\nThis app periodically collects anonymous statistics for us to study and potentially reveal how humans produce time internally.";
     introParagraph.textColor=[self getForegroundColor:0];
