@@ -188,15 +188,15 @@
     //[self loadData:currentLevel];
     
 #pragma mark - Button Stealer
-    id progressDelegate = self;
-    self.buttonStealer = [[RBVolumeButtons alloc] init];
-    self.buttonStealer.upBlock = ^{
-        [progressDelegate buttonPressed];
-    };
-    self.buttonStealer.downBlock = ^{
-        [progressDelegate buttonPressed];
-    };
-    [self.buttonStealer startStealingVolumeButtonEvents];
+//    id progressDelegate = self;
+//    self.buttonStealer = [[RBVolumeButtons alloc] init];
+//    self.buttonStealer.upBlock = ^{
+//        [progressDelegate buttonPressed];
+//    };
+//    self.buttonStealer.downBlock = ^{
+//        [progressDelegate buttonPressed];
+//    };
+//    [self.buttonStealer startStealingVolumeButtonEvents];
 
     
 #pragma mark - progressView
@@ -2950,7 +2950,8 @@
 
     if(trialSequence==0)
     {
-        [instructions update:@"START" rightLabel:@"PRESS VOLUME BUTTON" color:[self getForegroundColor:currentLevel] animate:NO];
+        //[instructions update:@"START" rightLabel:@"PRESS VOLUME BUTTON" color:[self getForegroundColor:currentLevel] animate:NO];
+        [instructions update:@"START" rightLabel:@"" color:[self getForegroundColor:currentLevel] animate:NO];
         instructions.rightLabel.frame=CGRectMake(-instructions.rightLabel.frame.size.height*.25,-instructions.rightLabel.frame.size.height*.05,
                                                  instructions.rightLabel.frame.size.width,instructions.rightLabel.frame.size.height);
         
