@@ -37,6 +37,11 @@
                   clientKey:clientKey];
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
+    [PFUser enableAutomaticUser];
+    [[PFUser currentUser] incrementKey:@"RunCount"];
+    [[PFUser currentUser] saveInBackground];
+    
+    
     NSString *testflightId = configuration[@"TestFlight"][@"id"];
     [TestFlight takeOff:testflightId];
 

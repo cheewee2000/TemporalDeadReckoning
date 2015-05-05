@@ -52,28 +52,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BlindStopwatch/ViewController.m"
-            timestampString = "452537401.691762"
+            timestampString = "452541730.194975"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1917"
-            endingLineNumber = "1917"
-            landmarkName = "-setLevel:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BlindStopwatch/ViewController.m"
-            timestampString = "452537385.751145"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1685"
-            endingLineNumber = "1685"
-            landmarkName = "-loadTrialData"
+            startingLineNumber = "1058"
+            endingLineNumber = "1058"
+            landmarkName = "-updateDotColors"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

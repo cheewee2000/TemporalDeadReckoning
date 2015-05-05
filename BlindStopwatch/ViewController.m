@@ -1,9 +1,11 @@
 #import "ViewController.h"
-#import <AudioToolbox/AudioToolbox.h>
+//#import <AudioToolbox/AudioToolbox.h>
 //#import <AVFoundation/AVFoundation.h>
-#import <MediaPlayer/MediaPlayer.h>
+//#import <MediaPlayer/MediaPlayer.h>
 #define CGRectSetPos( r, x, y ) CGRectMake( x, y, r.size.width, r.size.height )
-#import "RBVolumeButtons.h"
+//#import "RBVolumeButtons.h"
+
+#import <sys/utsname.h> // import it in your header or implementation file.
 
 //#include <assert.h>
 //#include <mach/mach.h>
@@ -975,9 +977,10 @@
                                                     [stageLabels addObject:sLabel];
                                                     [progressView.dotsContainer addSubview:sLabel];
                                                     
+                                                    //color isn't really set here
                                                     CGFloat hue, saturation, brightness, alpha ;
                                                     [[self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
-                                                    if(y>=screenHeight*.5) alpha=fabs(screenHeight-y-88)/(float)(screenHeight*.5);
+                                                    if(y>=screenHeight*.5) alpha=fabs(screenHeight-y-88)/(float)(screenHeight*.1);
                                                     else alpha=1.0;
                                                     UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
                                                     
@@ -1005,7 +1008,8 @@
                                                 CGFloat hue, saturation, brightness, alpha ;
                                                 [[self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
                                                 if(y>=screenHeight*.5) alpha=fabs(screenHeight-y-88)/(float)(screenHeight*.5);
-                                                else alpha=1.0;
+                                                
+
                                                 UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
                                                 
                                                 [dot setColor:sColor];
@@ -1047,11 +1051,10 @@
 
     for (int i=0; i<[dots count]; i++){
         Dots *dot=[dots objectAtIndex:i];
-        if(dot.frame.origin.y>=screenHeight*.5){
-            alpha=fabs(screenHeight-dot.frame.origin.y-88)/(float)(screenHeight*.5);
-        }
-        else alpha=1.0;
-        
+        //if(dot.frame.origin.y>=screenHeight*.25){
+            alpha=(float)(screenHeight-dot.frame.origin.y+88)/(float)(screenHeight);
+        //}
+        //else alpha=1.0;
         UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
 
         [UIView animateWithDuration:.4
@@ -1071,8 +1074,9 @@
 
             CGFloat hue, saturation, brightness, alpha ;
             [[self getBackgroundColor:currentLevel] getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
-            if(sLabel.frame.origin.y>=screenHeight*.5) alpha=fabs(sLabel.frame.origin.y-88)/(float)(screenHeight*.5);
-            else alpha=1.0;
+            //if(sLabel.frame.origin.y>=screenHeight*.5)
+                alpha=(screenHeight-sLabel.frame.origin.y)/(float)(screenHeight);
+            //else alpha=1.0;
             UIColor * sColor= [ UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
             
             
@@ -1300,6 +1304,15 @@
     CGPoint viewPoint = [progressView convertPoint:locationPoint fromView:self.view];
     if (![progressView pointInside:viewPoint withEvent:event]) {
         [self buttonPressed];
+        
+        touchStartTime=[aTimer elapsedSeconds];
+        
+        UITouch *touch = [[event allTouches] anyObject];
+        CGPoint touchPoint = [touch locationInView:self.view];
+        //NSLog(@"Touch x : %f y : %f", touchPoint.x, touchPoint.y);
+        touchX=touchPoint.x;
+        touchY=touchPoint.y;
+        
     }
 }
 
@@ -1335,6 +1348,11 @@
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    
+    touchLength=[aTimer elapsedSeconds]-touchStartTime;
+
+    
+    
     if([progressView.subMessage.text isEqual:@"GAME OVER"] || life<=0)return;
     //if([[event allTouches]count]>1)return;
     //if ([touches count] == [[event touchesForView:self.view] count])
@@ -1547,7 +1565,7 @@
         [self.lastNTrialsData removeObjectAtIndex:0];
     }
     
-    [self.lastNTrialsData addObject:myDictionary];
+    //[self.lastNTrialsData addObject:myDictionary];
     //[self.allTrialData addObject:myDictionary];
 
     
@@ -1562,7 +1580,11 @@
     pObject[@"date"]=[NSDate date];
     pObject[@"date"]=localDateTime;
     pObject[@"timezone"]=[NSString stringWithFormat:@"%@",[NSTimeZone localTimeZone].abbreviation];
-
+    pObject[@"touchX"]=[NSNumber numberWithFloat: touchX ];
+    pObject[@"touchY"]=[NSNumber numberWithFloat: touchY ];
+    pObject[@"touchLength"]=[NSNumber numberWithFloat:touchLength];
+    NSString * build = [[NSBundle mainBundle] objectForInfoDictionaryKey: (NSString *)kCFBundleVersionKey];
+    pObject[@"build"]=build;
 
     NSString*uuid;
     //NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -2348,10 +2370,10 @@
     //next buton
     levelAlert.rightLabel.frame=CGRectMake(levelAlert.rightLabel.frame.origin.x, levelAlert.rightLabel.frame.origin.y, levelAlert.frame.size.width-nextButton.frame.size.width*2.2, levelAlert.rightLabel.frame.size.height);
     levelAlert.rightLabel.textColor=[UIColor blackColor];
-    TextArrow *sl=[stageLabels objectAtIndex:0];
+    //TextArrow *sl=[stageLabels objectAtIndex:0];
 
-    nextButton.tintColor=sl.color;
-    shareButton.tintColor=sl.color;
+    nextButton.tintColor=self.view.backgroundColor;
+    shareButton.tintColor=self.view.backgroundColor;
 
     margin-=spacing+levelAlert.frame.size.height;
     d+=inc;
@@ -2381,7 +2403,7 @@
     if(lastStage==0) {
         
         progressView.subMessage.alpha=0;
-        [UIView animateWithDuration:0.2
+        [UIView animateWithDuration:0.4
                               delay:0.0
              usingSpringWithDamping:.8
               initialSpringVelocity:1.0
@@ -3151,10 +3173,14 @@
 
 #pragma mark - ViewController Delegate
 -(void)logIn{
+    [PFUser enableAutomaticUser];
+
     currentUser = [PFUser currentUser];
     if (currentUser) {
         // do stuff with the user
         currentUser[@"best"]=[NSNumber numberWithFloat:best];
+        currentUser[@"deviceName"]=[self deviceName];
+
         [currentUser saveEventually];
         
     } else {
@@ -3165,7 +3191,7 @@
             } else {
                 NSLog(@"Anonymous user logged in.");
                 currentUser = [PFUser currentUser];
-                
+
                 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                 NSString*uuid;
                 if([defaults stringForKey:@"uuid"] == nil){
@@ -3175,7 +3201,8 @@
                 }
                 else uuid =[defaults stringForKey:@"uuid"];
                 currentUser[@"uuid"]=uuid;
-                
+                currentUser[@"deviceName"]=[self deviceName];
+
                 PFInstallation *currentInstallation = [PFInstallation currentInstallation];
                 currentUser[@"installation"]=currentInstallation;
                 //                currentInstallation[@"user"]=currentUser;
@@ -3189,6 +3216,15 @@
     
     
 }
+-(NSString*) deviceName
+{
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    
+    return [NSString stringWithCString:systemInfo.machine
+                              encoding:NSUTF8StringEncoding];
+}
+
 
 
 

@@ -41,7 +41,9 @@
     NSString *lastNTrialDataFile;
 
     MachTimer* aTimer;
-
+    float touchX,touchY;
+    NSTimeInterval touchStartTime;
+    NSTimeInterval touchLength;
     
     #pragma mark - points
     float best;
