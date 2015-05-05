@@ -1548,7 +1548,7 @@
     }
     
     [self.lastNTrialsData addObject:myDictionary];
-    [self.allTrialData addObject:myDictionary];
+    //[self.allTrialData addObject:myDictionary];
 
     
     //save data into clean array
@@ -1695,21 +1695,21 @@
     self.trialData = [[NSMutableArray alloc] initWithContentsOfFile: timeValuesFile];
     
     
-    NSArray *docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    NSArray *docPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 
-    self.allTrialData = [[NSMutableArray alloc] init];
-    allTrialDataFile = [[docPath objectAtIndex:0] stringByAppendingPathComponent:@"allTrialData.dat"];
-    self.allTrialData = [[NSMutableArray alloc] initWithContentsOfFile: allTrialDataFile];
-    if(self.allTrialData == nil){
-        
-        self.allTrialData = [[NSMutableArray alloc] init];
-        NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
-        [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"accuracy"];
-        [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"goal"];
-        [myDictionary setObject:[NSDate date] forKey:@"date"];
-        [self.allTrialData addObject:myDictionary];
-        [self saveValues];
-    }
+//    self.allTrialData = [[NSMutableArray alloc] init];
+//    allTrialDataFile = [[docPath objectAtIndex:0] stringByAppendingPathComponent:@"allTrialData.dat"];
+//    self.allTrialData = [[NSMutableArray alloc] initWithContentsOfFile: allTrialDataFile];
+//    if(self.allTrialData == nil){
+//        
+//        self.allTrialData = [[NSMutableArray alloc] init];
+//        NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
+//        [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"accuracy"];
+//        [myDictionary setObject:[NSNumber numberWithFloat:0.0] forKey:@"goal"];
+//        [myDictionary setObject:[NSDate date] forKey:@"date"];
+//        [self.allTrialData addObject:myDictionary];
+//        [self saveValues];
+//    }
     
     
     
@@ -1754,7 +1754,7 @@
 
 -(void)saveValues{
     [self.trialData writeToFile:timeValuesFile atomically:YES];
-    [self.allTrialData writeToFile:allTrialDataFile atomically:YES];
+    //[self.allTrialData writeToFile:allTrialDataFile atomically:YES];
     [self.lastNTrialsData writeToFile:lastNTrialDataFile atomically:YES];
 
 }
@@ -1897,16 +1897,7 @@
         }
         [self updateBestDot];
 
-        
-//        float currentHS=(int)[defaults integerForKey:@"experiencepoints"];
-//        if(experiencePoints>currentHS){
-//            currentHS=experiencePoints;
-//            [defaults setInteger:experiencePoints forKey:@"experiencepoints"];
-//        }
-
         [self updateHighscore];
-
-
     }
      [defaults synchronize];
     
@@ -1920,16 +1911,19 @@
                      animations:^{
                          counterGoalLabel.alpha=0;
                          counterLabel.alpha=0;
-                         goalPrecision.alpha=0;
+                         //goalPrecision.alpha=0;
                      }
                      completion:^(BOOL finished){
                          [self animateLevelReset];
 
                      }];
     
+    
+    float backgroundColorDuration=0.0;
+    if ( currentLevel%TRIALSINSTAGE==0)backgroundColorDuration=0.4;
 
      //change background color
-     [UIView animateWithDuration:0.4
+     [UIView animateWithDuration:backgroundColorDuration
                            delay:0.0
                          options:UIViewAnimationOptionCurveLinear
                       animations:^{
@@ -2387,7 +2381,7 @@
     if(lastStage==0) {
         
         progressView.subMessage.alpha=0;
-        [UIView animateWithDuration:0.4
+        [UIView animateWithDuration:0.2
                               delay:0.0
              usingSpringWithDamping:.8
               initialSpringVelocity:1.0
@@ -2553,7 +2547,7 @@
     if(life<=0){
         resetCountdown=20;
         currentLevel=0;
-        [self performSelector:@selector(showGameOverSequence) withObject:self afterDelay:.2];
+        [self performSelector:@selector(showGameOverSequence) withObject:self afterDelay:.1];
     }
     
     //check for stage up to add dots
@@ -2563,8 +2557,8 @@
         [self performSelector:@selector(clearTrialData) withObject:self afterDelay:2.0];
 
     }
-    else [self performSelector:@selector(loadLevel) withObject:self afterDelay:.1];
-    
+    else [self performSelector:@selector(loadLevel) withObject:self afterDelay:.001];
+    //else [self loadLevel];
 
     
 }
@@ -2581,7 +2575,6 @@
     [self loadLevelProgress];
     [self.myGraph reloadGraph];
     [self.allGraph reloadGraph];
-
 }
 
 
@@ -2891,8 +2884,10 @@
     
     [instructions slideOut:0];
 
+    float slideDownDuration=0.0;
+    if(progressView.frame.origin.y==0)slideDownDuration=0.4;
     
-    [UIView animateWithDuration:0.4
+    [UIView animateWithDuration:slideDownDuration
                           delay:0
          usingSpringWithDamping:.8
           initialSpringVelocity:1.0
